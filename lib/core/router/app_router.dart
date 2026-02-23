@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:notidea/core/router/route_names.dart';
+import 'package:notidea/features/splash/presentation/screens/splash_screen.dart';
+import 'package:notidea/features/auth/presentation/screens/login_screen.dart';
+import 'package:notidea/features/auth/presentation/screens/signup_screen.dart';
+import 'package:notidea/features/notes/presentation/screens/notes_list_screen.dart';
+import 'package:notidea/features/notes/presentation/screens/note_editor_screen.dart';
+import 'package:notidea/features/notes/presentation/screens/note_detail_screen.dart';
+import 'package:notidea/features/explore/presentation/screens/explore_screen.dart';
+import 'package:notidea/features/favorites/presentation/screens/favorites_screen.dart';
+import 'package:notidea/features/profile/presentation/screens/profile_screen.dart';
+import 'package:notidea/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:notidea/features/friends/presentation/screens/friends_screen.dart';
+import 'package:notidea/features/friends/presentation/screens/add_friend_screen.dart';
+import 'package:notidea/features/groups/presentation/screens/groups_screen.dart';
+import 'package:notidea/features/groups/presentation/screens/create_group_screen.dart';
+import 'package:notidea/features/groups/presentation/screens/group_detail_screen.dart';
+import 'package:notidea/features/trash/presentation/screens/trash_screen.dart';
+import 'package:notidea/features/shared_notes/presentation/screens/shared_notes_screen.dart';
+import 'package:notidea/features/search/presentation/screens/search_screen.dart';
+import 'package:notidea/features/settings/presentation/screens/settings_screen.dart';
+import 'package:notidea/features/legal/presentation/screens/legal_screen.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+
+part 'app_router.g.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+@riverpod
+GoRouter appRouter(AppRouterRef ref) {
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: RoutePaths.splash,
+    debugLogDiagnostics: true,
+    redirect: (context, state) {
+      final session = Supabase.instance.client.auth.currentSession;
+      final isAuthenticated = session != null;
+      final currentPath = state.uri.path;
+
+      final isAuthRoute =
+          currentPath == RoutePaths.login || currentPath == RoutePaths.signup;
+      final isSplash = currentPath == RoutePaths.splash;
+
+      if (!isAuthenticated && !isAuthRoute && !isSplash) {
+        return RoutePaths.login;
+      }
+
+      if (isAuthenticated && (isAuthRoute || isSplash)) {
+        return RoutePaths.home;
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: RoutePaths.splash,
+        name: RouteNames.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.login,
+        name: RouteNames.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.signup,
+        name: RouteNames.signup,
+        builder: (context, state) => const SignupScreen(),
+      ),
+
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return AppScaffold(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: RoutePaths.home,
+            name: RouteNames.home,
+            builder: (context, state) => const NotesListScreen(),
+            routes: [
+              GoRoute(
+                path: RoutePaths.noteEditor,
+                name: RouteNames.noteEditor,
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) => const NoteEditorScreen(),
+              ),
+              GoRoute(
+                path: '${RoutePaths.noteEditor}/:noteId',
+                name: '${RouteNames.noteEditor}WithId',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) {
+                  final noteId = state.pathParameters['noteId']!;
+                  return NoteEditorScreen(noteId: noteId);
+                },
+              ),
+              GoRoute(
+                path: 'note/:noteId',
+                name: RouteNames.noteDetail,
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) {
+                  final noteId = state.pathParameters['noteId']!;
+                  return NoteDetailScreen(noteId: noteId);
+                },
+              ),
+              GoRoute(
+                path: RoutePaths.trash,
+                name: RouteNames.trash,
+                builder: (context, state) => const TrashScreen(),
+              ),
+              GoRoute(
+                path: RoutePaths.sharedNotes,
+                name: RouteNames.sharedNotes,
+                builder: (context, state) => const SharedNotesScreen(),
+              ),
+              GoRoute(
+                path: RoutePaths.search,
+                name: RouteNames.search,
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) => const SearchScreen(),
+              ),
+            ],
+          ),
+
+          GoRoute(
+            path: RoutePaths.explore,
+            name: RouteNames.explore,
+            builder: (context, state) => const ExploreScreen(),
+          ),
+
+          GoRoute(
+            path: RoutePaths.favorites,
+            name: RouteNames.favorites,
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+
+          GoRoute(
+            path: RoutePaths.profile,
+            name: RouteNames.profile,
+            builder: (context, state) => const ProfileScreen(),
+            routes: [
+              GoRoute(
+                path: RoutePaths.editProfile,
+                name: RouteNames.editProfile,
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) => const EditProfileScreen(),
+              ),
+              GoRoute(
+                path: 'user/:userId',
+                name: RouteNames.userProfile,
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) {
+                  final userId = state.pathParameters['userId']!;
+                  return ProfileScreen(userId: userId);
+                },
+              ),
+              GoRoute(
+                path: RoutePaths.friends,
+                name: RouteNames.friends,
+                builder: (context, state) => const FriendsScreen(),
+                routes: [
+                  GoRoute(
+                    path: RoutePaths.addFriend,
+                    name: RouteNames.addFriend,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const AddFriendScreen(),
+                  ),
+                ],
+              ),
+              GoRoute(
+                path: RoutePaths.groups,
+                name: RouteNames.groups,
+                builder: (context, state) => const GroupsScreen(),
+                routes: [
+                  GoRoute(
+                    path: RoutePaths.createGroup,
+                    name: RouteNames.createGroup,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const CreateGroupScreen(),
+                  ),
+                  GoRoute(
+                    path: 'group/:groupId',
+                    name: RouteNames.groupDetail,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final groupId = state.pathParameters['groupId']!;
+                      return GroupDetailScreen(groupId: groupId);
+                    },
+                  ),
+                ],
+              ),
+              GoRoute(
+                path: RoutePaths.settings,
+                name: RouteNames.settings,
+                builder: (context, state) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'privacy-policy',
+                    name: RouteNames.privacyPolicy,
+                    builder: (context, state) => const LegalScreen(
+                      documentType: LegalDocumentType.privacyPolicy,
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'terms-of-service',
+                    name: RouteNames.termsOfService,
+                    builder: (context, state) => const LegalScreen(
+                      documentType: LegalDocumentType.termsOfService,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
