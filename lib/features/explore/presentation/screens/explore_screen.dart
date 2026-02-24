@@ -9,6 +9,7 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/explore/presentation/providers/explore_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ExploreScreen extends ConsumerStatefulWidget {
@@ -47,6 +48,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: _isSearching
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => AppScaffold.openDrawer(context),
+              ),
         title: _isSearching
             ? TextField(
                 controller: _searchController,

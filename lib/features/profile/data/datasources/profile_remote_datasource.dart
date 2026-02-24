@@ -38,15 +38,8 @@ class ProfileRemoteDatasource {
       throw Exception('Username is already taken');
     }
 
-    final data = {
-      'id': profile.id,
-      'username': profile.username,
-      'display_name': profile.displayName,
-      'avatar_url': profile.avatarUrl,
-      'bio': profile.bio,
-      'created_at': DateTime.now().toIso8601String(),
-      'updated_at': DateTime.now().toIso8601String(),
-    };
+    final now = DateTime.now();
+    final data = profile.copyWith(createdAt: now, updatedAt: now).toJson();
 
     final response = await _client
         .from('profiles')
@@ -66,13 +59,9 @@ class ProfileRemoteDatasource {
       throw Exception('Username is already taken');
     }
 
-    final data = {
-      'username': profile.username,
-      'display_name': profile.displayName,
-      'avatar_url': profile.avatarUrl,
-      'bio': profile.bio,
-      'updated_at': DateTime.now().toIso8601String(),
-    };
+    final data = profile.copyWith(updatedAt: DateTime.now()).toJson();
+    data.remove('id');
+    data.remove('created_at');
 
     final response = await _client
         .from('profiles')

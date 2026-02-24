@@ -6,6 +6,7 @@ import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/domain/repositories/notes_repository.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 class NotesListScreen extends ConsumerStatefulWidget {
   const NotesListScreen({super.key});
@@ -261,6 +262,12 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: _isSearching
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => AppScaffold.openDrawer(context),
+              ),
         title: _isSearching
             ? TextField(
                 controller: _searchController,

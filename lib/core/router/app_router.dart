@@ -52,20 +52,21 @@ GoRouter appRouter(AppRouterRef ref) {
         return RoutePaths.login;
       }
 
-      if (isAuthenticated && isProfileSetup) {
-        return null;
+      if (!isAuthenticated) return null;
+
+      final profile = await Supabase.instance.client
+          .from('profiles')
+          .select('id')
+          .eq('id', session!.user.id)
+          .maybeSingle();
+
+      final hasProfile = profile != null;
+
+      if (!hasProfile && !isProfileSetup) {
+        return RoutePaths.profileSetup;
       }
 
-      if (isAuthenticated && (isAuthRoute || isSplash)) {
-        final profile = await Supabase.instance.client
-            .from('profiles')
-            .select('id')
-            .eq('id', session.user.id)
-            .maybeSingle();
-
-        if (profile == null) {
-          return RoutePaths.profileSetup;
-        }
+      if (hasProfile && (isAuthRoute || isSplash || isProfileSetup)) {
         return RoutePaths.home;
       }
 

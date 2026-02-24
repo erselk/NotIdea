@@ -6,6 +6,7 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final String? userId;
@@ -27,11 +28,17 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: isOwnProfile
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => AppScaffold.openDrawer(context),
+              )
+            : null,
         title: Text(l10n.profile),
         actions: [
           if (isOwnProfile)
             IconButton(
-              icon: const Icon(Icons.settings_outlined),
+              icon: const Icon(Icons.edit_outlined),
               onPressed: () => context.push('/profile/edit'),
             ),
         ],

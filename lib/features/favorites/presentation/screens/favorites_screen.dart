@@ -6,6 +6,7 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/favorites/presentation/providers/favorites_provider.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -19,6 +20,10 @@ class FavoritesScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => AppScaffold.openDrawer(context),
+        ),
         title: Text(l10n.favorites),
       ),
       body: RefreshIndicator(
