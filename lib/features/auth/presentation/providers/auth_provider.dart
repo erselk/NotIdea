@@ -38,12 +38,9 @@ class Login extends _$Login {
     required String email,
     required String password,
   }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(authRepositoryProvider);
-      await repository.signIn(email: email, password: password);
-      ref.invalidate(currentUserProvider);
-    });
+    final repository = ref.read(authRepositoryProvider);
+    await repository.signIn(email: email, password: password);
+    ref.invalidate(currentUserProvider);
   }
 }
 
@@ -55,20 +52,10 @@ class Signup extends _$Signup {
   Future<void> execute({
     required String email,
     required String password,
-    required String displayName,
-    required String username,
   }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(authRepositoryProvider);
-      await repository.signUp(
-        email: email,
-        password: password,
-        displayName: displayName,
-        username: username,
-      );
-      ref.invalidate(currentUserProvider);
-    });
+    final repository = ref.read(authRepositoryProvider);
+    await repository.signUp(email: email, password: password);
+    ref.invalidate(currentUserProvider);
   }
 }
 
@@ -78,12 +65,9 @@ class Logout extends _$Logout {
   FutureOr<void> build() {}
 
   Future<void> execute() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(authRepositoryProvider);
-      await repository.signOut();
-      ref.invalidate(currentUserProvider);
-    });
+    final repository = ref.read(authRepositoryProvider);
+    await repository.signOut();
+    ref.invalidate(currentUserProvider);
   }
 }
 
@@ -93,10 +77,7 @@ class ResetPassword extends _$ResetPassword {
   FutureOr<void> build() {}
 
   Future<void> execute({required String email}) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(authRepositoryProvider);
-      await repository.resetPassword(email: email);
-    });
+    final repository = ref.read(authRepositoryProvider);
+    await repository.resetPassword(email: email);
   }
 }

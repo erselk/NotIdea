@@ -81,14 +81,10 @@ class CreateNote extends _$CreateNote {
   @override
   FutureOr<void> build() {}
 
-  Future<NoteModel?> execute(NoteModel note) async {
-    NoteModel? created;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(notesRepositoryProvider);
-      created = await repository.createNote(note);
-      ref.invalidate(userNotesProvider);
-    });
+  Future<NoteModel> execute(NoteModel note) async {
+    final repository = ref.read(notesRepositoryProvider);
+    final created = await repository.createNote(note);
+    ref.invalidate(userNotesProvider);
     return created;
   }
 }
@@ -98,15 +94,11 @@ class UpdateNote extends _$UpdateNote {
   @override
   FutureOr<void> build() {}
 
-  Future<NoteModel?> execute(NoteModel note) async {
-    NoteModel? updated;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(notesRepositoryProvider);
-      updated = await repository.updateNote(note);
-      ref.invalidate(userNotesProvider);
-      ref.invalidate(noteByIdProvider(note.id));
-    });
+  Future<NoteModel> execute(NoteModel note) async {
+    final repository = ref.read(notesRepositoryProvider);
+    final updated = await repository.updateNote(note);
+    ref.invalidate(userNotesProvider);
+    ref.invalidate(noteByIdProvider(note.id));
     return updated;
   }
 }
@@ -117,12 +109,9 @@ class DeleteNote extends _$DeleteNote {
   FutureOr<void> build() {}
 
   Future<void> execute(String noteId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(notesRepositoryProvider);
-      await repository.softDeleteNote(noteId);
-      ref.invalidate(userNotesProvider);
-    });
+    final repository = ref.read(notesRepositoryProvider);
+    await repository.softDeleteNote(noteId);
+    ref.invalidate(userNotesProvider);
   }
 }
 
@@ -132,13 +121,10 @@ class ToggleFavorite extends _$ToggleFavorite {
   FutureOr<void> build() {}
 
   Future<void> execute(String noteId, bool isFavorite) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(notesRepositoryProvider);
-      await repository.toggleFavorite(noteId, isFavorite);
-      ref.invalidate(userNotesProvider);
-      ref.invalidate(noteByIdProvider(noteId));
-    });
+    final repository = ref.read(notesRepositoryProvider);
+    await repository.toggleFavorite(noteId, isFavorite);
+    ref.invalidate(userNotesProvider);
+    ref.invalidate(noteByIdProvider(noteId));
   }
 }
 

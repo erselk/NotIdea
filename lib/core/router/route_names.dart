@@ -6,6 +6,7 @@ class RouteNames {
   static const String splash = 'splash';
   static const String login = 'login';
   static const String signup = 'signup';
+  static const String profileSetup = 'profileSetup';
 
   // Ana sekmeler
   static const String home = 'home';
@@ -50,6 +51,7 @@ class RoutePaths {
   static const String splash = '/splash';
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String profileSetup = '/profile-setup';
 
   // Alt sekmeler (shell route altında)
   static const String home = '/home';

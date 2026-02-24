@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
@@ -17,6 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoggingIn = false;
 
   @override
   void dispose() {
@@ -28,10 +30,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    await ref.read(loginProvider.notifier).execute(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+    setState(() => _isLoggingIn = true);
+    try {
+      await ref.read(loginProvider.notifier).execute(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoggingIn = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
+      }
+    }
   }
 
   void _showForgotPassword() {
@@ -79,50 +94,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final loginState = ref.watch(loginProvider);
-
-    ref.listen(loginProvider, (prev, next) {
-      if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error.toString()),
-            backgroundColor: theme.colorScheme.error,
-          ),
-        );
-      }
-    });
-
-    final isLoading = loginState.isLoading;
+    final isLoading = _isLoggingIn;
 
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
+            child: AutofillGroup(
+              child: Form(
+                key: _formKey,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 48),
 
-                  // Branding
-                  Icon(
-                    Icons.lightbulb_outline_rounded,
-                    size: 64,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    AppConstants.appName,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+                  Center(
+                    child: SvgPicture.asset(
+                      theme.brightness == Brightness.light
+                          ? 'assets/images/logolight-notext.svg'
+                          : 'assets/images/logodark-notext.svg',
+                      width: 72,
+                      height: 72,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  Center(
+                    child: SvgPicture.asset(
+                      theme.brightness == Brightness.light
+                          ? 'assets/images/logolight-onlytext.svg'
+                          : 'assets/images/logodark-onlytext.svg',
+                      width: 150,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   Text(
                     l10n.loginSubtitle,
                     textAlign: TextAlign.center,
@@ -137,6 +143,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
+                    textAlign: TextAlign.center,
+                    autofillHints: const [AutofillHints.email],
                     enabled: !isLoading,
                     decoration: InputDecoration(
                       labelText: l10n.email,
@@ -161,6 +169,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.done,
+                    textAlign: TextAlign.center,
+                    autofillHints: const [AutofillHints.password],
                     enabled: !isLoading,
                     onFieldSubmitted: (_) => _handleLogin(),
                     decoration: InputDecoration(
@@ -253,6 +263,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 48),
                 ],
               ),
+            ),
             ),
           ),
         ),

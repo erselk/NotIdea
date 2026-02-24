@@ -18,7 +18,54 @@ class ProfileRemoteDatasource {
     return ProfileModel.fromJson(response);
   }
 
+  Future<bool> isUsernameTaken(String username, {String? excludeUserId}) async {
+    var query = _client
+        .from('profiles')
+        .select('id')
+        .eq('username', username.toLowerCase());
+
+    if (excludeUserId != null) {
+      query = query.neq('id', excludeUserId);
+    }
+
+    final response = await query.maybeSingle();
+    return response != null;
+  }
+
+  Future<ProfileModel> createProfile(ProfileModel profile) async {
+    final taken = await isUsernameTaken(profile.username);
+    if (taken) {
+      throw Exception('Username is already taken');
+    }
+
+    final data = {
+      'id': profile.id,
+      'username': profile.username,
+      'display_name': profile.displayName,
+      'avatar_url': profile.avatarUrl,
+      'bio': profile.bio,
+      'created_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    final response = await _client
+        .from('profiles')
+        .upsert(data)
+        .select()
+        .single();
+
+    return ProfileModel.fromJson(response);
+  }
+
   Future<ProfileModel> updateProfile(ProfileModel profile) async {
+    final taken = await isUsernameTaken(
+      profile.username,
+      excludeUserId: profile.id,
+    );
+    if (taken) {
+      throw Exception('Username is already taken');
+    }
+
     final data = {
       'username': profile.username,
       'display_name': profile.displayName,
@@ -45,10 +92,17 @@ class ProfileRemoteDatasource {
     final path = StorageConstants.avatarPath(userId);
     final fullPath = '$path.$fileExtension';
 
+    final mimeType = switch (fileExtension) {
+      'png' => 'image/png',
+      'webp' => 'image/webp',
+      'gif' => 'image/gif',
+      _ => 'image/jpeg',
+    };
+
     await _client.storage.from(StorageConstants.avatarsBucket).uploadBinary(
           fullPath,
           bytes,
-          fileOptions: const FileOptions(upsert: true),
+          fileOptions: FileOptions(upsert: true, contentType: mimeType),
         );
 
     final publicUrl = _client.storage

@@ -374,5 +374,13 @@
   "publicNotes": "Public",
   "friendsNotes": "Friends",
   "clearFilters": "Clear Filters",
-  "groupSharedNotes": "Group Shared Notes"
+  "groupSharedNotes": "Group Shared Notes",
+
+  "completeYourProfile": "Complete Your Profile",
+  "profileSetupSubtitle": "Add your details to get started",
+  "tapToAddPhoto": "Tap to add a profile photo",
+  "getStarted": "Get Started",
+  "checkEmailToConfirm": "Please check your email to confirm your account, then log in.",
+  "usernameTaken": "This username is already taken",
+  "checkingUsername": "Checking availability..."
 }

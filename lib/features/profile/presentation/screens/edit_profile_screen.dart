@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,14 +22,79 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _usernameController = TextEditingController();
   final _bioController = TextEditingController();
   bool _isInitialized = false;
+  bool _isUploadingAvatar = false;
+  bool _isSavingProfile = false;
+  bool _isCheckingUsername = false;
+  bool _usernameTaken = false;
+  Timer? _usernameDebounce;
+  String? _originalUsername;
+
+  static String? _extensionFromMime(String? mime) {
+    if (mime == null) return null;
+    const map = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/webp': 'webp',
+      'image/gif': 'gif',
+    };
+    return map[mime.toLowerCase()];
+  }
+
+  static String? _extensionFromPath(String path) {
+    final ext = path.split('.').last.toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'webp', 'gif'].contains(ext)) return ext;
+    return null;
+  }
   String? _currentAvatarUrl;
 
   @override
   void dispose() {
+    _usernameDebounce?.cancel();
     _displayNameController.dispose();
     _usernameController.dispose();
     _bioController.dispose();
     super.dispose();
+  }
+
+  void _onUsernameChanged(String value) {
+    _usernameDebounce?.cancel();
+    final trimmed = value.trim();
+
+    if (trimmed == _originalUsername) {
+      setState(() {
+        _isCheckingUsername = false;
+        _usernameTaken = false;
+      });
+      return;
+    }
+
+    if (trimmed.length < AppConstants.minUsernameLength) {
+      setState(() {
+        _isCheckingUsername = false;
+        _usernameTaken = false;
+      });
+      return;
+    }
+
+    setState(() => _isCheckingUsername = true);
+    _usernameDebounce = Timer(const Duration(milliseconds: 500), () async {
+      try {
+        final currentUser = await ref.read(currentUserProvider.future);
+        final repo = ref.read(profileRepositoryProvider);
+        final taken = await repo.isUsernameTaken(
+          trimmed,
+          excludeUserId: currentUser?.id,
+        );
+        if (mounted) {
+          setState(() {
+            _usernameTaken = taken;
+            _isCheckingUsername = false;
+          });
+        }
+      } catch (_) {
+        if (mounted) setState(() => _isCheckingUsername = false);
+      }
+    });
   }
 
   Future<void> _pickAvatar() async {
@@ -77,19 +143,35 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (currentUser == null) return;
 
     final bytes = await file.readAsBytes();
-    final ext = file.path.split('.').last.toLowerCase();
+    final mimeType = file.mimeType;
+    final ext = _extensionFromMime(mimeType) ??
+        _extensionFromPath(file.path) ??
+        'jpg';
 
-    final url = await ref.read(uploadAvatarProvider.notifier).execute(
-          userId: currentUser.id,
-          bytes: bytes,
-          fileExtension: ext,
+    setState(() => _isUploadingAvatar = true);
+    try {
+      final url = await ref.read(uploadAvatarProvider.notifier).execute(
+            userId: currentUser.id,
+            bytes: bytes,
+            fileExtension: ext,
+          );
+
+      if (mounted) {
+        setState(() {
+          _currentAvatarUrl = url;
+          _isUploadingAvatar = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.avatarUpdated)),
         );
-
-    if (url != null && mounted) {
-      setState(() => _currentAvatarUrl = url);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.avatarUpdated)),
-      );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isUploadingAvatar = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
     }
   }
 
@@ -108,13 +190,26 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           : _bioController.text.trim(),
     );
 
-    await ref.read(updateProfileProvider.notifier).execute(updated);
+    setState(() => _isSavingProfile = true);
+    try {
+      await ref.read(updateProfileProvider.notifier).execute(updated);
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.profileUpdated)),
-      );
-      context.pop();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.profileUpdated)),
+        );
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSavingProfile = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 
@@ -164,30 +259,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final profileAsync = ref.watch(currentProfileProvider);
-    final updateState = ref.watch(updateProfileProvider);
-    final uploadState = ref.watch(uploadAvatarProvider);
+    final isLoading = _isSavingProfile || _isUploadingAvatar;
 
-    final isLoading = updateState.isLoading || uploadState.isLoading;
-
-    // Initialize fields from profile data
     profileAsync.whenData((profile) {
       if (profile != null && !_isInitialized) {
         _displayNameController.text = profile.displayName ?? '';
         _usernameController.text = profile.username;
+        _originalUsername = profile.username;
         _bioController.text = profile.bio ?? '';
         _currentAvatarUrl = profile.avatarUrl;
         _isInitialized = true;
-      }
-    });
-
-    ref.listen(updateProfileProvider, (prev, next) {
-      if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error.toString()),
-            backgroundColor: theme.colorScheme.error,
-          ),
-        );
       }
     });
 
@@ -291,9 +372,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   TextFormField(
                     controller: _usernameController,
                     enabled: !isLoading,
+                    onChanged: _onUsernameChanged,
                     decoration: InputDecoration(
                       labelText: l10n.username,
                       prefixIcon: const Icon(Icons.alternate_email),
+                      suffixIcon: _isCheckingUsername
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            )
+                          : _usernameController.text.trim().length >=
+                                      AppConstants.minUsernameLength &&
+                                  !_usernameTaken &&
+                                  _usernameController.text.trim() != _originalUsername
+                              ? const Icon(Icons.check_circle, color: Colors.green)
+                              : _usernameTaken
+                                  ? Icon(Icons.cancel, color: theme.colorScheme.error)
+                                  : null,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -310,6 +409,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       if (!RegExp(r'^[a-zA-Z0-9_]+$')
                           .hasMatch(value.trim())) {
                         return l10n.usernameInvalid;
+                      }
+                      if (_usernameTaken) {
+                        return l10n.usernameTaken;
                       }
                       return null;
                     },

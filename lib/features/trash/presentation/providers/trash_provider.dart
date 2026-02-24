@@ -30,17 +30,14 @@ class RestoreNote extends _$RestoreNote {
   FutureOr<void> build() {}
 
   Future<void> execute(String noteId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final client = SupabaseConfig.client;
-      await client.from('notes').update({
-        'is_deleted': false,
-        'deleted_at': null,
-        'updated_at': DateTime.now().toIso8601String(),
-      }).eq('id', noteId);
-      ref.invalidate(trashedNotesProvider);
-      ref.invalidate(userNotesProvider);
-    });
+    final client = SupabaseConfig.client;
+    await client.from('notes').update({
+      'is_deleted': false,
+      'deleted_at': null,
+      'updated_at': DateTime.now().toIso8601String(),
+    }).eq('id', noteId);
+    ref.invalidate(trashedNotesProvider);
+    ref.invalidate(userNotesProvider);
   }
 }
 
@@ -50,12 +47,9 @@ class PermanentlyDelete extends _$PermanentlyDelete {
   FutureOr<void> build() {}
 
   Future<void> execute(String noteId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(notesRepositoryProvider);
-      await repository.permanentlyDeleteNote(noteId);
-      ref.invalidate(trashedNotesProvider);
-    });
+    final repository = ref.read(notesRepositoryProvider);
+    await repository.permanentlyDeleteNote(noteId);
+    ref.invalidate(trashedNotesProvider);
   }
 }
 
@@ -65,18 +59,15 @@ class EmptyTrash extends _$EmptyTrash {
   FutureOr<void> build() {}
 
   Future<void> execute() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final currentUser = await ref.read(currentUserProvider.future);
-      if (currentUser == null) return;
+    final currentUser = await ref.read(currentUserProvider.future);
+    if (currentUser == null) return;
 
-      final client = SupabaseConfig.client;
-      await client
-          .from('notes')
-          .delete()
-          .eq('user_id', currentUser.id)
-          .eq('is_deleted', true);
-      ref.invalidate(trashedNotesProvider);
-    });
+    final client = SupabaseConfig.client;
+    await client
+        .from('notes')
+        .delete()
+        .eq('user_id', currentUser.id)
+        .eq('is_deleted', true);
+    ref.invalidate(trashedNotesProvider);
   }
 }

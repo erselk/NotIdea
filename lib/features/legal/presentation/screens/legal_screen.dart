@@ -36,7 +36,7 @@ class _LegalScreenState extends State<LegalScreen> {
     final raw = await rootBundle.loadString(assetPath);
     return raw
         .replaceAll('[APP_NAME]', 'NotIdea')
-        .replaceAll('[CONTACT_EMAIL]', 'support@notidea.app')
+        .replaceAll('[CONTACT_EMAIL]', 'support@notidea.ersel.dev')
         .replaceAll('[EFFECTIVE_DATE]', '2026-01-01');
   }
 

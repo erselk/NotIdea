@@ -45,19 +45,16 @@ class SendFriendRequest extends _$SendFriendRequest {
   FutureOr<void> build() {}
 
   Future<void> execute(String addresseeId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final currentUser = await ref.read(currentUserProvider.future);
-      if (currentUser == null) throw Exception('User not authenticated');
+    final currentUser = await ref.read(currentUserProvider.future);
+    if (currentUser == null) throw Exception('User not authenticated');
 
-      final repository = ref.read(friendsRepositoryProvider);
-      await repository.sendRequest(
-        requesterId: currentUser.id,
-        addresseeId: addresseeId,
-      );
-      ref.invalidate(pendingRequestsProvider);
-      ref.invalidate(friendsListProvider);
-    });
+    final repository = ref.read(friendsRepositoryProvider);
+    await repository.sendRequest(
+      requesterId: currentUser.id,
+      addresseeId: addresseeId,
+    );
+    ref.invalidate(pendingRequestsProvider);
+    ref.invalidate(friendsListProvider);
   }
 }
 
@@ -67,13 +64,10 @@ class AcceptFriendRequest extends _$AcceptFriendRequest {
   FutureOr<void> build() {}
 
   Future<void> execute(String friendshipId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(friendsRepositoryProvider);
-      await repository.acceptRequest(friendshipId);
-      ref.invalidate(pendingRequestsProvider);
-      ref.invalidate(friendsListProvider);
-    });
+    final repository = ref.read(friendsRepositoryProvider);
+    await repository.acceptRequest(friendshipId);
+    ref.invalidate(pendingRequestsProvider);
+    ref.invalidate(friendsListProvider);
   }
 }
 
@@ -83,12 +77,9 @@ class RejectFriendRequest extends _$RejectFriendRequest {
   FutureOr<void> build() {}
 
   Future<void> execute(String friendshipId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(friendsRepositoryProvider);
-      await repository.rejectRequest(friendshipId);
-      ref.invalidate(pendingRequestsProvider);
-    });
+    final repository = ref.read(friendsRepositoryProvider);
+    await repository.rejectRequest(friendshipId);
+    ref.invalidate(pendingRequestsProvider);
   }
 }
 
@@ -98,12 +89,9 @@ class RemoveFriend extends _$RemoveFriend {
   FutureOr<void> build() {}
 
   Future<void> execute(String friendshipId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(friendsRepositoryProvider);
-      await repository.removeFriend(friendshipId);
-      ref.invalidate(friendsListProvider);
-    });
+    final repository = ref.read(friendsRepositoryProvider);
+    await repository.removeFriend(friendshipId);
+    ref.invalidate(friendsListProvider);
   }
 }
 

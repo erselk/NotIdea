@@ -7,6 +7,7 @@ import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/features/splash/presentation/screens/splash_screen.dart';
 import 'package:notidea/features/auth/presentation/screens/login_screen.dart';
 import 'package:notidea/features/auth/presentation/screens/signup_screen.dart';
+import 'package:notidea/features/auth/presentation/screens/profile_setup_screen.dart';
 import 'package:notidea/features/notes/presentation/screens/notes_list_screen.dart';
 import 'package:notidea/features/notes/presentation/screens/note_editor_screen.dart';
 import 'package:notidea/features/notes/presentation/screens/note_detail_screen.dart';
@@ -37,7 +38,7 @@ GoRouter appRouter(AppRouterRef ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: RoutePaths.splash,
     debugLogDiagnostics: true,
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final session = Supabase.instance.client.auth.currentSession;
       final isAuthenticated = session != null;
       final currentPath = state.uri.path;
@@ -45,12 +46,26 @@ GoRouter appRouter(AppRouterRef ref) {
       final isAuthRoute =
           currentPath == RoutePaths.login || currentPath == RoutePaths.signup;
       final isSplash = currentPath == RoutePaths.splash;
+      final isProfileSetup = currentPath == RoutePaths.profileSetup;
 
       if (!isAuthenticated && !isAuthRoute && !isSplash) {
         return RoutePaths.login;
       }
 
+      if (isAuthenticated && isProfileSetup) {
+        return null;
+      }
+
       if (isAuthenticated && (isAuthRoute || isSplash)) {
+        final profile = await Supabase.instance.client
+            .from('profiles')
+            .select('id')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+        if (profile == null) {
+          return RoutePaths.profileSetup;
+        }
         return RoutePaths.home;
       }
 
@@ -71,6 +86,11 @@ GoRouter appRouter(AppRouterRef ref) {
         path: RoutePaths.signup,
         name: RouteNames.signup,
         builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.profileSetup,
+        name: RouteNames.profileSetup,
+        builder: (context, state) => const ProfileSetupScreen(),
       ),
 
       ShellRoute(

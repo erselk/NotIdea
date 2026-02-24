@@ -36,19 +36,27 @@ Future<ProfileModel?> profileById(ProfileByIdRef ref, String userId) async {
 }
 
 @riverpod
+class CreateProfile extends _$CreateProfile {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> execute(ProfileModel profile) async {
+    final repository = ref.read(profileRepositoryProvider);
+    await repository.createProfile(profile);
+    ref.invalidate(currentProfileProvider);
+  }
+}
+
+@riverpod
 class UpdateProfile extends _$UpdateProfile {
   @override
   FutureOr<void> build() {}
 
-  Future<ProfileModel?> execute(ProfileModel profile) async {
-    ProfileModel? updated;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(profileRepositoryProvider);
-      updated = await repository.updateProfile(profile);
-      ref.invalidate(currentProfileProvider);
-      ref.invalidate(profileByIdProvider(profile.id));
-    });
+  Future<ProfileModel> execute(ProfileModel profile) async {
+    final repository = ref.read(profileRepositoryProvider);
+    final updated = await repository.updateProfile(profile);
+    ref.invalidate(currentProfileProvider);
+    ref.invalidate(profileByIdProvider(profile.id));
     return updated;
   }
 }
@@ -58,23 +66,19 @@ class UploadAvatar extends _$UploadAvatar {
   @override
   FutureOr<void> build() {}
 
-  Future<String?> execute({
+  Future<String> execute({
     required String userId,
     required Uint8List bytes,
     required String fileExtension,
   }) async {
-    String? url;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(profileRepositoryProvider);
-      url = await repository.uploadAvatar(
-        userId: userId,
-        bytes: bytes,
-        fileExtension: fileExtension,
-      );
-      ref.invalidate(currentProfileProvider);
-      ref.invalidate(profileByIdProvider(userId));
-    });
+    final repository = ref.read(profileRepositoryProvider);
+    final url = await repository.uploadAvatar(
+      userId: userId,
+      bytes: bytes,
+      fileExtension: fileExtension,
+    );
+    ref.invalidate(currentProfileProvider);
+    ref.invalidate(profileByIdProvider(userId));
     return url;
   }
 }
@@ -85,10 +89,7 @@ class DeleteAccount extends _$DeleteAccount {
   FutureOr<void> build() {}
 
   Future<void> execute(String userId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(profileRepositoryProvider);
-      await repository.deleteAccount(userId);
-    });
+    final repository = ref.read(profileRepositoryProvider);
+    await repository.deleteAccount(userId);
   }
 }

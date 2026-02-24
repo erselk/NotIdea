@@ -12,7 +12,7 @@ class L10n {
   ];
 
   /// Varsayılan dil
-  static const defaultLocale = Locale('tr');
+  static const defaultLocale = Locale('en');
 
   /// Cihaz diline göre locale çözümleme
   static Locale? localeResolutionCallback(

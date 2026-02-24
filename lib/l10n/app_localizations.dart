@@ -1933,6 +1933,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Group Shared Notes'**
   String get groupSharedNotes;
+
+  /// No description provided for @completeYourProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Your Profile'**
+  String get completeYourProfile;
+
+  /// No description provided for @profileSetupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your details to get started'**
+  String get profileSetupSubtitle;
+
+  /// No description provided for @tapToAddPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add a profile photo'**
+  String get tapToAddPhoto;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @checkEmailToConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your email to confirm your account, then log in.'**
+  String get checkEmailToConfirm;
+
+  /// No description provided for @usernameTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This username is already taken'**
+  String get usernameTaken;
+
+  /// No description provided for @checkingUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking availability...'**
+  String get checkingUsername;
 }
 
 class _AppLocalizationsDelegate

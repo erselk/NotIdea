@@ -30,15 +30,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<UserModel> signUp({
     required String email,
     required String password,
-    required String displayName,
-    required String username,
   }) async {
-    return _remoteDatasource.signUp(
-      email: email,
-      password: password,
-      displayName: displayName,
-      username: username,
-    );
+    return _remoteDatasource.signUp(email: email, password: password);
   }
 
   @override

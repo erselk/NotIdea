@@ -22,9 +22,9 @@ dependencies:
   # Supabase
   supabase_flutter: ^2.9.0
 
-  # Local Database (Drift - SQL tabanlı, offline-first)
-  drift: ^2.22.1
-  sqlite3_flutter_libs: ^0.5.28
+  # Local Database (Hive CE - cross-platform, pure Dart)
+  hive_ce: ^2.7.0
+  hive_ce_flutter: ^2.3.4
   path_provider: ^2.1.5
   path: ^1.9.1
 
@@ -76,7 +76,7 @@ dev_dependencies:
   custom_lint: ^0.7.5
   freezed: ^3.0.0
   json_serializable: ^6.9.4
-  drift_dev: ^2.22.1
+  hive_ce_generator: ^1.7.0
   flutter_launcher_icons: ^0.14.3
 
 flutter_native_splash:

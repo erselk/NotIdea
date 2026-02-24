@@ -1,75 +1,144 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:notidea/features/notes/domain/models/note_model.dart';
+import 'package:notidea/features/profile/domain/models/profile_model.dart';
 
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
+class AppDatabase {
+  AppDatabase._();
+  static final AppDatabase instance = AppDatabase._();
 
-part 'app_database.g.dart';
+  static const String _notesBox = 'notes_cache';
+  static const String _profilesBox = 'profiles_cache';
+  static const String _searchBox = 'search_history';
+  static const String _prefsBox = 'app_prefs';
 
-class CachedNotes extends Table {
-  TextColumn get id => text()();
-  TextColumn get userId => text()();
-  TextColumn get title => text()();
-  TextColumn get content => text().withDefault(const Constant(''))();
-  TextColumn get color => text().nullable()();
-  TextColumn get visibility =>
-      text().withDefault(const Constant('private'))();
-  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
-  BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
-  DateTimeColumn get deletedAt => dateTime().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
-  TextColumn get tags => text().withDefault(const Constant(''))();
-  TextColumn get imageUrls => text().withDefault(const Constant(''))();
+  late Box<Map> _notes;
+  late Box<Map> _profiles;
+  late Box<List> _search;
+  late Box _prefs;
 
-  @override
-  Set<Column> get primaryKey => {id};
-}
+  bool _initialized = false;
 
-class CachedProfiles extends Table {
-  TextColumn get id => text()();
-  TextColumn get username => text()();
-  TextColumn get displayName => text().nullable()();
-  TextColumn get avatarUrl => text().nullable()();
-  TextColumn get bio => text().nullable()();
-  IntColumn get noteCount => integer().withDefault(const Constant(0))();
-  IntColumn get friendCount => integer().withDefault(const Constant(0))();
-  DateTimeColumn get cachedAt => dateTime()();
+  Future<void> init() async {
+    if (_initialized) return;
 
-  @override
-  Set<Column> get primaryKey => {id};
-}
+    await Hive.initFlutter();
 
-class SearchHistory extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get query => text()();
-  DateTimeColumn get searchedAt => dateTime()();
-}
+    _notes = await Hive.openBox<Map>(_notesBox);
+    _profiles = await Hive.openBox<Map>(_profilesBox);
+    _search = await Hive.openBox<List>(_searchBox);
+    _prefs = await Hive.openBox(_prefsBox);
 
-@DriftDatabase(tables: [CachedNotes, CachedProfiles, SearchHistory])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase._() : super(_openConnection());
-
-  static AppDatabase? _instance;
-  static AppDatabase get instance => _instance ??= AppDatabase._();
-
-  @override
-  int get schemaVersion => 1;
-
-  @override
-  MigrationStrategy get migration {
-    return MigrationStrategy(
-      onCreate: (m) => m.createAll(),
-      onUpgrade: (m, from, to) async {},
-    );
+    _initialized = true;
+    debugPrint('Hive: initialized with ${_notes.length} cached notes');
   }
-}
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dir.path, 'notidea_cache.db'));
-    return NativeDatabase.createInBackground(file);
-  });
+  // ── Notes ──
+
+  Future<void> cacheNote(NoteModel note) async {
+    await _notes.put(note.id, note.toJson());
+  }
+
+  Future<void> cacheNotes(List<NoteModel> notes) async {
+    final entries = <String, Map>{
+      for (final note in notes) note.id: note.toJson(),
+    };
+    await _notes.putAll(entries);
+  }
+
+  NoteModel? getNoteById(String id) {
+    final raw = _notes.get(id);
+    if (raw == null) return null;
+    return NoteModel.fromJson(Map<String, dynamic>.from(raw));
+  }
+
+  List<NoteModel> getNotesByUserId(String userId) {
+    return _notes.values
+        .map((raw) => NoteModel.fromJson(Map<String, dynamic>.from(raw)))
+        .where((n) => n.userId == userId && !n.isDeleted)
+        .toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+
+  List<NoteModel> getAllCachedNotes() {
+    return _notes.values
+        .map((raw) => NoteModel.fromJson(Map<String, dynamic>.from(raw)))
+        .toList();
+  }
+
+  List<NoteModel> searchNotes(String userId, String query) {
+    final q = query.toLowerCase();
+    return _notes.values
+        .map((raw) => NoteModel.fromJson(Map<String, dynamic>.from(raw)))
+        .where(
+          (n) =>
+              n.userId == userId &&
+              !n.isDeleted &&
+              (n.title.toLowerCase().contains(q) ||
+                  n.content.toLowerCase().contains(q) ||
+                  n.tags.any((t) => t.toLowerCase().contains(q))),
+        )
+        .toList();
+  }
+
+  Future<void> deleteNote(String id) async {
+    await _notes.delete(id);
+  }
+
+  Future<void> clearNotesCache() async {
+    await _notes.clear();
+  }
+
+  // ── Profiles ──
+
+  Future<void> cacheProfile(ProfileModel profile) async {
+    await _profiles.put(profile.id, profile.toJson());
+  }
+
+  ProfileModel? getProfileById(String id) {
+    final raw = _profiles.get(id);
+    if (raw == null) return null;
+    return ProfileModel.fromJson(Map<String, dynamic>.from(raw));
+  }
+
+  Future<void> clearProfilesCache() async {
+    await _profiles.clear();
+  }
+
+  // ── Search History ──
+
+  List<String> getRecentSearches({int limit = 10}) {
+    final history = _search.get('history')?.cast<String>() ?? <String>[];
+    return history.reversed.take(limit).toList();
+  }
+
+  Future<void> addSearch(String query) async {
+    final history = _search.get('history')?.cast<String>() ?? <String>[];
+    history.remove(query);
+    history.add(query);
+    if (history.length > 50) history.removeRange(0, history.length - 50);
+    await _search.put('history', history);
+  }
+
+  Future<void> clearSearchHistory() async {
+    await _search.delete('history');
+  }
+
+  // ── Preferences ──
+
+  T? getPref<T>(String key) => _prefs.get(key) as T?;
+  Future<void> setPref<T>(String key, T value) => _prefs.put(key, value);
+
+  // ── Lifecycle ──
+
+  Future<void> clearAll() async {
+    await _notes.clear();
+    await _profiles.clear();
+    await _search.clear();
+  }
+
+  Future<void> close() async {
+    await Hive.close();
+    _initialized = false;
+  }
 }

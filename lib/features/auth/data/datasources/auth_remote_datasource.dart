@@ -39,7 +39,7 @@ class AuthRemoteDatasource {
 
     final user = response.user;
     if (user == null) {
-      throw Exception('Giriş başarısız: kullanıcı bulunamadı');
+      throw Exception('Login failed: user not found');
     }
 
     final profile = await _client
@@ -62,8 +62,6 @@ class AuthRemoteDatasource {
   Future<UserModel> signUp({
     required String email,
     required String password,
-    required String displayName,
-    required String username,
   }) async {
     final response = await _auth.signUp(
       email: email,
@@ -72,22 +70,12 @@ class AuthRemoteDatasource {
 
     final user = response.user;
     if (user == null) {
-      throw Exception('Kayıt başarısız: kullanıcı oluşturulamadı');
+      throw Exception('Signup failed: could not create user');
     }
-
-    await _client.from('profiles').insert({
-      'id': user.id,
-      'username': username,
-      'display_name': displayName,
-      'created_at': DateTime.now().toIso8601String(),
-      'updated_at': DateTime.now().toIso8601String(),
-    });
 
     return UserModel(
       id: user.id,
       email: user.email ?? '',
-      displayName: displayName,
-      username: username,
       createdAt: DateTime.tryParse(user.createdAt),
     );
   }

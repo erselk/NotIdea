@@ -6,6 +6,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:notidea/app.dart';
 import 'package:notidea/config/env.dart';
 import 'package:notidea/config/supabase_config.dart';
+import 'package:notidea/core/database/app_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ Future<void> main() async {
   );
 
   await Env.load();
+  await AppDatabase.instance.init();
   await SupabaseConfig.initialize();
 
   timeago.setLocaleMessages('tr', timeago.TrMessages());

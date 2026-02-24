@@ -50,26 +50,22 @@ class CreateGroup extends _$CreateGroup {
   @override
   FutureOr<void> build() {}
 
-  Future<GroupModel?> execute({
+  Future<GroupModel> execute({
     required String name,
     String? description,
     List<String> memberIds = const [],
   }) async {
-    GroupModel? created;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final currentUser = await ref.read(currentUserProvider.future);
-      if (currentUser == null) throw Exception('User not authenticated');
+    final currentUser = await ref.read(currentUserProvider.future);
+    if (currentUser == null) throw Exception('User not authenticated');
 
-      final repository = ref.read(groupsRepositoryProvider);
-      created = await repository.createGroup(
-        name: name,
-        description: description,
-        ownerId: currentUser.id,
-        memberIds: memberIds,
-      );
-      ref.invalidate(myGroupsProvider);
-    });
+    final repository = ref.read(groupsRepositoryProvider);
+    final created = await repository.createGroup(
+      name: name,
+      description: description,
+      ownerId: currentUser.id,
+      memberIds: memberIds,
+    );
+    ref.invalidate(myGroupsProvider);
     return created;
   }
 }
@@ -79,15 +75,11 @@ class UpdateGroup extends _$UpdateGroup {
   @override
   FutureOr<void> build() {}
 
-  Future<GroupModel?> execute(GroupModel group) async {
-    GroupModel? updated;
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(groupsRepositoryProvider);
-      updated = await repository.updateGroup(group);
-      ref.invalidate(myGroupsProvider);
-      ref.invalidate(groupByIdProvider(group.id));
-    });
+  Future<GroupModel> execute(GroupModel group) async {
+    final repository = ref.read(groupsRepositoryProvider);
+    final updated = await repository.updateGroup(group);
+    ref.invalidate(myGroupsProvider);
+    ref.invalidate(groupByIdProvider(group.id));
     return updated;
   }
 }
@@ -98,12 +90,9 @@ class DeleteGroup extends _$DeleteGroup {
   FutureOr<void> build() {}
 
   Future<void> execute(String groupId) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(groupsRepositoryProvider);
-      await repository.deleteGroup(groupId);
-      ref.invalidate(myGroupsProvider);
-    });
+    final repository = ref.read(groupsRepositoryProvider);
+    await repository.deleteGroup(groupId);
+    ref.invalidate(myGroupsProvider);
   }
 }
 
@@ -116,13 +105,10 @@ class AddGroupMember extends _$AddGroupMember {
     required String groupId,
     required String userId,
   }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(groupsRepositoryProvider);
-      await repository.addMember(groupId: groupId, userId: userId);
-      ref.invalidate(groupMembersProvider(groupId));
-      ref.invalidate(groupByIdProvider(groupId));
-    });
+    final repository = ref.read(groupsRepositoryProvider);
+    await repository.addMember(groupId: groupId, userId: userId);
+    ref.invalidate(groupMembersProvider(groupId));
+    ref.invalidate(groupByIdProvider(groupId));
   }
 }
 
@@ -135,12 +121,9 @@ class RemoveGroupMember extends _$RemoveGroupMember {
     required String groupId,
     required String userId,
   }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(groupsRepositoryProvider);
-      await repository.removeMember(groupId: groupId, userId: userId);
-      ref.invalidate(groupMembersProvider(groupId));
-      ref.invalidate(groupByIdProvider(groupId));
-    });
+    final repository = ref.read(groupsRepositoryProvider);
+    await repository.removeMember(groupId: groupId, userId: userId);
+    ref.invalidate(groupMembersProvider(groupId));
+    ref.invalidate(groupByIdProvider(groupId));
   }
 }

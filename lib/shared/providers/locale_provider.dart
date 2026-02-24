@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,17 +17,7 @@ class LocaleNotifier extends _$LocaleNotifier {
   @override
   Locale build() {
     _loadSavedLocale();
-    return _getDeviceLocale();
-  }
-
-  /// Cihaz dilini algılayarak desteklenen bir locale döndürür
-  Locale _getDeviceLocale() {
-    final deviceLocale = ui.PlatformDispatcher.instance.locale;
-    final resolved = L10n.localeResolutionCallback(
-      deviceLocale,
-      L10n.supportedLocales,
-    );
-    return resolved ?? L10n.defaultLocale;
+    return L10n.defaultLocale;
   }
 
   Future<void> _loadSavedLocale() async {

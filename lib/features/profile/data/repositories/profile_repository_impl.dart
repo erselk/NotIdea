@@ -15,6 +15,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
+  Future<bool> isUsernameTaken(String username, {String? excludeUserId}) async {
+    return _remoteDatasource.isUsernameTaken(username, excludeUserId: excludeUserId);
+  }
+
+  @override
+  Future<ProfileModel> createProfile(ProfileModel profile) async {
+    return _remoteDatasource.createProfile(profile);
+  }
+
+  @override
   Future<ProfileModel> updateProfile(ProfileModel profile) async {
     return _remoteDatasource.updateProfile(profile);
   }

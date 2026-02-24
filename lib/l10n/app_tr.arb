@@ -374,5 +374,13 @@
   "publicNotes": "Herkese Açık",
   "friendsNotes": "Arkadaşlar",
   "clearFilters": "Filtreleri Temizle",
-  "groupSharedNotes": "Grup Paylaşılan Notlar"
+  "groupSharedNotes": "Grup Paylaşılan Notlar",
+
+  "completeYourProfile": "Profilini Tamamla",
+  "profileSetupSubtitle": "Başlamak için bilgilerini ekle",
+  "tapToAddPhoto": "Profil fotoğrafı eklemek için dokun",
+  "getStarted": "Başla",
+  "checkEmailToConfirm": "Hesabınızı onaylamak için e-postanızı kontrol edin, ardından giriş yapın.",
+  "usernameTaken": "Bu kullanıcı adı zaten alınmış",
+  "checkingUsername": "Uygunluk kontrol ediliyor..."
 }

@@ -958,4 +958,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get groupSharedNotes => 'Grup Paylaşılan Notlar';
+
+  @override
+  String get completeYourProfile => 'Profilini Tamamla';
+
+  @override
+  String get profileSetupSubtitle => 'Başlamak için bilgilerini ekle';
+
+  @override
+  String get tapToAddPhoto => 'Profil fotoğrafı eklemek için dokun';
+
+  @override
+  String get getStarted => 'Başla';
+
+  @override
+  String get checkEmailToConfirm =>
+      'Hesabınızı onaylamak için e-postanızı kontrol edin, ardından giriş yapın.';
+
+  @override
+  String get usernameTaken => 'Bu kullanıcı adı zaten alınmış';
+
+  @override
+  String get checkingUsername => 'Uygunluk kontrol ediliyor...';
 }

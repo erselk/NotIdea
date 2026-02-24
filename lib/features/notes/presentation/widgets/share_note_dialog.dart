@@ -95,7 +95,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
 
   void _copyLink() {
     final link =
-        'https://notidea.app/notes/${widget.note.id}';
+        'https://www.notidea.ersel.dev/notes/${widget.note.id}';
     Clipboard.setData(ClipboardData(text: link));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(

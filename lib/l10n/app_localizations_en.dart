@@ -950,4 +950,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get groupSharedNotes => 'Group Shared Notes';
+
+  @override
+  String get completeYourProfile => 'Complete Your Profile';
+
+  @override
+  String get profileSetupSubtitle => 'Add your details to get started';
+
+  @override
+  String get tapToAddPhoto => 'Tap to add a profile photo';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get checkEmailToConfirm =>
+      'Please check your email to confirm your account, then log in.';
+
+  @override
+  String get usernameTaken => 'This username is already taken';
+
+  @override
+  String get checkingUsername => 'Checking availability...';
 }
