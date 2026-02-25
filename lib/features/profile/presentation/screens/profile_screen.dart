@@ -7,6 +7,7 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_stats_provider.dart';
+import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -94,7 +95,7 @@ class ProfileScreen extends ConsumerWidget {
                   Container(
                     height: 150, // Resmin tam ortasinda hizalanacak seviyeye daraltildi
                     width: double.infinity,
-                    color: const Color(0xFF06A74D),
+                    color: theme.colorScheme.primary,
                   ),
                   Column(
                     children: [
@@ -125,8 +126,8 @@ class ProfileScreen extends ConsumerWidget {
                               child: GestureDetector(
                                 onTap: () => context.push('/profile/edit'),
                                 child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF06A74D), // Green background
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary, // Green background
                                     shape: BoxShape.circle,
                                   ),
                                   padding: const EdgeInsets.all(7), // Smaller padding for smaller circle
@@ -211,8 +212,8 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 60), // Uzatıldı
-                        child: const Divider(
-                          color: Color(0xFF06A74D), 
+                        child: Divider(
+                          color: theme.colorScheme.primary, 
                           thickness: 3, // Hafif Kalınlaştırıldı
                         ),
                       ),
@@ -228,7 +229,10 @@ class ProfileScreen extends ConsumerWidget {
                               if (isOwnProfile) {
                                 context.push('/profile/edit');
                               } else {
-                                // TODO: Arkadaş ekleme
+                                ref.read(sendFriendRequestProvider.notifier).execute(profile.id);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(l10n.friendRequestSent ?? 'Friend request sent')),
+                                );
                               }
                             },
                             borderRadius: BorderRadius.circular(8),
@@ -239,7 +243,7 @@ class ProfileScreen extends ConsumerWidget {
                                 children: [
                                   Icon(
                                     isOwnProfile ? Icons.edit_outlined : Icons.person_add_outlined, 
-                                    color: const Color(0xFF06A74D), // Green icon
+                                    color: theme.colorScheme.primary, // Green icon
                                     size: 28 // Büyütüldü
                                   ),
                                   const SizedBox(width: 12),

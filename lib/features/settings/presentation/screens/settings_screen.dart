@@ -58,7 +58,7 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(l10n.changePassword),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
-              // TODO: Navigate to change password flow
+              context.goNamed(RouteNames.changePassword);
             },
           ),
           Divider(height: 1, color: appColors.divider),

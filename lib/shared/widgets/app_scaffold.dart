@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notidea/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
+import 'package:notidea/core/theme/theme_extensions.dart';
 
 class AppScaffold extends ConsumerStatefulWidget {
   const AppScaffold({super.key, required this.child});
@@ -32,7 +32,7 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawerScrimColor: const Color(0xFF374241).withOpacity(0.12),
+      drawerScrimColor: Theme.of(context).colorScheme.scrim.withOpacity(0.12),
       drawer: const _AppDrawer(),
       body: widget.child,
     );
@@ -42,13 +42,11 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
 class _AppDrawer extends ConsumerWidget {
   const _AppDrawer();
 
-  static const _green = Color(0xFF06A74D);
-  static const _selectedBg = Color(0xFFE5EAE4);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final appColors = theme.extension<AppColorsExtension>()!;
     final profileAsync = ref.watch(currentProfileProvider);
     final profile = profileAsync.value;
     final currentPath = GoRouterState.of(context).uri.path;
@@ -83,8 +81,8 @@ class _AppDrawer extends ConsumerWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: _green, size: 30),
+                    icon: Icon(Icons.arrow_back_rounded,
+                        color: theme.colorScheme.primary, size: 30),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -131,9 +129,9 @@ class _AppDrawer extends ConsumerWidget {
 
               // ─── Yeşil çizgi ───
               const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Divider(height: 1, thickness: 2, color: _green),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Divider(height: 1, thickness: 2, color: theme.colorScheme.primary),
               ),
               const SizedBox(height: 24),
 
@@ -149,7 +147,7 @@ class _AppDrawer extends ConsumerWidget {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Material(
-                        color: isSelected ? _selectedBg : Colors.transparent,
+                        color: isSelected ? appColors.surfaceVariant : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
@@ -162,7 +160,7 @@ class _AppDrawer extends ConsumerWidget {
                                 horizontal: 16, vertical: 12),
                             child: Row(
                               children: [
-                                Icon(item.icon, size: 24, color: _green),
+                                Icon(item.icon, size: 24, color: theme.colorScheme.primary),
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Text(

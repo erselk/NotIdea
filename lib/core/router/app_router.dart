@@ -23,6 +23,7 @@ import 'package:notidea/features/trash/presentation/screens/trash_screen.dart';
 import 'package:notidea/features/shared_notes/presentation/screens/shared_notes_screen.dart';
 import 'package:notidea/features/search/presentation/screens/search_screen.dart';
 import 'package:notidea/features/settings/presentation/screens/settings_screen.dart';
+import 'package:notidea/features/settings/presentation/screens/change_password_screen.dart';
 import 'package:notidea/features/legal/presentation/screens/legal_screen.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 
@@ -225,6 +226,12 @@ GoRouter appRouter(Ref ref) {
                 name: RouteNames.settings,
                 builder: (context, state) => const SettingsScreen(),
                 routes: [
+                  GoRoute(
+                    path: RoutePaths.changePassword,
+                    name: RouteNames.changePassword,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const ChangePasswordScreen(),
+                  ),
                   GoRoute(
                     path: 'privacy-policy',
                     name: RouteNames.privacyPolicy,

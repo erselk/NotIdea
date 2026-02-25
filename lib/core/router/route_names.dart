@@ -36,6 +36,7 @@ class RouteNames {
   static const String sharedNotes = 'sharedNotes';
   static const String search = 'search';
   static const String settings = 'settings';
+  static const String changePassword = 'changePassword';
 
   // Hukuki
   static const String legal = 'legal';
@@ -81,6 +82,7 @@ class RoutePaths {
   static const String sharedNotes = 'shared';
   static const String search = 'search';
   static const String settings = 'settings';
+  static const String changePassword = 'change-password';
 
   // Hukuki
   static const String legal = 'legal';

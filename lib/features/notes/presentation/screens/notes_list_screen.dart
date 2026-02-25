@@ -7,10 +7,12 @@ import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/domain/repositories/notes_repository.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/core/theme/app_colors.dart';
+import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NotesListScreen extends ConsumerStatefulWidget {
   const NotesListScreen({super.key});
@@ -98,7 +100,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 title: Text(l10n.share),
                 onTap: () {
                   Navigator.pop(ctx);
-                  // TODO: Paylaşım ekranı
+                  Share.share('${note.title}\n\n${note.content}');
                 },
               ),
               ListTile(
@@ -179,6 +181,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final appColors = theme.extension<AppColorsExtension>()!;
     final notesAsync = ref.watch(userNotesProvider);
 
     return Scaffold(
@@ -245,20 +248,20 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE5EAE4),
+                          color: appColors.surfaceVariant,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: TextField(
                           controller: _searchController,
                           autofocus: true,
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            color: Colors.black87,
+                          style: TextStyle(
+                            color: appColors.textPrimary,
                             fontSize: 16,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Search in the Notes',
-                            hintStyle: TextStyle(color: Colors.black38),
+                            hintStyle: TextStyle(color: appColors.textTertiary),
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
