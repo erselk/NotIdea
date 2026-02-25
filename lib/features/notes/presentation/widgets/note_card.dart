@@ -17,7 +17,57 @@ class UnderlineSyntax extends md.DelimiterSyntax {
         );
 }
 
-class NoteCard extends StatelessWidget {
+class _ImagePlaceholderEmbedBuilder extends quill.EmbedBuilder {
+  final ThemeData theme;
+  final Color onCardColor;
+
+  const _ImagePlaceholderEmbedBuilder({
+    required this.theme,
+    required this.onCardColor,
+  });
+
+  @override
+  String get key => 'image';
+
+  @override
+  bool get expanded => false;
+
+  @override
+  WidgetSpan buildWidgetSpan(Widget widget) {
+    return WidgetSpan(child: widget, alignment: PlaceholderAlignment.middle);
+  }
+
+  @override
+  Widget build(BuildContext context, quill.EmbedContext embedContext) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2, top: 2, right: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      decoration: BoxDecoration(
+        color: onCardColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.image_outlined,
+              size: 12, color: onCardColor.withValues(alpha: 0.8)),
+          const SizedBox(width: 4),
+          Text(
+            'Görsel',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: onCardColor.withValues(alpha: 0.8),
+              fontSize: 10,
+              height: 1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NoteCard extends StatefulWidget {
   final NoteModel note;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
@@ -29,12 +79,67 @@ class NoteCard extends StatelessWidget {
     this.onLongPress,
   });
 
+  @override
+  State<NoteCard> createState() => _NoteCardState();
+}
+
+class _NoteCardState extends State<NoteCard> {
+  late quill.QuillController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _initController();
+  }
+
+  @override
+  void didUpdateWidget(NoteCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.note.content != widget.note.content) {
+      _initController();
+    }
+  }
+
+  void _initController() {
+    final customMdToDelta = MarkdownToDelta(
+      markdownDocument: md.Document(
+        encodeHtml: false,
+        extensionSet: md.ExtensionSet.gitHubFlavored,
+        inlineSyntaxes: [UnderlineSyntax()],
+      ),
+      customElementToInlineAttribute: {
+        'u': (_) => [quill.Attribute.underline],
+      },
+    );
+    try {
+      final delta = customMdToDelta.convert(widget.note.content);
+      _controller = quill.QuillController(
+        document: quill.Document.fromDelta(delta),
+        selection: const TextSelection.collapsed(offset: 0),
+        readOnly: true,
+      );
+    } catch (_) {
+      // Fallback
+      _controller = quill.QuillController(
+        document: quill.Document(),
+        selection: const TextSelection.collapsed(offset: 0),
+        readOnly: true,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Color _parseNoteColor(BuildContext context) {
-    if (note.color == null || note.color!.isEmpty) {
+    final hex = widget.note.color?.replaceFirst('#', '');
+    if (hex == null || hex.isEmpty) {
       return Theme.of(context).colorScheme.surfaceContainerHighest;
     }
     try {
-      final hex = note.color!.replaceFirst('#', '');
       return Color(int.parse('FF$hex', radix: 16));
     } catch (_) {
       return Theme.of(context).colorScheme.surfaceContainerHighest;
@@ -42,7 +147,7 @@ class NoteCard extends StatelessWidget {
   }
 
   IconData _visibilityIcon() {
-    return switch (note.visibility) {
+    return switch (widget.note.visibility) {
       NoteVisibility.private_ => Icons.lock_outline,
       NoteVisibility.public_ => Icons.public,
       NoteVisibility.friends => Icons.people_outline,
@@ -57,34 +162,6 @@ class NoteCard extends StatelessWidget {
     final onCardColor =
         brightness == Brightness.dark ? Colors.white : Colors.black87;
 
-    // Parse pure text from Markdown via Quill Delta mechanism.
-    final customMdToDelta = MarkdownToDelta(
-      markdownDocument: md.Document(
-        encodeHtml: false,
-        extensionSet: md.ExtensionSet.gitHubFlavored,
-        inlineSyntaxes: [UnderlineSyntax()],
-      ),
-      customElementToInlineAttribute: {
-        'u': (_) => [quill.Attribute.underline],
-      },
-    );
-    
-    String plainTextContent = note.content;
-    try {
-      final delta = customMdToDelta.convert(note.content);
-      final rawStr = quill.Document.fromDelta(delta).toPlainText().trim();
-      if (rawStr.isNotEmpty) {
-        plainTextContent = rawStr;
-      }
-    } catch (_) {
-      // Fallback
-      plainTextContent = note.content;
-    }
-
-    final contentPreview = plainTextContent.length > 120
-        ? '${plainTextContent.substring(0, 120)}…'
-        : plainTextContent;
-
     return Card(
       color: cardColor,
       elevation: 0,
@@ -96,8 +173,8 @@ class NoteCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
+        onTap: widget.onTap,
+        onLongPress: widget.onLongPress,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(14),
@@ -109,7 +186,7 @@ class NoteCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      note.title.isEmpty ? 'Untitled' : note.title,
+                      widget.note.title.isEmpty ? 'Untitled' : widget.note.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -118,7 +195,7 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (note.isFavorite)
+                  if (widget.note.isFavorite)
                     Padding(
                       padding: const EdgeInsets.only(left: 4),
                       child: Icon(
@@ -132,15 +209,39 @@ class NoteCard extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Content preview
-              if (contentPreview.isNotEmpty)
+              if (widget.note.content.isNotEmpty)
                 Expanded(
-                  child: Text(
-                    contentPreview,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: onCardColor.withValues(alpha: 0.75),
-                      height: 1.4,
+                  child: ClipRect(
+                    child: IgnorePointer(
+                      child: quill.QuillEditor(
+                        focusNode: FocusNode(),
+                        scrollController: ScrollController(),
+                        controller: _controller,
+                        config: quill.QuillEditorConfig(
+                          checkBoxReadOnly: true,
+                          scrollable: false,
+                          expands: false,
+                          padding: EdgeInsets.zero,
+                          embedBuilders: [
+                            _ImagePlaceholderEmbedBuilder(
+                              theme: theme,
+                              onCardColor: onCardColor,
+                            ),
+                          ],
+                          customStyles: quill.DefaultStyles(
+                            paragraph: quill.DefaultTextBlockStyle(
+                              theme.textTheme.bodySmall!.copyWith(
+                                color: onCardColor.withValues(alpha: 0.75),
+                                height: 1.4,
+                              ),
+                              const quill.HorizontalSpacing(0, 0),
+                              const quill.VerticalSpacing(0, 0),
+                              const quill.VerticalSpacing(0, 0),
+                              null,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -158,7 +259,7 @@ class NoteCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
-                      timeago.format(note.updatedAt),
+                      timeago.format(widget.note.updatedAt),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.labelSmall?.copyWith(
@@ -166,7 +267,7 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (note.tags.isNotEmpty)
+                  if (widget.note.tags.isNotEmpty)
                     Icon(
                       Icons.label_outline,
                       size: 14,

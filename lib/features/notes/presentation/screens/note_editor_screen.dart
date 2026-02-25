@@ -177,6 +177,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         }
 
         final markdownContent = _deltaToMd.convert(_contentController.document.toDelta());
+        debugPrint('--- SAVED MARKDOWN ---');
+        debugPrint(markdownContent);
+        debugPrint('----------------------');
         final updated = existing.copyWith(
           title: _titleController.text.trim(),
           content: markdownContent,
