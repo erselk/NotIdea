@@ -4,6 +4,7 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/trash/presentation/providers/trash_provider.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TrashScreen extends ConsumerWidget {
   const TrashScreen({super.key});
@@ -138,11 +139,16 @@ class TrashScreen extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                  child: ListView.separated(
+                Expanded(
+                  child: MasonryGridView.builder(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 4),
+                    gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
                     itemCount: notes.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 4),
                     itemBuilder: (context, index) {
                       final note = notes[index];
                       final deletedDate = note.deletedAt?.formattedDate ?? '';
@@ -151,95 +157,101 @@ class TrashScreen extends ConsumerWidget {
                         elevation: 0,
                         color: appColors.surface,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(16),
                           side: BorderSide(
                             color: appColors.border.withValues(alpha: 0.3),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                note.title.isEmpty ? 'Untitled' : note.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: appColors.textPrimary,
-                                ),
-                              ),
-                              if (note.content.isNotEmpty) ...[
-                                const SizedBox(height: 4),
-                                Text(
-                                  note.content.length > 80
-                                      ? '${note.content.substring(0, 80)}...'
-                                      : note.content,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: appColors.textTertiary,
-                                  ),
-                                ),
-                              ],
-                              const SizedBox(height: 8),
-                              Row(
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () {
+                            // Show bottom sheet with actions for trash
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (ctx) => Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.schedule, size: 14,
-                                      color: appColors.textTertiary),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      l10n.deletedAtDate(deletedDate),
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                        color: appColors.textTertiary,
-                                      ),
-                                    ),
+                                  ListTile(
+                                    leading: const Icon(Icons.restore),
+                                    title: Text(l10n.restoreNote),
+                                    onTap: () {
+                                      Navigator.pop(ctx);
+                                      ref
+                                          .read(restoreNoteProvider.notifier)
+                                          .execute(note.id);
+                                    },
                                   ),
-                                  TextButton.icon(
-                                    onPressed: () => ref
-                                        .read(restoreNoteProvider.notifier)
-                                        .execute(note.id),
-                                    icon: const Icon(Icons.restore, size: 16),
-                                    label: Text(l10n.restoreNote),
-                                    style: TextButton.styleFrom(
-                                      visualDensity: VisualDensity.compact,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  TextButton.icon(
-                                    onPressed: () => _confirmPermanentDelete(
-                                      context,
-                                      ref,
-                                      l10n,
-                                      theme,
-                                      note.id,
-                                    ),
-                                    icon: Icon(
-                                      Icons.delete_forever,
-                                      size: 16,
-                                      color: theme.colorScheme.error,
-                                    ),
-                                    label: Text(
-                                      l10n.deletePermanently,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.error,
-                                      ),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                      visualDensity: VisualDensity.compact,
-                                    ),
+                                  ListTile(
+                                    leading: Icon(Icons.delete_forever, color: theme.colorScheme.error),
+                                    title: Text(l10n.deletePermanently, style: TextStyle(color: theme.colorScheme.error)),
+                                    onTap: () {
+                                      Navigator.pop(ctx);
+                                      _confirmPermanentDelete(
+                                        context,
+                                        ref,
+                                        l10n,
+                                        theme,
+                                        note.id,
+                                      );
+                                    },
                                   ),
                                 ],
                               ),
-                            ],
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  note.title.isEmpty ? 'Untitled' : note.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: appColors.textPrimary,
+                                  ),
+                                ),
+                                if (note.content.isNotEmpty) ...[
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    note.content.length > 100
+                                        ? '${note.content.substring(0, 100)}...'
+                                        : note.content,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: appColors.textTertiary,
+                                    ),
+                                  ),
+                                ],
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Icon(Icons.auto_delete_outlined, size: 12,
+                                        color: appColors.textTertiary),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        deletedDate,
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
+                                          color: appColors.textTertiary,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     },
                   ),
+                ),
                 ),
               ],
             );

@@ -8,9 +8,11 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/explore/presentation/providers/explore_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
+import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -187,12 +189,20 @@ class _PublicNotesView extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
+          return MasonryGridView.builder(
             padding: const EdgeInsets.all(12),
+            gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
             itemCount: notes.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
-              return _ExploreNoteCard(note: notes[index]);
+              final note = notes[index];
+              return NoteCard(
+                note: note,
+                onTap: () => context.push('/home/editor/${note.id}'),
+              );
             },
           );
         },
@@ -230,12 +240,20 @@ class _SearchResultsView extends ConsumerWidget {
           );
         }
 
-        return ListView.separated(
+        return MasonryGridView.builder(
           padding: const EdgeInsets.all(12),
+          gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+          ),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
           itemCount: notes.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
-            return _ExploreNoteCard(note: notes[index]);
+            final note = notes[index];
+            return NoteCard(
+              note: note,
+              onTap: () => context.push('/home/editor/${note.id}'),
+            );
           },
         );
       },
@@ -243,116 +261,3 @@ class _SearchResultsView extends ConsumerWidget {
   }
 }
 
-class _ExploreNoteCard extends ConsumerWidget {
-  const _ExploreNoteCard({required this.note});
-
-  final NoteModel note;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final appColors = theme.extension<AppColorsExtension>()!;
-    final authorAsync = ref.watch(profileByIdProvider(note.userId));
-
-    final contentPreview = note.content.length > 150
-        ? '${note.content.substring(0, 150)}...'
-        : note.content;
-
-    return Card(
-      elevation: 0,
-      color: appColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: appColors.border.withValues(alpha: 0.3)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/home/editor/${note.id}'),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                note.title.isEmpty ? 'Untitled' : note.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: appColors.textPrimary,
-                ),
-              ),
-              if (contentPreview.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  contentPreview,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: appColors.textSecondary,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  authorAsync.when(
-                    loading: () => const SizedBox(width: 20, height: 20),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (profile) {
-                      if (profile == null) return const SizedBox.shrink();
-                      return GestureDetector(
-                        onTap: () => context.push('/profile/user/${note.userId}'),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: appColors.surfaceVariant,
-                              backgroundImage: profile.avatarUrl != null
-                                  ? CachedNetworkImageProvider(
-                                      profile.avatarUrl!)
-                                  : null,
-                              child: profile.avatarUrl == null
-                                  ? Text(
-                                      (profile.displayName ?? profile.username)[0]
-                                          .toUpperCase(),
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                        color: appColors.primary,
-                                        fontSize: 10,
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              profile.displayName ?? profile.username,
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: appColors.textSecondary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  const Spacer(),
-                  Text(
-                    timeago.format(note.createdAt),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: appColors.textTertiary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
