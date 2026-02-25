@@ -30,7 +30,6 @@ class AppDatabase {
     _prefs = await Hive.openBox(_prefsBox);
 
     _initialized = true;
-    debugPrint('Hive: initialized with ${_notes.length} cached notes');
   }
 
   // ── Notes ──

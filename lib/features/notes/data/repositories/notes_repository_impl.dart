@@ -21,14 +21,44 @@ class NotesRepositoryImpl implements NotesRepository {
     int limit = 20,
   }) async {
     try {
-      final notes = await _remoteDatasource.getUserNotes(
+      final remoteNotes = await _remoteDatasource.getUserNotes(
         userId: userId,
         filter: filter,
         offset: offset,
         limit: limit,
       );
-      await _localDatasource.cacheNotes(notes);
-      return notes;
+      
+      final localNotes = await _localDatasource.getCachedNotes(userId);
+      final remoteNotesMap = {for (var n in remoteNotes) n.id: n};
+      
+      // Senkronizasyon: Lokaldeki not daha yeniyse veya uzakta yoksa uzaya gönder
+      for (final local in localNotes) {
+        final remote = remoteNotesMap[local.id];
+        if (remote == null) {
+          // Uzakta yok, oluştur
+          try {
+            if (!local.isDeleted) {
+              await _remoteDatasource.createNote(local);
+            }
+          } catch (_) {}
+        } else if (local.updatedAt.isAfter(remote.updatedAt)) {
+          // Lokal daha yeni, güncelle
+          try {
+            await _remoteDatasource.updateNote(local);
+          } catch (_) {}
+        }
+      }
+
+      // Senkronizasyon sonrası yeniden çek veya şimdilik cache'i remote ile güncelle
+      final updatedRemoteNotes = await _remoteDatasource.getUserNotes(
+        userId: userId,
+        filter: filter,
+        offset: offset,
+        limit: limit,
+      );
+      
+      await _localDatasource.cacheNotes(updatedRemoteNotes);
+      return updatedRemoteNotes;
     } catch (_) {
       return _localDatasource.getCachedNotes(userId);
     }
@@ -49,27 +79,43 @@ class NotesRepositoryImpl implements NotesRepository {
 
   @override
   Future<NoteModel> createNote(NoteModel note) async {
-    final created = await _remoteDatasource.createNote(note);
-    await _localDatasource.cacheNote(created);
-    return created;
+    try {
+      final created = await _remoteDatasource.createNote(note);
+      await _localDatasource.cacheNote(created);
+      return created;
+    } catch (_) {
+      // Çevrimdışı kayıt (Offline Save)
+      await _localDatasource.cacheNote(note);
+      return note;
+    }
   }
 
   @override
   Future<NoteModel> updateNote(NoteModel note) async {
-    final updated = await _remoteDatasource.updateNote(note);
-    await _localDatasource.cacheNote(updated);
-    return updated;
+    try {
+      final updated = await _remoteDatasource.updateNote(note);
+      await _localDatasource.cacheNote(updated);
+      return updated;
+    } catch (_) {
+      // Çevrimdışı kayıt (Offline Save)
+      await _localDatasource.cacheNote(note);
+      return note;
+    }
   }
 
   @override
   Future<void> softDeleteNote(String noteId) async {
-    await _remoteDatasource.softDeleteNote(noteId);
+    try {
+      await _remoteDatasource.softDeleteNote(noteId);
+    } catch (_) {} // Ağ yoksa yoksay
     await _localDatasource.deleteCachedNote(noteId);
   }
 
   @override
   Future<void> permanentlyDeleteNote(String noteId) async {
-    await _remoteDatasource.permanentlyDeleteNote(noteId);
+    try {
+      await _remoteDatasource.permanentlyDeleteNote(noteId);
+    } catch (_) {} // Ağ yoksa yoksay
     await _localDatasource.deleteCachedNote(noteId);
   }
 

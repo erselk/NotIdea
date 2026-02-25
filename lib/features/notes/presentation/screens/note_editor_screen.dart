@@ -15,6 +15,7 @@ import 'package:notidea/features/auth/presentation/providers/auth_provider.dart'
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
+import 'package:notidea/config/supabase_config.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';
@@ -177,9 +178,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         }
 
         final markdownContent = _deltaToMd.convert(_contentController.document.toDelta());
-        debugPrint('--- SAVED MARKDOWN ---');
-        debugPrint(markdownContent);
-        debugPrint('----------------------');
+
         final updated = existing.copyWith(
           title: _titleController.text.trim(),
           content: markdownContent,
@@ -699,7 +698,32 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       
       final index = _contentController.selection.baseOffset;
       final length = _contentController.selection.extentOffset - index;
-      _contentController.replaceText(index, length, quill.BlockEmbed.image(file.path), null);
+      
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Yükleniyor...'), duration: Duration(seconds: 1)),
+        );
+
+        final authState = ref.read(authNotifierProvider);
+        final userId = authState.user?.id ?? 'anonymous';
+        final ext = file.path.split('.').last;
+        final fileName = 'user_$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
+        
+        final bytes = await file.readAsBytes();
+        await SupabaseConfig.storage.from('images').uploadBinary(
+          fileName, 
+          bytes,
+        );
+        
+        final imageUrl = SupabaseConfig.storage.from('images').getPublicUrl(fileName);
+        _contentController.replaceText(index, length, quill.BlockEmbed.image(imageUrl), null);
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Görsel yüklenemedi: $e')),
+          );
+        }
+      }
     }
 
     return Container(
