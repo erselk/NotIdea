@@ -27,6 +27,17 @@ class NoteEditorScreen extends ConsumerStatefulWidget {
   ConsumerState<NoteEditorScreen> createState() => _NoteEditorScreenState();
 }
 
+class UnderlineSyntax extends md.DelimiterSyntax {
+  UnderlineSyntax()
+      : super(
+          r'\+\+',
+          requiresDelimiterRun: true,
+          allowIntraWord: true,
+          startCharacter: 43,
+          tags: [md.DelimiterTag('u', 2)],
+        );
+}
+
 class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   final _titleController = TextEditingController();
   late quill.QuillController _contentController;
@@ -36,10 +47,42 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   final _mdToDelta = MarkdownToDelta(
     markdownDocument: md.Document(
       encodeHtml: false, 
-      extensionSet: md.ExtensionSet.gitHubFlavored
-    )
+      extensionSet: md.ExtensionSet.gitHubFlavored,
+      inlineSyntaxes: [UnderlineSyntax()],
+    ),
+    customElementToInlineAttribute: {
+      'u': (_) => [quill.Attribute.underline],
+    },
   );
-  final _deltaToMd = DeltaToMarkdown();
+  
+  final _deltaToMd = DeltaToMarkdown(
+    customTextAttrsHandlers: {
+      quill.Attribute.italic.key: CustomAttributeHandler(
+        beforeContent: (attribute, node, output) {
+          if (node.previous?.style.attributes.containsKey(attribute.key) != true) {
+            output.write('*');
+          }
+        },
+        afterContent: (attribute, node, output) {
+          if (node.next?.style.attributes.containsKey(attribute.key) != true) {
+            output.write('*');
+          }
+        },
+      ),
+      quill.Attribute.underline.key: CustomAttributeHandler(
+        beforeContent: (attribute, node, output) {
+          if (node.previous?.style.attributes.containsKey(attribute.key) != true) {
+            output.write('++');
+          }
+        },
+        afterContent: (attribute, node, output) {
+          if (node.next?.style.attributes.containsKey(attribute.key) != true) {
+            output.write('++');
+          }
+        },
+      ),
+    }
+  );
 
   bool _showColorPalette = false;
   bool _isPreview = false;
@@ -220,7 +263,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               setState(() {
                 _titleController.text = _initialTitle;
                 final delta = _mdToDelta.convert(_initialContent);
-                _contentController.document = quill.Document.fromDelta(delta);
+                final newDoc = quill.Document.fromDelta(delta);
+                _contentController.document = newDoc;
+                newDoc.changes.listen((_) => _onContentChanged());
                 _visibility = _initialVisibility;
                 _selectedColor = _initialColor;
                 _hasUnsavedChanges = false;
@@ -790,7 +835,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         if (note != null && !_isInitialized) {
           _titleController.text = note.title;
           final delta = _mdToDelta.convert(note.content);
-          _contentController.document = quill.Document.fromDelta(delta);
+          final newDoc = quill.Document.fromDelta(delta);
+          _contentController.document = newDoc;
+          newDoc.changes.listen((_) => _onContentChanged());
           _visibility = note.visibility;
           _selectedColor = note.color;
           _isFavorite = note.isFavorite;
@@ -822,10 +869,16 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     };
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
-        if (didPop && _hasUnsavedChanges) {
+        if (didPop) return;
+        
+        if (_hasUnsavedChanges) {
           await _save(showSnackbar: false);
+        }
+        
+        if (context.mounted) {
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -837,7 +890,14 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           iconTheme: IconThemeData(color: iconColor),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: _saveAndPop,
+            onPressed: () async {
+              if (_hasUnsavedChanges) {
+                await _save(showSnackbar: false);
+              }
+              if (context.mounted) {
+                context.pop();
+              }
+            },
           ),
           actions: [
             IconButton(

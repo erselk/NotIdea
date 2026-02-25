@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:markdown_quill/markdown_quill.dart';
+import 'package:markdown/markdown.dart' as md;
+
+class UnderlineSyntax extends md.DelimiterSyntax {
+  UnderlineSyntax()
+      : super(
+          r'\+\+',
+          requiresDelimiterRun: true,
+          allowIntraWord: true,
+          startCharacter: 43,
+          tags: [md.DelimiterTag('u', 2)],
+        );
+}
 
 class NoteCard extends StatelessWidget {
   final NoteModel note;
@@ -43,9 +57,33 @@ class NoteCard extends StatelessWidget {
     final onCardColor =
         brightness == Brightness.dark ? Colors.white : Colors.black87;
 
-    final contentPreview = note.content.length > 120
-        ? '${note.content.substring(0, 120)}…'
-        : note.content;
+    // Parse pure text from Markdown via Quill Delta mechanism.
+    final customMdToDelta = MarkdownToDelta(
+      markdownDocument: md.Document(
+        encodeHtml: false,
+        extensionSet: md.ExtensionSet.gitHubFlavored,
+        inlineSyntaxes: [UnderlineSyntax()],
+      ),
+      customElementToInlineAttribute: {
+        'u': (_) => [quill.Attribute.underline],
+      },
+    );
+    
+    String plainTextContent = note.content;
+    try {
+      final delta = customMdToDelta.convert(note.content);
+      final rawStr = quill.Document.fromDelta(delta).toPlainText().trim();
+      if (rawStr.isNotEmpty) {
+        plainTextContent = rawStr;
+      }
+    } catch (_) {
+      // Fallback
+      plainTextContent = note.content;
+    }
+
+    final contentPreview = plainTextContent.length > 120
+        ? '${plainTextContent.substring(0, 120)}…'
+        : plainTextContent;
 
     return Card(
       color: cardColor,
