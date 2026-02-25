@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/l10n/app_localizations.dart';
+import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
@@ -94,8 +95,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
   }
 
   void _copyLink() {
-    final link =
-        'https://www.notidea.ersel.dev/notes/${widget.note.id}';
+    final link = '${AppConstants.baseUrl}/n/${widget.note.id}';
     Clipboard.setData(ClipboardData(text: link));
     final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(

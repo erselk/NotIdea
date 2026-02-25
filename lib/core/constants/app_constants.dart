@@ -6,6 +6,11 @@ class AppConstants {
   static const String appName = 'NotIdea';
   static const String appTagline = 'Your creative note-taking companion';
   static const String appVersion = '1.0.0';
+  
+  // Link Paylaşımı için Base URL
+  // Domain hazır olduğunda burayı 'https://notidea.ersel.dev' ile değiştirebilirsiniz.
+  // Geliştirme aşamasında Vercel preview URL'ini veya localhost kullanabilirsiniz.
+  static const String baseUrl = 'https://notidea.ersel.dev';
 
   // Sayfalama limitleri
   static const int defaultPageSize = 20;

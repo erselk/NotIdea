@@ -61,13 +61,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final logoAsset = brightness == Brightness.light
-        ? 'assets/images/logolight-notext.svg'
-        : 'assets/images/logodark-notext.svg';
-    final textAsset = brightness == Brightness.light
-        ? 'assets/images/logolight-onlytext.svg'
-        : 'assets/images/logodark-onlytext.svg';
+    const logoAsset = 'assets/images/logo.svg';
+    const textAsset = 'assets/images/notidea.svg';
 
     return Scaffold(
       body: Center(
@@ -87,6 +82,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 SvgPicture.asset(
                   textAsset,
                   width: 180,
+                  colorFilter: Theme.of(context).brightness == Brightness.dark
+                      ? const ColorFilter.mode(
+                          Color(0xFFE5EAE4),
+                          BlendMode.srcIn,
+                        )
+                      : null,
                 ),
               ],
             ),

@@ -63,9 +63,7 @@ class BrandedAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            theme.brightness == Brightness.dark
-                ? 'assets/images/logodark-notext.svg'
-                : 'assets/images/logolight-notext.svg',
+            'assets/images/logo.svg',
             height: 36,
           ),
           const SizedBox(width: 10),
@@ -80,7 +78,9 @@ class BrandedAppBar extends StatelessWidget implements PreferredSizeWidget {
                   TextSpan(
                     text: titleFirst,
                     style: titleStyle.copyWith(
-                      color: const Color(0xFF374241),
+                      color: theme.brightness == Brightness.dark
+                          ? const Color(0xFFE5EAE4)
+                          : const Color(0xFF374241),
                     ),
                   ),
                   TextSpan(

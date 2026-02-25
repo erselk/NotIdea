@@ -488,7 +488,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             permission: permission,
           );
 
-      final link = 'https://notidea.app/shared/$token';
+      final link = '${AppConstants.baseUrl}/n/$_currentNoteId';
       await Clipboard.setData(ClipboardData(text: link));
 
       if (mounted) {
@@ -661,8 +661,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   Widget _buildFloatingToolbar(BuildContext context, bool isDarkBg) {
     final theme = Theme.of(context);
     final isAppDark = theme.brightness == Brightness.dark;
-    final bgColor = isAppDark ? Colors.grey.shade900 : const Color(0xFF374241);
-    final iconColor = isAppDark ? Colors.grey.shade400 : const Color(0xFFB8B8B8);
+    final bgColor = isAppDark ? const Color(0xFFE5EAE4) : const Color(0xFF374241);
+    final iconColor = isAppDark ? const Color(0xFF374241) : const Color(0xFFB8B8B8);
     final activeColor = theme.colorScheme.primary;
 
     Future<void> _showFontFamilyPicker() async {

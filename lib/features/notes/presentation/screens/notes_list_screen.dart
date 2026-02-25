@@ -217,17 +217,19 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              theme.brightness == Brightness.dark
-                  ? 'assets/images/logodark-notext.svg'
-                  : 'assets/images/logolight-notext.svg',
+              'assets/images/logo.svg',
               height: 36,
             ),
             const SizedBox(width: 10),
             SvgPicture.asset(
-              theme.brightness == Brightness.dark
-                  ? 'assets/images/logodark-onlytext.svg'
-                  : 'assets/images/logolight-onlytext.svg',
+              'assets/images/notidea.svg',
               height: 28,
+              colorFilter: theme.brightness == Brightness.dark
+                  ? const ColorFilter.mode(
+                      Color(0xFFE5EAE4),
+                      BlendMode.srcIn,
+                    )
+                  : null,
             ),
           ],
         ),

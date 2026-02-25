@@ -42,6 +42,9 @@ class RouteNames {
   static const String legal = 'legal';
   static const String privacyPolicy = 'privacyPolicy';
   static const String termsOfService = 'termsOfService';
+  static const String appTerms = 'appTerms';
+  static const String appPrivacy = 'appPrivacy';
+  static const String publicNote = 'publicNote';
 }
 
 /// Rota yol sabitleri
@@ -88,4 +91,7 @@ class RoutePaths {
   static const String legal = 'legal';
   static const String privacyPolicy = 'privacy-policy';
   static const String termsOfService = 'terms-of-service';
+  static const String appTerms = '/app-terms';
+  static const String appPrivacy = '/app-privacy';
+  static const String publicNote = '/n/:noteId';
 }

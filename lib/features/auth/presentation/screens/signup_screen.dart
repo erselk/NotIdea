@@ -93,12 +93,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final isLoading = _isSigningUp;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -113,9 +107,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                     Center(
                       child: SvgPicture.asset(
-                        theme.brightness == Brightness.light
-                            ? 'assets/images/logolight-notext.svg'
-                            : 'assets/images/logodark-notext.svg',
+                        'assets/images/logo.svg',
                         width: 72,
                         height: 72,
                       ),
@@ -123,29 +115,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     const SizedBox(height: 12),
                     Center(
                       child: SvgPicture.asset(
-                        theme.brightness == Brightness.light
-                            ? 'assets/images/logolight-onlytext.svg'
-                            : 'assets/images/logodark-onlytext.svg',
+                        'assets/images/notidea.svg',
                         width: 150,
+                        colorFilter: theme.brightness == Brightness.dark
+                            ? const ColorFilter.mode(
+                                Color(0xFFE5EAE4),
+                                BlendMode.srcIn,
+                              )
+                            : null,
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Text(
-                      l10n.createAccount,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.signupSubtitle,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16),
 
                     TextFormField(
                       controller: _emailController,
@@ -241,10 +221,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 12),
 
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
@@ -263,7 +243,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         const SizedBox(width: 8),
                         Flexible(
                           child: Wrap(
-                            alignment: WrapAlignment.center,
+                            alignment: WrapAlignment.start,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Text(
@@ -273,7 +253,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               const SizedBox(width: 3),
                               GestureDetector(
                                 onTap: () => _openUrl(
-                                    'https://www.notidea.ersel.dev/terms'),
+                                    'https://www.notidea.ersel.dev/app-terms'),
                                 child: Text(
                                   l10n.termsOfService,
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -288,7 +268,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               ),
                               GestureDetector(
                                 onTap: () => _openUrl(
-                                    'https://www.notidea.ersel.dev/privacy'),
+                                    'https://www.notidea.ersel.dev/app-privacy'),
                                 child: Text(
                                   l10n.privacyPolicy,
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -302,7 +282,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
 
                     FilledButton(
                       onPressed: isLoading ? null : _handleSignup,
@@ -329,7 +309,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               ),
                             ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -350,7 +330,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

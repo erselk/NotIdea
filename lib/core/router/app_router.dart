@@ -25,6 +25,7 @@ import 'package:notidea/features/search/presentation/screens/search_screen.dart'
 import 'package:notidea/features/settings/presentation/screens/settings_screen.dart';
 import 'package:notidea/features/settings/presentation/screens/change_password_screen.dart';
 import 'package:notidea/features/legal/presentation/screens/legal_screen.dart';
+import 'package:notidea/features/notes/presentation/screens/public_note_screen.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 part 'app_router.g.dart';
@@ -59,10 +60,12 @@ GoRouter appRouter(Ref ref) {
 
       final isAuthRoute =
           currentPath == RoutePaths.login || currentPath == RoutePaths.signup;
+      final isPublicNote = currentPath.startsWith('/n/');
+      final isLegalRoute = currentPath == RoutePaths.appTerms || currentPath == RoutePaths.appPrivacy;
       final isSplash = currentPath == RoutePaths.splash;
       final isProfileSetup = currentPath == RoutePaths.profileSetup;
 
-      if (!isAuthenticated && !isAuthRoute && !isSplash) {
+      if (!isAuthenticated && !isAuthRoute && !isSplash && !isLegalRoute && !isPublicNote) {
         return RoutePaths.login;
       }
 
@@ -106,6 +109,28 @@ GoRouter appRouter(Ref ref) {
         path: RoutePaths.profileSetup,
         name: RouteNames.profileSetup,
         builder: (context, state) => const ProfileSetupScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.appTerms,
+        name: RouteNames.appTerms,
+        builder: (context, state) => const LegalScreen(
+          documentType: LegalDocumentType.termsOfService,
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.appPrivacy,
+        name: RouteNames.appPrivacy,
+        builder: (context, state) => const LegalScreen(
+          documentType: LegalDocumentType.privacyPolicy,
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.publicNote,
+        name: RouteNames.publicNote,
+        builder: (context, state) {
+          final noteId = state.pathParameters['noteId']!;
+          return PublicNoteScreen(noteId: noteId);
+        },
       ),
 
       ShellRoute(
