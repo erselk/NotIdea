@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
@@ -68,15 +71,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   static const _colorOptions = [
-    null,
-    '#DAEDD5',
-    '#1A759F',
-    '#613F75',
-    '#CDB4DB',
-    '#FFDCE0',
-    '#79B669',
-    '#D9ED92',
-    '#F7EF81',
+    null, // null is for "white" or default background
+    '#FCEEA7', // sari (yellow)
+    '#D9ED92', // acik yesil (light green)
+    '#79B669', // yesil (green)
+    '#FFDCE0', // pembe (pink)
+    '#CDB4DB', // acik mor (light purple)
+    '#613F75', // mor (purple)
+    '#A0C4FF', // acik mavi (light blue)
+    '#1A759F', // mavi (blue)
   ];
 
   Color _noteBackgroundColor(ThemeData theme) {
@@ -593,17 +596,185 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   Widget _buildFloatingToolbar(BuildContext context, bool isDarkBg) {
-    return quill.QuillSimpleToolbar(
-      controller: _contentController,
-      config: quill.QuillSimpleToolbarConfig(
-        showClipboardPaste: true,
-        showQuote: true,
-        showUndo: false,
-        showRedo: false,
-        showSearchButton: false,
-        showSubscript: false,
-        showSuperscript: false,
-        showListCheck: true,
+    final theme = Theme.of(context);
+    final isAppDark = theme.brightness == Brightness.dark;
+    final bgColor = isAppDark ? Colors.grey[900] : Colors.black;
+    final iconColor = Colors.white; 
+    final activeColor = Colors.greenAccent; 
+
+    Future<void> _showFontFamilyPicker() async {
+      final String? selectedFont = await showDialog<String>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(AppLocalizations.of(context)!.noteTitle, style: TextStyle(color: isAppDark ? Colors.white : Colors.black)),
+          backgroundColor: isAppDark ? Colors.grey[900] : Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Default (System)'),
+                  onTap: () => Navigator.pop(ctx, 'Clear'),
+                ),
+                ListTile(
+                  title: const Text('Serif', style: TextStyle(fontFamily: 'serif')),
+                  onTap: () => Navigator.pop(ctx, 'serif'),
+                ),
+                ListTile(
+                  title: const Text('Monospace', style: TextStyle(fontFamily: 'monospace')),
+                  onTap: () => Navigator.pop(ctx, 'monospace'),
+                ),
+                ListTile(
+                  title: const Text('Cursive', style: TextStyle(fontFamily: 'cursive')),
+                  onTap: () => Navigator.pop(ctx, 'cursive'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      if (selectedFont != null) {
+        if (selectedFont == 'Clear') {
+          _contentController.formatSelection(quill.Attribute.clone(quill.Attribute.font, null));
+        } else {
+          _contentController.formatSelection(quill.Attribute.clone(quill.Attribute.font, selectedFont));
+        }
+      }
+    }
+
+    Future<void> _pickImage() async {
+      final picker = ImagePicker();
+      final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      if (file == null) return;
+      
+      final index = _contentController.selection.baseOffset;
+      final length = _contentController.selection.extentOffset - index;
+      _contentController.replaceText(index, length, quill.BlockEmbed.image(file.path), null);
+    }
+
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDarkBg ? 0.3 : 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: _showColorPalette 
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: _colorOptions.map((color) {
+                    final displayColor = color != null
+                        ? Color(int.parse('FF${color.replaceFirst('#', '')}', radix: 16))
+                        : (isAppDark ? Colors.grey[700]! : Colors.grey[300]!); 
+                    final isSelected = _selectedColor == color;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() => _selectedColor = color);
+                        _onContentChanged();
+                      },
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: displayColor,
+                          shape: BoxShape.circle,
+                          border: isSelected 
+                              ? Border.all(color: Colors.white, width: 2.5) 
+                              : Border.all(color: Colors.transparent, width: 2.5),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                )
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      IconButton(icon: const Icon(Icons.info_outline, size: 22), color: iconColor, onPressed: _showInfoDialog, visualDensity: VisualDensity.compact),
+                      quill.QuillSimpleToolbar(
+                        controller: _contentController,
+                        config: quill.QuillSimpleToolbarConfig(
+                          color: Colors.transparent,
+                          buttonOptions: quill.QuillSimpleToolbarButtonOptions(
+                            base: quill.QuillToolbarBaseButtonOptions(
+                              iconTheme: quill.QuillIconTheme(
+                                iconButtonSelectedData: quill.IconButtonData(color: activeColor),
+                                iconButtonUnselectedData: quill.IconButtonData(color: iconColor),
+                              ),
+                            ),
+                          ),
+                          showListCheck: true,
+                          showBoldButton: true,
+                          showItalicButton: true,
+                          showUnderLineButton: true,
+                          showListBullets: false,
+                          showListNumbers: false,
+                          showUndo: false,
+                          showRedo: false,
+                          showSearchButton: false,
+                          showSubscript: false,
+                          showSuperscript: false,
+                          showFontFamily: false,
+                          showFontSize: false,
+                          showHeaderStyle: false,
+                          showStrikeThrough: false,
+                          showInlineCode: false,
+                          showColorButton: false,
+                          showBackgroundColorButton: false,
+                          showClearFormat: false,
+                          showAlignmentButtons: false,
+                          showLeftAlignment: false,
+                          showCenterAlignment: false,
+                          showRightAlignment: false,
+                          showJustifyAlignment: false,
+                          showDirection: false,
+                          showCodeBlock: false,
+                          showQuote: false,
+                          showIndent: false,
+                          showLink: false,
+                          showClipboardCopy: false,
+                          showClipboardCut: false,
+                          showClipboardPaste: false,
+                          showDividers: false,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.font_download_outlined, size: 22), 
+                        color: iconColor, 
+                        onPressed: _showFontFamilyPicker, 
+                        visualDensity: VisualDensity.compact
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.image_outlined, size: 22), 
+                        color: iconColor, 
+                        onPressed: _pickImage, 
+                        visualDensity: VisualDensity.compact
+                      ),
+                    ],
+                  ),
+                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0, left: 4.0),
+            child: IconButton(
+              icon: Icon(_showColorPalette ? Icons.palette : Icons.palette_outlined),
+              color: _showColorPalette ? activeColor : iconColor,
+              onPressed: () => setState(() => _showColorPalette = !_showColorPalette),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -781,6 +952,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               null,
                             ),
                           ),
+                          embedBuilders: [
+                            ...FlutterQuillEmbeds.editorBuilders(
+                              imageEmbedConfig: const QuillEditorImageEmbedConfig(),
+                            ),
+                          ],
                         ),
                       ),
                     ),
