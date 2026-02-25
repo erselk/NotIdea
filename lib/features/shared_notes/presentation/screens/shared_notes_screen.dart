@@ -6,6 +6,8 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/shared_notes/presentation/providers/shared_notes_provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class SharedNotesScreen extends ConsumerWidget {
   const SharedNotesScreen({super.key});
@@ -18,9 +20,7 @@ class SharedNotesScreen extends ConsumerWidget {
     final sharedAsync = ref.watch(sharedWithMeNotesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.sharedNotes),
-      ),
+      appBar: BrandedAppBar(titleFirst: 'Shared', titleSecond: 'Notes'),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(sharedWithMeNotesProvider),
         child: sharedAsync.when(

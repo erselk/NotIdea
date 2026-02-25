@@ -11,6 +11,7 @@ import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -49,27 +50,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final sortMode = ref.watch(exploreSortProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: _isSearching
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => AppScaffold.openDrawer(context),
-              ),
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                onChanged: _onSearchChanged,
-                decoration: InputDecoration(
-                  hintText: l10n.searchHint,
-                  border: InputBorder.none,
-                ),
-              )
-            : Text(l10n.explore),
+      appBar: BrandedAppBar(
+        titleFirst: 'Exp',
+        titleSecond: 'lore',
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            icon: Icon(Icons.search, size: 30,
+              color: _isSearching ? theme.colorScheme.primary : null,
+            ),
             onPressed: () {
               setState(() {
                 _isSearching = !_isSearching;
@@ -114,9 +102,41 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ),
         ],
       ),
-      body: _searchQuery.isNotEmpty
-          ? _SearchResultsView(query: _searchQuery)
-          : _PublicNotesView(appColors: appColors),
+      body: Column(
+        children: [
+          if (_isSearching)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE5EAE4),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: l10n.searchHint,
+                    hintStyle: const TextStyle(color: Colors.black38),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.only(
+                      left: 36, right: 20, top: 14, bottom: 14,
+                    ),
+                  ),
+                  onChanged: _onSearchChanged,
+                ),
+              ),
+            ),
+          Expanded(
+            child: _searchQuery.isNotEmpty
+                ? _SearchResultsView(query: _searchQuery)
+                : _PublicNotesView(appColors: appColors),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/trash/presentation/providers/trash_provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class TrashScreen extends ConsumerWidget {
   const TrashScreen({super.key});
@@ -33,8 +35,9 @@ class TrashScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.trash),
+      appBar: BrandedAppBar(
+        titleFirst: 'Tr',
+        titleSecond: 'ash',
         actions: [
           trashAsync.when(
             loading: () => const SizedBox.shrink(),

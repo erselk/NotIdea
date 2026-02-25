@@ -9,6 +9,8 @@ import 'package:notidea/features/friends/domain/models/friendship_status.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/features/friends/presentation/widgets/friend_card.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class FriendsScreen extends ConsumerStatefulWidget {
   const FriendsScreen({super.key});
@@ -40,8 +42,9 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
     final appColors = theme.extension<AppColorsExtension>()!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.friends),
+      appBar: BrandedAppBar(
+        titleFirst: 'Fri',
+        titleSecond: 'ends',
         bottom: TabBar(
           controller: _tabController,
           tabs: [

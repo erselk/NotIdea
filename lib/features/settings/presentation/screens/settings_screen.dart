@@ -11,6 +11,8 @@ import 'package:notidea/shared/providers/theme_provider.dart';
 import 'package:notidea/shared/widgets/confirm_dialog.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -24,7 +26,7 @@ class SettingsScreen extends ConsumerWidget {
     final currentLocale = ref.watch(localeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settings)),
+      appBar: BrandedAppBar(titleFirst: 'Set', titleSecond: 'tings'),
       body: ListView(
         children: [
           // ─── Appearance ───

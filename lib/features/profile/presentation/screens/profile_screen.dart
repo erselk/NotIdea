@@ -7,6 +7,7 @@ import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final String? userId;
@@ -27,22 +28,20 @@ class ProfileScreen extends ConsumerWidget {
         : ref.watch(profileByIdProvider(userId!));
 
     return Scaffold(
-      appBar: AppBar(
-        leading: isOwnProfile
-            ? IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => AppScaffold.openDrawer(context),
-              )
-            : null,
-        title: Text(l10n.profile),
-        actions: [
-          if (isOwnProfile)
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () => context.push('/profile/edit'),
+      appBar: isOwnProfile
+          ? BrandedAppBar(
+              titleFirst: 'Pro',
+              titleSecond: 'file',
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined),
+                  onPressed: () => context.push('/profile/edit'),
+                ),
+              ],
+            )
+          : AppBar(
+              title: Text(l10n.profile),
             ),
-        ],
-      ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(

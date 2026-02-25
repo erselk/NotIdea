@@ -5,6 +5,8 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
+import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class GroupsScreen extends ConsumerWidget {
   const GroupsScreen({super.key});
@@ -17,9 +19,7 @@ class GroupsScreen extends ConsumerWidget {
     final groupsAsync = ref.watch(myGroupsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.groups),
-      ),
+      appBar: BrandedAppBar(titleFirst: 'Gr', titleSecond: 'oups'),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(myGroupsProvider),
         child: groupsAsync.when(
