@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:notidea/core/theme/app_colors.dart';
 
 class NotesListScreen extends ConsumerStatefulWidget {
   const NotesListScreen({super.key});
@@ -20,10 +22,13 @@ class NotesListScreen extends ConsumerStatefulWidget {
 class _NotesListScreenState extends ConsumerState<NotesListScreen> {
   bool _isSearching = false;
   final _searchController = TextEditingController();
+  Timer? _debounce;
+  List<dynamic>? _cachedNotes;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -32,8 +37,16 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
       _isSearching = !_isSearching;
       if (!_isSearching) {
         _searchController.clear();
+        _debounce?.cancel();
         ref.read(noteFilterProvider.notifier).setSearchQuery(null);
       }
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 200), () {
+      ref.read(noteFilterProvider.notifier).setSearchQuery(query.trim().isEmpty ? null : query);
     });
   }
 
@@ -138,6 +151,30 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
     );
   }
 
+  Widget _buildNotesList(BuildContext context, List<dynamic> notes, ThemeData theme, dynamic l10n) {
+    final pinnedNotes = notes.where((n) => n.isPinned).toList();
+    final unpinnedNotes = notes.where((n) => !n.isPinned).toList();
+    final sortedNotes = [...pinnedNotes, ...unpinnedNotes];
+
+    return MasonryGridView.builder(
+      padding: const EdgeInsets.all(12),
+      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      mainAxisSpacing: 8,
+      crossAxisSpacing: 8,
+      itemCount: sortedNotes.length,
+      itemBuilder: (context, index) {
+        final note = sortedNotes[index];
+        return NoteCard(
+          note: note,
+          onTap: () => context.push('/home/editor/${note.id}'),
+          onLongPress: () => _showNoteActions(note),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -146,154 +183,200 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 76,
         centerTitle: true,
-        backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: _isSearching
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => AppScaffold.openDrawer(context),
-              ),
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.searchNotes,
-                  border: InputBorder.none,
-                ),
-                onChanged: (query) {
-                  ref.read(noteFilterProvider.notifier)
-                      .setSearchQuery(query);
-                },
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/logolight-notext.svg',
-                    height: 26,
-                  ),
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    'assets/images/logolight-onlytext.svg',
-                    height: 20,
-                  ),
-                ],
-              ),
+        flexibleSpace: AnimatedContainer(
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeOutCubic,
+          color: _isSearching
+              ? Colors.transparent
+              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        ),
+        leadingWidth: 72,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: IconButton(
+            icon: const Icon(Icons.menu, size: 30),
+            onPressed: () => AppScaffold.openDrawer(context),
+          ),
+        ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              theme.brightness == Brightness.dark
+                  ? 'assets/images/logodark-notext.svg'
+                  : 'assets/images/logolight-notext.svg',
+              height: 36,
+            ),
+            const SizedBox(width: 10),
+            SvgPicture.asset(
+              theme.brightness == Brightness.dark
+                  ? 'assets/images/logodark-onlytext.svg'
+                  : 'assets/images/logolight-onlytext.svg',
+              height: 28,
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            icon: Icon(Icons.search, size: 30,
+              color: _isSearching ? theme.colorScheme.primary : null,
+            ),
             onPressed: _toggleSearch,
           ),
+          const SizedBox(width: 20),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(userNotesProvider);
-        },
-        child: notesAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: theme.colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l10n.errorLoadingNotes,
-                    style: theme.textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    error.toString(),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+      body: Column(
+        children: [
+          AnimatedSize(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            child: _isSearching
+                ? AnimatedOpacity(
+                    duration: const Duration(milliseconds: 350),
+                    opacity: _isSearching ? 1.0 : 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE5EAE4),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          autofocus: true,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                          ),
+                          decoration: const InputDecoration(
+                            hintText: 'Search in the Notes',
+                            hintStyle: TextStyle(color: Colors.black38),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.only(
+                              left: 36,
+                              right: 20,
+                              top: 14,
+                              bottom: 14,
+                            ),
+                          ),
+                          onChanged: _onSearchChanged,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
+                  )
+                : const SizedBox.shrink(),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(userNotesProvider);
+              },
+              child: notesAsync.when(
+                loading: () {
+                  // Önceki veriler varsa loading ekranı gösterme
+                  if (_cachedNotes != null && _cachedNotes!.isNotEmpty) {
+                    return _buildNotesList(context, _cachedNotes!, theme, l10n);
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+                error: (error, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: theme.colorScheme.error,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.errorLoadingNotes,
+                          style: theme.textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          error.toString(),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        OutlinedButton.icon(
+                          onPressed: () => ref.invalidate(userNotesProvider),
+                          icon: const Icon(Icons.refresh),
+                          label: Text(l10n.retry),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  OutlinedButton.icon(
-                    onPressed: () => ref.invalidate(userNotesProvider),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(l10n.retry),
-                  ),
-                ],
+                ),
+                data: (notes) {
+                  // Notları hafızada tut
+                  _cachedNotes = notes;
+
+                  if (notes.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(48),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.note_add_outlined,
+                              size: 72,
+                              color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.noNotesYet,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.createFirstNote,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return _buildNotesList(context, notes, theme, l10n);
+                },
               ),
             ),
           ),
-          data: (notes) {
-            if (notes.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(48),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.note_add_outlined,
-                        size: 72,
-                        color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        l10n.noNotesYet,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.createFirstNote,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            final pinnedNotes = notes.where((n) => n.isPinned).toList();
-            final unpinnedNotes = notes.where((n) => !n.isPinned).toList();
-            final sortedNotes = [...pinnedNotes, ...unpinnedNotes];
-
-            return MasonryGridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              itemCount: sortedNotes.length,
-              itemBuilder: (context, index) {
-                final note = sortedNotes[index];
-                return NoteCard(
-                  note: note,
-                  onTap: () => context.push('/home/editor/${note.id}'),
-                  onLongPress: () => _showNoteActions(note),
-                );
-              },
-            );
-          },
-        ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/home/editor'),
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: const Icon(Icons.add, size: 28),
+      floatingActionButton: SizedBox(
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          onPressed: () => context.push('/home/editor'),
+          elevation: 3,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 32),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
