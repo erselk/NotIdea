@@ -58,13 +58,13 @@ class _AppDrawer extends ConsumerWidget {
     final avatarUrl = profile?.avatarUrl;
 
     final menuItems = [
+      _MenuItem(Icons.person_outline_rounded, l10n.profile),
       _MenuItem(Icons.note_alt_outlined, 'Notes'),
       _MenuItem(Icons.explore_outlined, l10n.explore),
       _MenuItem(Icons.favorite_outline_rounded, l10n.favorites),
-      _MenuItem(Icons.person_outline_rounded, l10n.profile),
+      _MenuItem(Icons.share_outlined, l10n.sharedWithMe),
       _MenuItem(Icons.people_outline_rounded, l10n.friends),
       _MenuItem(Icons.group_work_outlined, l10n.groups),
-      _MenuItem(Icons.share_outlined, l10n.sharedWithMe),
       _MenuItem(Icons.delete_outline_rounded, l10n.trash),
       _MenuItem(Icons.settings_outlined, l10n.settings),
     ];
@@ -194,37 +194,37 @@ class _AppDrawer extends ConsumerWidget {
 
   int _selectedIndex(String path) {
     if (path.startsWith(RoutePaths.home)) {
-      if (path.contains('shared')) return 6;
+      if (path.contains('shared')) return 4;
       if (path.contains('trash')) return 7;
+      return 1;
+    }
+    if (path.startsWith(RoutePaths.explore)) return 2;
+    if (path.startsWith(RoutePaths.favorites)) return 3;
+    if (path.startsWith(RoutePaths.profile)) {
+      if (path.contains('friends')) return 5;
+      if (path.contains('groups')) return 6;
+      if (path.contains('settings')) return 8;
       return 0;
     }
-    if (path.startsWith(RoutePaths.explore)) return 1;
-    if (path.startsWith(RoutePaths.favorites)) return 2;
-    if (path.startsWith(RoutePaths.profile)) {
-      if (path.contains('friends')) return 4;
-      if (path.contains('groups')) return 5;
-      if (path.contains('settings')) return 8;
-      return 3;
-    }
-    return 0;
+    return 1;
   }
 
   void _onDestinationSelected(int index, BuildContext context) {
     switch (index) {
       case 0:
-        context.goNamed(RouteNames.home);
-      case 1:
-        context.goNamed(RouteNames.explore);
-      case 2:
-        context.goNamed(RouteNames.favorites);
-      case 3:
         context.goNamed(RouteNames.profile);
+      case 1:
+        context.goNamed(RouteNames.home);
+      case 2:
+        context.goNamed(RouteNames.explore);
+      case 3:
+        context.goNamed(RouteNames.favorites);
       case 4:
-        context.go('/profile/friends');
-      case 5:
-        context.go('/profile/groups');
-      case 6:
         context.go('/home/shared');
+      case 5:
+        context.go('/profile/friends');
+      case 6:
+        context.go('/profile/groups');
       case 7:
         context.go('/home/trash');
       case 8:

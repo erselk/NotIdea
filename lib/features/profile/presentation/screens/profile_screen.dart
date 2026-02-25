@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
+import 'package:notidea/features/profile/presentation/providers/profile_stats_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -178,27 +179,33 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 24),
 
                       // Stats
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _StatItem(
-                            count: profile.noteCount, // TODO: Replace with total notes logic if different
-                            label: 'Notes',
-                            theme: theme,
-                          ),
-                          const SizedBox(width: 48),
-                          _StatItem(
-                            count: profile.friendCount,
-                            label: l10n.friends,
-                            theme: theme,
-                          ),
-                          const SizedBox(width: 48),
-                          _StatItem(
-                            count: 0, // Profile model'de group count varsa güncellenmeli
-                            label: 'Groups',
-                            theme: theme,
-                          ),
-                        ],
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final statsAsync = ref.watch(profileStatsProvider(profile.id));
+                          
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _StatItem(
+                                count: statsAsync.value?.noteCount ?? profile.noteCount,
+                                label: 'Notes',
+                                theme: theme,
+                              ),
+                              const SizedBox(width: 48),
+                              _StatItem(
+                                count: statsAsync.value?.friendCount ?? profile.friendCount,
+                                label: l10n.friends,
+                                theme: theme,
+                              ),
+                              const SizedBox(width: 48),
+                              _StatItem(
+                                count: statsAsync.value?.groupCount ?? 0,
+                                label: 'Groups',
+                                theme: theme,
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       
                       const SizedBox(height: 16),
