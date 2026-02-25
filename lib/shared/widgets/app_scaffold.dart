@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:notidea/core/router/route_names.dart';
-import 'package:notidea/features/profile/domain/models/profile_model.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 
 class AppScaffold extends ConsumerStatefulWidget {
@@ -32,6 +32,7 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      drawerScrimColor: const Color(0xFF374241).withOpacity(0.12),
       drawer: const _AppDrawer(),
       body: widget.child,
     );
@@ -41,6 +42,9 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
 class _AppDrawer extends ConsumerWidget {
   const _AppDrawer();
 
+  static const _green = Color(0xFF06A74D);
+  static const _selectedBg = Color(0xFFE5EAE4);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
@@ -48,77 +52,143 @@ class _AppDrawer extends ConsumerWidget {
     final profileAsync = ref.watch(currentProfileProvider);
     final profile = profileAsync.value;
     final currentPath = GoRouterState.of(context).uri.path;
+    final selectedIdx = _selectedIndex(currentPath);
 
-    return NavigationDrawer(
-      selectedIndex: _selectedIndex(currentPath),
-      onDestinationSelected: (index) {
-        Navigator.of(context).pop();
-        _onDestinationSelected(index, context);
-      },
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 28, 16, 16),
-          child: _DrawerHeader(profile: profile, theme: theme),
+    final displayName = profile?.displayName ?? profile?.username ?? '';
+    final avatarUrl = profile?.avatarUrl;
+
+    final menuItems = [
+      _MenuItem(Icons.note_alt_outlined, l10n.myNotes),
+      _MenuItem(Icons.explore_outlined, l10n.explore),
+      _MenuItem(Icons.favorite_outline_rounded, l10n.favorites),
+      _MenuItem(Icons.person_outline_rounded, l10n.profile),
+      _MenuItem(Icons.people_outline_rounded, l10n.friends),
+      _MenuItem(Icons.group_work_outlined, l10n.groups),
+      _MenuItem(Icons.share_outlined, l10n.sharedWithMe),
+      _MenuItem(Icons.delete_outline_rounded, l10n.trash),
+      _MenuItem(Icons.settings_outlined, l10n.settings),
+    ];
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.61,
+      child: Drawer(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // ─── Üst kısım: geri butonu (Menü butonu ile aynı hizada) ───
+              Padding(
+                padding: const EdgeInsets.only(left: 20, top: 14),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded,
+                        color: _green, size: 30),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              ),
+
+              // ─── Profil resmi ───
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context.goNamed(RouteNames.profile);
+                },
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                  backgroundImage: avatarUrl != null
+                      ? CachedNetworkImageProvider(avatarUrl)
+                      : null,
+                  child: avatarUrl == null
+                      ? Icon(
+                          Icons.person,
+                          size: 40,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        )
+                      : null,
+                ),
+              ),
+
+              // ─── Görünen ad ───
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  displayName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // ─── Yeşil çizgi ───
+              const SizedBox(height: 24),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Divider(height: 1, thickness: 2, color: _green),
+              ),
+              const SizedBox(height: 24),
+
+              // ─── Menü listesi ───
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: menuItems.length,
+                  itemBuilder: (context, index) {
+                    final item = menuItems[index];
+                    final isSelected = index == selectedIdx;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Material(
+                        color: isSelected ? _selectedBg : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            _onDestinationSelected(index, context);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            child: Row(
+                              children: [
+                                Icon(item.icon, size: 24, color: _green),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    item.label,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Divider(height: 1),
-        ),
-        const SizedBox(height: 8),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.note_alt_outlined),
-          selectedIcon: const Icon(Icons.note_alt_rounded),
-          label: Text(l10n.myNotes),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.explore_outlined),
-          selectedIcon: const Icon(Icons.explore_rounded),
-          label: Text(l10n.explore),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.favorite_outline_rounded),
-          selectedIcon: const Icon(Icons.favorite_rounded),
-          label: Text(l10n.favorites),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.person_outline_rounded),
-          selectedIcon: const Icon(Icons.person_rounded),
-          label: Text(l10n.profile),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Divider(height: 1),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.people_outline_rounded),
-          selectedIcon: const Icon(Icons.people_rounded),
-          label: Text(l10n.friends),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.group_work_outlined),
-          selectedIcon: const Icon(Icons.group_work_rounded),
-          label: Text(l10n.groups),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.share_outlined),
-          selectedIcon: const Icon(Icons.share_rounded),
-          label: Text(l10n.sharedWithMe),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.delete_outline_rounded),
-          selectedIcon: const Icon(Icons.delete_rounded),
-          label: Text(l10n.trash),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Divider(height: 1),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.settings_outlined),
-          selectedIcon: const Icon(Icons.settings_rounded),
-          label: Text(l10n.settings),
-        ),
-      ],
+      ),
     );
   }
 
@@ -163,64 +233,9 @@ class _AppDrawer extends ConsumerWidget {
   }
 }
 
-class _DrawerHeader extends StatelessWidget {
-  const _DrawerHeader({
-    required this.profile,
-    required this.theme,
-  });
-
-  final ProfileModel? profile;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    final displayName = profile?.displayName ?? profile?.username ?? '';
-    final username = profile?.username ?? '';
-    final avatarUrl = profile?.avatarUrl;
-
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 28,
-          backgroundColor: theme.colorScheme.surfaceContainerHighest,
-          backgroundImage: avatarUrl != null
-              ? CachedNetworkImageProvider(avatarUrl)
-              : null,
-          child: avatarUrl == null
-              ? Icon(
-                  Icons.person,
-                  size: 28,
-                  color: theme.colorScheme.onSurfaceVariant,
-                )
-              : null,
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                displayName,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (username.isNotEmpty)
-                Text(
-                  '@$username',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+class _MenuItem {
+  final IconData icon;
+  final String label;
+  const _MenuItem(this.icon, this.label);
 }
+
