@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/l10n.dart';
 
@@ -10,7 +11,7 @@ const _localeKey = 'app_locale';
 
 /// Dil (locale) yönetimi.
 /// Cihaz dilini otomatik algılar, kullanıcı tercihi güvenli depolamada saklanır.
-@riverpod
+@Riverpod(keepAlive: true)
 class LocaleNotifier extends _$LocaleNotifier {
   final _storage = const FlutterSecureStorage();
 

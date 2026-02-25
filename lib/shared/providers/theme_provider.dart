@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'theme_provider.g.dart';
 
@@ -8,7 +9,7 @@ const _themeKey = 'theme_mode';
 
 /// Tema modu (light/dark/system) yönetimi.
 /// Kullanıcı tercihi güvenli depolamada saklanır.
-@riverpod
+@Riverpod(keepAlive: true)
 class ThemeModeNotifier extends _$ThemeModeNotifier {
   final _storage = const FlutterSecureStorage();
 

@@ -9,6 +9,8 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/shared/providers/locale_provider.dart';
 import 'package:notidea/shared/providers/theme_provider.dart';
 import 'package:notidea/shared/widgets/confirm_dialog.dart';
+import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
+import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -100,7 +102,14 @@ class SettingsScreen extends ConsumerWidget {
                 isDestructive: true,
               );
               if (confirmed && context.mounted) {
-                // TODO: Implement account deletion
+                final currentUser = await ref.read(currentUserProvider.future);
+                if (currentUser != null) {
+                  await ref.read(deleteAccountProvider.notifier).execute(currentUser.id);
+                  await ref.read(logoutProvider.notifier).execute();
+                  if (context.mounted) {
+                    context.go(RoutePaths.login);
+                  }
+                }
               }
             },
           ),
@@ -119,7 +128,10 @@ class SettingsScreen extends ConsumerWidget {
                 isDestructive: true,
               );
               if (confirmed && context.mounted) {
-                // TODO: Implement logout
+                await ref.read(logoutProvider.notifier).execute();
+                if (context.mounted) {
+                  context.go(RoutePaths.login);
+                }
               }
             },
           ),

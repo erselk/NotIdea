@@ -1,0 +1,106 @@
+Analyzing NotIdea...
+
+  error - fix_keepalive.dart:1:388 - Expected to find ';'. - expected_token
+  error - fix_keepalive.dart:1:406 - Unterminated string literal. - unterminated_string_literal
+  error - fix_keepalive.dart:2:1 - Expected to find ')'. - expected_token
+  error - fix_keepalive.dart:2:1 - Expected to find '}'. - expected_token
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:46:7 - Missing concrete implementation of 'State.build'. Try implementing the missing method, or make the class abstract. - non_abstract_class_inherits_abstract_member
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:869:97 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:870:101 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:871:107 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:872:115 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:873:96 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:874:103 - The argument type 'Color?' can't be assigned to the parameter type 'Color'.  - argument_type_not_assignable
+  error - lib\features\notes\presentation\screens\note_editor_screen.dart:1212:1 - Expected to find '}'. - expected_token
+warning - lib\core\database\app_database.dart:1:8 - Unused import: 'package:flutter/foundation.dart'. Try removing the import directive. - unused_import
+warning - lib\core\router\app_router.dart:73:28 - The '!' will have no effect because the receiver can't be null. Try removing the '!' operator. - unnecessary_non_null_assertion
+warning - lib\features\explore\presentation\screens\explore_screen.dart:3:8 - Unused import: 'package:cached_network_image/cached_network_image.dart'. Try removing the import directive. - unused_import
+warning - lib\features\explore\presentation\screens\explore_screen.dart:10:8 - Unused import: 'package:notidea/features/notes/domain/models/note_model.dart'. Try removing the import directive. - unused_import
+warning - lib\features\explore\presentation\screens\explore_screen.dart:12:8 - Unused import: 'package:notidea/features/profile/presentation/providers/profile_provider.dart'. Try removing the import directive. - unused_import
+warning - lib\features\explore\presentation\screens\explore_screen.dart:14:8 - Unused import: 'package:timeago/timeago.dart'. Try removing the import directive. - unused_import
+warning - lib\features\groups\data\datasources\groups_remote_datasource.dart:118:18 - The operand can't be 'null', so the condition is always 'true'. Remove the condition. - unnecessary_null_comparison
+warning - lib\features\groups\data\datasources\groups_remote_datasource.dart:135:18 - The operand can't be 'null', so the condition is always 'true'. Remove the condition. - unnecessary_null_comparison
+warning - lib\features\groups\presentation\screens\create_group_screen.dart:43:17 - The operand can't be 'null', so the condition is always 'true'. Remove the condition. - unnecessary_null_comparison
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:5:8 - Unused import: 'package:flutter_markdown/flutter_markdown.dart'. Try removing the import directive. - unused_import
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:95:8 - The value of the field '_isPreview' isn't used. Try removing the field, or using it. - unused_field
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:249:16 - The declaration '_saveAndPop' isn't referenced. Try removing the declaration of '_saveAndPop'. - unused_element
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:386:11 - The value of the local variable 'theme' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:510:8 - The declaration '_showColorPicker' isn't referenced. Try removing the declaration of '_showColorPicker'. - unused_element
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:584:8 - The declaration '_showVisibilityPicker' isn't referenced. Try removing the declaration of '_showVisibilityPicker'. - unused_element
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:965:3 - Dead code. Try removing the code, or fixing the code before it so that it can be reached. - dead_code
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:966:10 - The declaration 'build' isn't referenced. Try removing the declaration of 'build'. - unused_element
+warning - lib\features\notes\presentation\screens\note_editor_screen.dart:1005:11 - The value of the local variable 'visibilityIcon' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\notes\presentation\screens\notes_list_screen.dart:5:8 - Unused import: 'package:notidea/features/notes/domain/models/note_visibility.dart'. Try removing the import directive. - unused_import
+warning - lib\features\notes\presentation\screens\notes_list_screen.dart:6:8 - Unused import: 'package:notidea/features/notes/domain/repositories/notes_repository.dart'. Try removing the import directive. - unused_import
+warning - lib\features\notes\presentation\widgets\note_card.dart:3:8 - Unused import: 'package:notidea/features/notes/domain/models/note_visibility.dart'. Try removing the import directive. - unused_import
+warning - lib\features\notes\presentation\widgets\note_card.dart:4:8 - Unused import: 'package:timeago/timeago.dart'. Try removing the import directive. - unused_import
+warning - lib\features\profile\presentation\screens\edit_profile_screen.dart:102:11 - The value of the local variable 'theme' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\search\presentation\screens\search_screen.dart:142:11 - The value of the local variable 'l10n' isn't used. Try removing the variable or using it. - unused_local_variable
+   info - fix_imports.dart:9:12 - The variable 'f' should be final. Try making the variable final. - prefer_final_in_for_each
+   info - fix_imports.dart:17:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - fix_keepalive.dart:1:166 - The variable 'f' should be final. Try making the variable final. - prefer_final_in_for_each
+   info - fix_keepalive.dart:1:180 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - fix_keepalive.dart:1:216 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - fix_keepalive.dart:1:382 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - fix_keepalive_regex.dart:9:12 - The variable 'f' should be final. Try making the variable final. - prefer_final_in_for_each
+   info - fix_keepalive_regex.dart:10:5 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - fix_keepalive_regex.dart:11:5 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - fix_keepalive_regex.dart:14:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\app.dart:29:31 - Use 'const' literals as arguments to constructors of '@immutable' classes. Try adding 'const' before the literal. - prefer_const_literals_to_create_immutables
+   info - lib\config\supabase_config.dart:3:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\core\theme\app_theme.dart:5:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\core\theme\app_theme.dart:6:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\core\theme\app_theme.dart:44:21 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\core\theme\app_theme.dart:53:19 - Use 'const' literals as arguments to constructors of '@immutable' classes. Try adding 'const' before the literal. - prefer_const_literals_to_create_immutables
+   info - lib\core\theme\app_theme.dart:89:21 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\core\theme\app_theme.dart:98:19 - Use 'const' literals as arguments to constructors of '@immutable' classes. Try adding 'const' before the literal. - prefer_const_literals_to_create_immutables
+   info - lib\core\utils\extensions.dart:5:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\core\utils\helpers.dart:6:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\core\utils\helpers.dart:7:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\features\auth\presentation\providers\auth_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\explore\presentation\providers\explore_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\favorites\presentation\providers\favorites_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\friends\presentation\providers\friends_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\friends\presentation\screens\add_friend_screen.dart:178:33 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\friends\presentation\screens\friends_screen.dart:143:35 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\friends\presentation\screens\friends_screen.dart:187:3 - Missing type annotation. Try adding a type annotation. - strict_top_level_inference
+   info - lib\features\groups\presentation\providers\groups_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\groups\presentation\screens\groups_screen.dart:83:37 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\notes\data\repositories\notes_repository_impl.dart:32:40 - The variable 'n' should be final. Try making the variable final. - prefer_final_in_for_each
+   info - lib\features\notes\presentation\providers\notes_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:95:8 - The private field _isPreview could be 'final'. Try making the field 'final'. - prefer_final_fields
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:128:5 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:408:17 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:408:23 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:670:18 - The local variable '_showFontFamilyPicker' starts with an underscore. Try renaming the variable to not start with an underscore. - no_leading_underscores_for_local_identifiers
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:730:18 - The local variable '_pickImage' starts with an underscore. Try renaming the variable to not start with an underscore. - no_leading_underscores_for_local_identifiers
+   info - lib\features\notes\presentation\screens\note_editor_screen.dart:769:18 - The variable 'op' should be final. Try making the variable final. - prefer_final_in_for_each
+   info - lib\features\notes\presentation\widgets\markdown_syntax_controller.dart:69:9 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - lib\features\notes\presentation\widgets\markdown_syntax_controller.dart:79:65 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\presentation\providers\profile_provider.dart:3:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\search\presentation\providers\search_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\search\presentation\screens\search_screen.dart:158:33 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\search\presentation\screens\search_screen.dart:191:33 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\search\presentation\screens\search_screen.dart:228:33 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\features\settings\presentation\screens\settings_screen.dart:180:5 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - lib\features\settings\presentation\screens\settings_screen.dart:213:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:214:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:223:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:224:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:233:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:234:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:279:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\presentation\screens\settings_screen.dart:280:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\shared_notes\presentation\providers\shared_notes_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\trash\presentation\providers\trash_provider.dart:2:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\trash\presentation\screens\trash_screen.dart:41:24 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\shared\providers\locale_provider.dart:4:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\shared\providers\locale_provider.dart:6:8 - Use 'package:' imports for files in the 'lib' directory. Try converting the URI to a 'package:' URI. - always_use_package_imports
+   info - lib\shared\providers\theme_provider.dart:4:8 - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\shared\widgets\avatar_widget.dart:43:5 - Local variables should be final. Try making the variable final. - prefer_final_locals
+   info - lib\shared\widgets\avatar_widget.dart:59:34 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\shared\widgets\avatar_widget.dart:65:34 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\shared\widgets\avatar_widget.dart:65:38 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\shared\widgets\note_color_picker.dart:47:31 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+
+102 issues found.

@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/config/supabase_config.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
@@ -24,7 +25,7 @@ Future<List<NoteModel>> trashedNotes(Ref ref) async {
       .toList();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RestoreNote extends _$RestoreNote {
   @override
   FutureOr<void> build() {}
@@ -41,7 +42,7 @@ class RestoreNote extends _$RestoreNote {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PermanentlyDelete extends _$PermanentlyDelete {
   @override
   FutureOr<void> build() {}
@@ -53,7 +54,7 @@ class PermanentlyDelete extends _$PermanentlyDelete {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class EmptyTrash extends _$EmptyTrash {
   @override
   FutureOr<void> build() {}

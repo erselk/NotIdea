@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:notidea/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:notidea/features/auth/domain/models/user_model.dart';
@@ -29,7 +30,7 @@ Future<UserModel?> currentUser(Ref ref) async {
   return repository.getCurrentUser();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Login extends _$Login {
   @override
   FutureOr<void> build() {}
@@ -44,7 +45,7 @@ class Login extends _$Login {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Signup extends _$Signup {
   @override
   FutureOr<void> build() {}
@@ -59,7 +60,7 @@ class Signup extends _$Signup {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Logout extends _$Logout {
   @override
   FutureOr<void> build() {}
@@ -71,7 +72,7 @@ class Logout extends _$Logout {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ResetPassword extends _$ResetPassword {
   @override
   FutureOr<void> build() {}

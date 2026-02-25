@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/notes/data/datasources/notes_local_datasource.dart';
 import 'package:notidea/features/notes/data/datasources/notes_remote_datasource.dart';
@@ -26,7 +27,7 @@ NotesRepository notesRepository(Ref ref) {
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class NoteFilterNotifier extends _$NoteFilterNotifier {
   @override
   NoteFilter build() => const NoteFilter();
@@ -76,7 +77,7 @@ Future<NoteModel?> noteById(Ref ref, String noteId) async {
   return repository.getNoteById(noteId);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreateNote extends _$CreateNote {
   @override
   FutureOr<void> build() {}
@@ -89,7 +90,7 @@ class CreateNote extends _$CreateNote {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UpdateNote extends _$UpdateNote {
   @override
   FutureOr<void> build() {}
@@ -103,7 +104,7 @@ class UpdateNote extends _$UpdateNote {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DeleteNote extends _$DeleteNote {
   @override
   FutureOr<void> build() {}
@@ -115,7 +116,7 @@ class DeleteNote extends _$DeleteNote {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ToggleFavorite extends _$ToggleFavorite {
   @override
   FutureOr<void> build() {}
@@ -128,7 +129,7 @@ class ToggleFavorite extends _$ToggleFavorite {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class TogglePin extends _$TogglePin {
   @override
   FutureOr<void> build() {}
@@ -141,7 +142,7 @@ class TogglePin extends _$TogglePin {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PermanentlyDelete extends _$PermanentlyDelete {
   @override
   FutureOr<void> build() {}
@@ -153,7 +154,7 @@ class PermanentlyDelete extends _$PermanentlyDelete {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreateShareLink extends _$CreateShareLink {
   @override
   FutureOr<void> build() {}

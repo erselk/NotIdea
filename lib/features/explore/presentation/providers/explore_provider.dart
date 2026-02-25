@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 
@@ -6,7 +7,7 @@ part 'explore_provider.g.dart';
 
 enum ExploreSortMode { recent, trending }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ExploreSortNotifier extends _$ExploreSortNotifier {
   @override
   ExploreSortMode build() => ExploreSortMode.recent;

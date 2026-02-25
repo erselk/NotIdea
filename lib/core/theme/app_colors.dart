@@ -110,46 +110,63 @@ class NoteCardColors {
   NoteCardColors._();
 
   // ─── Light mode not kartı renkleri ───
-  static const Color mintLight = Color(0xFFDAEDD5);
-  static const Color oceanLight = Color(0xFF1A759F);
-  static const Color purpleLight = Color(0xFF613F75);
-  static const Color lavenderLight = Color(0xFFCDB4DB);
-  static const Color roseLight = Color(0xFFFFDCE0);
-  static const Color greenLight = Color(0xFF79B669);
-  static const Color limeLight = Color(0xFFD9ED92);
-  static const Color yellowLight = Color(0xFFF7EF81);
+  static const Color c1Light = Color(0xFFE5EAE4);
+  static const Color c2Light = Color(0xFFF7EF81);
+  static const Color c3Light = Color(0xFFD9ED92);
+  static const Color c4Light = Color(0xFF79B669);
+  static const Color c5Light = Color(0xFFFFDCE0);
+  static const Color c6Light = Color(0xFFCDB4DB);
+  static const Color c7Light = Color(0xFF613F75);
+  static const Color c8Light = Color(0xFF77A6B6);
+  static const Color c9Light = Color(0xFF1A759F);
 
   // ─── Dark mode not kartı renkleri (koyu/mat versiyonlar) ───
-  static const Color mintDark = Color(0xFF2D3E2A);
-  static const Color oceanDark = Color(0xFF113344);
-  static const Color purpleDark = Color(0xFF2E1F38);
-  static const Color lavenderDark = Color(0xFF3D2E4A);
-  static const Color roseDark = Color(0xFF3E2628);
-  static const Color greenDark = Color(0xFF263D1F);
-  static const Color limeDark = Color(0xFF333E1E);
-  static const Color yellowDark = Color(0xFF3B381A);
+  static const Color c1Dark = Color(0xFF2B332B);
+  static const Color c2Dark = Color(0xFF4A4513);
+  static const Color c3Dark = Color(0xFF384013);
+  static const Color c4Dark = Color(0xFF223A1B);
+  static const Color c5Dark = Color(0xFF52282E);
+  static const Color c6Dark = Color(0xFF3B2D42);
+  static const Color c7Dark = Color(0xFF2F1D3A);
+  static const Color c8Dark = Color(0xFF233B43);
+  static const Color c9Dark = Color(0xFF0C384F);
 
   /// Light modda kullanılacak not kartı renk listesi
   static const List<Color> lightColors = [
-    mintLight,
-    oceanLight,
-    purpleLight,
-    lavenderLight,
-    roseLight,
-    greenLight,
-    limeLight,
-    yellowLight,
+    c1Light,
+    c2Light,
+    c3Light,
+    c4Light,
+    c5Light,
+    c6Light,
+    c7Light,
+    c8Light,
+    c9Light,
   ];
 
   /// Dark modda kullanılacak not kartı renk listesi
   static const List<Color> darkColors = [
-    mintDark,
-    oceanDark,
-    purpleDark,
-    lavenderDark,
-    roseDark,
-    greenDark,
-    limeDark,
-    yellowDark,
+    c1Dark,
+    c2Dark,
+    c3Dark,
+    c4Dark,
+    c5Dark,
+    c6Dark,
+    c7Dark,
+    c8Dark,
+    c9Dark,
+  ];
+
+  /// Veritabanına kaydedilecek orijinal (light) hex kodları
+  static const List<String> lightColorHexes = [
+    '#E5EAE4',
+    '#F7EF81',
+    '#D9ED92',
+    '#79B669',
+    '#FFDCE0',
+    '#CDB4DB',
+    '#613F75',
+    '#77A6B6',
+    '#1A759F',
   ];
 }

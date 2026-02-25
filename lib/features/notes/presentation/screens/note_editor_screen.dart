@@ -21,6 +21,8 @@ import 'package:notidea/config/supabase_config.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 class NoteEditorScreen extends ConsumerStatefulWidget {
   final String? noteId;
 
@@ -32,13 +34,13 @@ class NoteEditorScreen extends ConsumerStatefulWidget {
 
 class UnderlineSyntax extends md.DelimiterSyntax {
   UnderlineSyntax()
-      : super(
-          r'\+\+',
-          requiresDelimiterRun: true,
-          allowIntraWord: true,
-          startCharacter: 43,
-          tags: [md.DelimiterTag('u', 2)],
-        );
+    : super(
+        r'\+\+',
+        requiresDelimiterRun: true,
+        allowIntraWord: true,
+        startCharacter: 43,
+        tags: [md.DelimiterTag('u', 2)],
+      );
 }
 
 class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
@@ -46,10 +48,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   late quill.QuillController _contentController;
   final _focusNode = FocusNode();
   final _scrollController = ScrollController();
-  
+
   final _mdToDelta = MarkdownToDelta(
     markdownDocument: md.Document(
-      encodeHtml: false, 
+      encodeHtml: false,
       extensionSet: md.ExtensionSet.gitHubFlavored,
       inlineSyntaxes: [UnderlineSyntax()],
     ),
@@ -57,12 +59,13 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       'u': (_) => [quill.Attribute.underline],
     },
   );
-  
+
   final _deltaToMd = DeltaToMarkdown(
     customTextAttrsHandlers: {
       quill.Attribute.italic.key: CustomAttributeHandler(
         beforeContent: (attribute, node, output) {
-          if (node.previous?.style.attributes.containsKey(attribute.key) != true) {
+          if (node.previous?.style.attributes.containsKey(attribute.key) !=
+              true) {
             output.write('*');
           }
         },
@@ -74,7 +77,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ),
       quill.Attribute.underline.key: CustomAttributeHandler(
         beforeContent: (attribute, node, output) {
-          if (node.previous?.style.attributes.containsKey(attribute.key) != true) {
+          if (node.previous?.style.attributes.containsKey(attribute.key) !=
+              true) {
             output.write('++');
           }
         },
@@ -84,14 +88,14 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           }
         },
       ),
-    }
+    },
   );
 
   bool _showColorPalette = false;
   bool _isPreview = false;
 
   NoteVisibility _visibility = NoteVisibility.private_;
-  String? _selectedColor;
+  String? _selectedColor = NoteCardColors.lightColorHexes.isNotEmpty ? NoteCardColors.lightColorHexes[0] : null;
   bool _isFavorite = false;
   bool _isPinned = false;
   bool _isDeleted = false;
@@ -104,7 +108,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   String _initialTitle = '';
   String _initialContent = '';
   NoteVisibility _initialVisibility = NoteVisibility.private_;
-  String? _initialColor;
+  String? _initialColor = NoteCardColors.lightColorHexes.isNotEmpty ? NoteCardColors.lightColorHexes[0] : null;
 
   bool get _isEditing => _currentNoteId != null;
 
@@ -116,20 +120,19 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     _contentController.document.changes.listen((_) => _onContentChanged());
   }
 
-  static const _colorOptions = [
-    null, // null is for "white" or default background
-    '#FCEEA7', // sari (yellow)
-    '#D9ED92', // acik yesil (light green)
-    '#79B669', // yesil (green)
-    '#FFDCE0', // pembe (pink)
-    '#CDB4DB', // acik mor (light purple)
-    '#613F75', // mor (purple)
-    '#A0C4FF', // acik mavi (light blue)
-    '#1A759F', // mavi (blue)
-  ];
+  static const _colorOptions = NoteCardColors.lightColorHexes;
 
   Color _noteBackgroundColor(ThemeData theme) {
     if (_selectedColor == null) return theme.scaffoldBackgroundColor;
+
+    int index = NoteCardColors.lightColorHexes.indexOf(_selectedColor!);
+    if (index != -1) {
+      final isDark = theme.brightness == Brightness.dark;
+      return isDark
+          ? NoteCardColors.darkColors[index]
+          : NoteCardColors.lightColors[index];
+    }
+
     return Color(
       int.parse('FF${_selectedColor!.replaceFirst('#', '')}', radix: 16),
     );
@@ -173,13 +176,16 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       final now = DateTime.now();
 
       if (_isEditing) {
-        final existing =
-            await ref.read(noteByIdProvider(_currentNoteId!).future);
+        final existing = await ref.read(
+          noteByIdProvider(_currentNoteId!).future,
+        );
         if (existing == null) {
           return;
         }
 
-        final markdownContent = _deltaToMd.convert(_contentController.document.toDelta());
+        final markdownContent = _deltaToMd.convert(
+          _contentController.document.toDelta(),
+        );
 
         final updated = existing.copyWith(
           title: _titleController.text.trim(),
@@ -196,7 +202,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         await ref.read(updateNoteProvider.notifier).execute(updated);
       } else {
         final newId = const Uuid().v4();
-        final markdownContent = _deltaToMd.convert(_contentController.document.toDelta());
+        final markdownContent = _deltaToMd.convert(
+          _contentController.document.toDelta(),
+        );
         final note = NoteModel(
           id: newId,
           userId: currentUser.id,
@@ -221,9 +229,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       setState(() => _hasUnsavedChanges = false);
 
       if (showSnackbar && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.noteSaved)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.noteSaved)));
       }
     } catch (e) {
       if (mounted) {
@@ -291,46 +299,44 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       return;
     }
 
-    if (_isDeleted) {
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(l10n.deletePermanently),
-          content: Text(l10n.deleteNotePermanentConfirm),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.cancel),
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(_isDeleted ? l10n.deletePermanently : l10n.deleteNote),
+        content: Text(_isDeleted ? l10n.deleteNotePermanentConfirm : l10n.deleteNoteConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
             ),
-            FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              style: FilledButton.styleFrom(
-                backgroundColor: theme.colorScheme.error,
-              ),
-              child: Text(l10n.deletePermanently),
-            ),
-          ],
-        ),
-      );
+            child: Text(_isDeleted ? l10n.deletePermanently : l10n.delete),
+          ),
+        ],
+      ),
+    );
 
-      if (confirmed == true && _isEditing) {
+    if (confirmed == true && _isEditing) {
+      if (_isDeleted) {
         await ref
             .read(permanentlyDeleteProvider.notifier)
             .execute(_currentNoteId!);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.notePermanentlyDeleted)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.notePermanentlyDeleted)));
           context.pop();
         }
-      }
-    } else {
-      if (_isEditing) {
+      } else {
         await ref.read(deleteNoteProvider.notifier).execute(_currentNoteId!);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.movedToTrash)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.movedToTrash)));
           context.pop();
         }
       }
@@ -393,10 +399,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               onTap: () {
                 Navigator.pop(ctx);
                 final title = _titleController.text.trim();
-                final content = _deltaToMd.convert(_contentController.document.toDelta()).trim();
-                final text = title.isNotEmpty
-                    ? '$title\n\n$content'
-                    : content;
+                final content = _deltaToMd
+                    .convert(_contentController.document.toDelta())
+                    .trim();
+                final text = title.isNotEmpty ? '$title\n\n$content' : content;
                 Share.share(text);
               },
             ),
@@ -474,7 +480,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     if (currentUser == null) return;
 
     try {
-      final token = await ref.read(createShareLinkProvider.notifier).execute(
+      final token = await ref
+          .read(createShareLinkProvider.notifier)
+          .execute(
             noteId: _currentNoteId!,
             sharedByUserId: currentUser.id,
             permission: permission,
@@ -484,15 +492,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       await Clipboard.setData(ClipboardData(text: link));
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.linkCopied)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.linkCopied)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
   }
@@ -519,10 +527,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               runSpacing: 12,
               children: _colorOptions.map((color) {
                 final isSelected = color == _selectedColor;
-                final displayColor = color != null
-                    ? Color(int.parse('FF${color.replaceFirst('#', '')}',
-                        radix: 16))
-                    : theme.colorScheme.surfaceContainerHighest;
+                final index = NoteCardColors.lightColorHexes.indexOf(color);
+                final isDark = theme.brightness == Brightness.dark;
+                final displayColor = index != -1
+                    ? (isDark
+                          ? NoteCardColors.darkColors[index]
+                          : NoteCardColors.lightColors[index])
+                    : Color(
+                        int.parse(
+                          'FF${color.replaceFirst('#', '')}',
+                          radix: 16,
+                        ),
+                      );
 
                 return GestureDetector(
                   onTap: () {
@@ -541,9 +557,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               color: theme.colorScheme.primary,
                               width: 3,
                             )
-                          : Border.all(
-                              color: theme.colorScheme.outlineVariant,
-                            ),
+                          : Border.all(color: theme.colorScheme.outlineVariant),
                     ),
                     child: isSelected
                         ? Icon(
@@ -553,13 +567,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                                 : AppColors.black,
                             size: 20,
                           )
-                        : color == null
-                            ? Icon(
-                                Icons.format_color_reset,
-                                size: 20,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              )
-                            : null,
+                        : null,
                   ),
                 );
               }).toList(),
@@ -590,8 +598,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               title: Text(l10n.privateNotes),
               subtitle: Text(l10n.onlyYouCanSee),
               selected: _visibility == NoteVisibility.private_,
-              selectedTileColor:
-                  theme.colorScheme.primary.withValues(alpha: 0.08),
+              selectedTileColor: theme.colorScheme.primary.withValues(
+                alpha: 0.08,
+              ),
               onTap: () {
                 setState(() => _visibility = NoteVisibility.private_);
                 _onContentChanged();
@@ -603,8 +612,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               title: Text(l10n.friendsNotes),
               subtitle: Text(l10n.friendsCanSee),
               selected: _visibility == NoteVisibility.friends,
-              selectedTileColor:
-                  theme.colorScheme.primary.withValues(alpha: 0.08),
+              selectedTileColor: theme.colorScheme.primary.withValues(
+                alpha: 0.08,
+              ),
               onTap: () {
                 setState(() => _visibility = NoteVisibility.friends);
                 _onContentChanged();
@@ -616,8 +626,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               title: Text(l10n.publicNotes),
               subtitle: Text(l10n.everyoneCanSee),
               selected: _visibility == NoteVisibility.public_,
-              selectedTileColor:
-                  theme.colorScheme.primary.withValues(alpha: 0.08),
+              selectedTileColor: theme.colorScheme.primary.withValues(
+                alpha: 0.08,
+              ),
               onTap: () {
                 setState(() => _visibility = NoteVisibility.public_);
                 _onContentChanged();
@@ -631,15 +642,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 
-
   void _showInfoDialog() {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Not Bilgisi'),
-        content: Text('Kelime Sayısı: ${_deltaToMd.convert(_contentController.document.toDelta()).trim().split(RegExp(r'\s+')).length}'),
-        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.ok))],
+        content: Text(
+          'Kelime Sayısı: ${_deltaToMd.convert(_contentController.document.toDelta()).trim().split(RegExp(r'\s+')).length}',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.ok)),
+        ],
       ),
     );
   }
@@ -647,17 +661,22 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   Widget _buildFloatingToolbar(BuildContext context, bool isDarkBg) {
     final theme = Theme.of(context);
     final isAppDark = theme.brightness == Brightness.dark;
-    final bgColor = isAppDark ? Colors.grey[900] : Colors.black;
-    final iconColor = Colors.white; 
-    final activeColor = Colors.greenAccent; 
+    final bgColor = isAppDark ? Colors.grey.shade900 : const Color(0xFF374241);
+    final iconColor = isAppDark ? Colors.grey.shade400 : const Color(0xFFB8B8B8);
+    final activeColor = theme.colorScheme.primary;
 
     Future<void> _showFontFamilyPicker() async {
       final String? selectedFont = await showDialog<String>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.noteTitle, style: TextStyle(color: isAppDark ? Colors.white : Colors.black)),
+          title: Text(
+            AppLocalizations.of(context)!.noteTitle,
+            style: TextStyle(color: isAppDark ? Colors.white : Colors.black),
+          ),
           backgroundColor: isAppDark ? Colors.grey[900] : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -667,15 +686,24 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   onTap: () => Navigator.pop(ctx, 'Clear'),
                 ),
                 ListTile(
-                  title: const Text('Serif', style: TextStyle(fontFamily: 'serif')),
+                  title: const Text(
+                    'Serif',
+                    style: TextStyle(fontFamily: 'serif'),
+                  ),
                   onTap: () => Navigator.pop(ctx, 'serif'),
                 ),
                 ListTile(
-                  title: const Text('Monospace', style: TextStyle(fontFamily: 'monospace')),
+                  title: const Text(
+                    'Monospace',
+                    style: TextStyle(fontFamily: 'monospace'),
+                  ),
                   onTap: () => Navigator.pop(ctx, 'monospace'),
                 ),
                 ListTile(
-                  title: const Text('Cursive', style: TextStyle(fontFamily: 'cursive')),
+                  title: const Text(
+                    'Cursive',
+                    style: TextStyle(fontFamily: 'cursive'),
+                  ),
                   onTap: () => Navigator.pop(ctx, 'cursive'),
                 ),
               ],
@@ -686,45 +714,66 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
       if (selectedFont != null) {
         if (selectedFont == 'Clear') {
-          _contentController.formatSelection(quill.Attribute.clone(quill.Attribute.font, null));
+          _contentController.formatSelection(
+            quill.Attribute.clone(quill.Attribute.font, null),
+          );
         } else {
-          _contentController.formatSelection(quill.Attribute.clone(quill.Attribute.font, selectedFont));
+          _contentController.formatSelection(
+            quill.Attribute.clone(quill.Attribute.font, selectedFont),
+          );
         }
       }
     }
 
     Future<void> _pickImage() async {
       final picker = ImagePicker();
-      final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      final file = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
       if (file == null) return;
-      
+
       final index = _contentController.selection.baseOffset;
       final length = _contentController.selection.extentOffset - index;
-      
+
       // Hızlı (Çevrimdışı) Görsel Ekleme
       final localPath = file.path;
-      _contentController.replaceText(index, length, quill.BlockEmbed.image(localPath), null);
-      
+      _contentController.replaceText(
+        index,
+        length,
+        quill.BlockEmbed.image(localPath),
+        null,
+      );
+
       try {
         final currentUser = await ref.read(currentUserProvider.future);
         final userId = currentUser?.id ?? 'anonymous';
         final ext = localPath.split('.').last;
-        final fileName = 'user_$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
-        
+        final fileName =
+            'user_$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
+
         final bytes = await file.readAsBytes();
-        await SupabaseConfig.storage.from('images').uploadBinary(
-          fileName, 
-          bytes,
-        );
-        
-        final imageUrl = SupabaseConfig.storage.from('images').getPublicUrl(fileName);
-        
+        await SupabaseConfig.storage
+            .from('images')
+            .uploadBinary(fileName, bytes);
+
+        final imageUrl = SupabaseConfig.storage
+            .from('images')
+            .getPublicUrl(fileName);
+
         // Supabase linkiyle editor içindeki yerel linki değiştir
         final doc = _contentController.document;
         int offset = 0;
         for (var op in doc.toDelta().toList()) {
-          if (op.isInsert && op.data is Map && (op.data as Map)['image'] == localPath) {
-            _contentController.replaceText(offset, 1, quill.BlockEmbed.image(imageUrl), null);
+          if (op.isInsert &&
+              op.data is Map &&
+              (op.data as Map)['image'] == localPath) {
+            _contentController.replaceText(
+              offset,
+              1,
+              quill.BlockEmbed.image(imageUrl),
+              null,
+            );
             break;
           }
           final val = op.value;
@@ -736,10 +785,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
 
     return Container(
-      height: 56,
+      height: 60,
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDarkBg ? 0.3 : 0.1),
@@ -748,115 +797,167 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: _showColorPalette 
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _colorOptions.map((color) {
-                    final displayColor = color != null
-                        ? Color(int.parse('FF${color.replaceFirst('#', '')}', radix: 16))
-                        : (isAppDark ? Colors.grey[700]! : Colors.grey[300]!); 
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: _showColorPalette
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ..._colorOptions.map((color) {
+                    final index = NoteCardColors.lightColorHexes.indexOf(color);
+                    final displayColor = index != -1
+                        ? (isAppDark
+                            ? NoteCardColors.darkColors[index]
+                            : NoteCardColors.lightColors[index])
+                        : Color(int.parse('FF${color.replaceFirst('#', '')}', radix: 16));
                     final isSelected = _selectedColor == color;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() => _selectedColor = color);
-                        _onContentChanged();
-                      },
-                      child: Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: displayColor,
-                          shape: BoxShape.circle,
-                          border: isSelected 
-                              ? Border.all(color: Colors.white, width: 2.5) 
-                              : Border.all(color: Colors.transparent, width: 2.5),
+                    return SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() => _selectedColor = color);
+                            _onContentChanged();
+                          },
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: displayColor,
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(color: theme.colorScheme.primary, width: 2.5)
+                                  : Border.all(color: Colors.transparent, width: 2.5),
+                            ),
+                          ),
                         ),
                       ),
                     );
-                  }).toList(),
-                )
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      IconButton(icon: const Icon(Icons.info_outline, size: 22), color: iconColor, onPressed: _showInfoDialog, visualDensity: VisualDensity.compact),
-                      quill.QuillSimpleToolbar(
-                        controller: _contentController,
-                        config: quill.QuillSimpleToolbarConfig(
-                          color: Colors.transparent,
-                          buttonOptions: quill.QuillSimpleToolbarButtonOptions(
-                            base: quill.QuillToolbarBaseButtonOptions(
-                              iconTheme: quill.QuillIconTheme(
-                                iconButtonSelectedData: quill.IconButtonData(color: activeColor),
-                                iconButtonUnselectedData: quill.IconButtonData(color: iconColor),
-                              ),
-                            ),
-                          ),
-                          showListCheck: true,
-                          showBoldButton: true,
-                          showItalicButton: true,
-                          showUnderLineButton: true,
-                          showListBullets: false,
-                          showListNumbers: false,
-                          showUndo: false,
-                          showRedo: false,
-                          showSearchButton: false,
-                          showSubscript: false,
-                          showSuperscript: false,
-                          showFontFamily: false,
-                          showFontSize: false,
-                          showHeaderStyle: false,
-                          showStrikeThrough: false,
-                          showInlineCode: false,
-                          showColorButton: false,
-                          showBackgroundColorButton: false,
-                          showClearFormat: false,
-                          showAlignmentButtons: false,
-                          showLeftAlignment: false,
-                          showCenterAlignment: false,
-                          showRightAlignment: false,
-                          showJustifyAlignment: false,
-                          showDirection: false,
-                          showCodeBlock: false,
-                          showQuote: false,
-                          showIndent: false,
-                          showLink: false,
-                          showClipboardCopy: false,
-                          showClipboardCut: false,
-                          showClipboardPaste: false,
-                          showDividers: false,
-                        ),
+                  }),
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.palette_outlined, size: 26, color: activeColor),
+                        onPressed: () => setState(() => _showColorPalette = false),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.font_download_outlined, size: 22), 
-                        color: iconColor, 
-                        onPressed: _showFontFamilyPicker, 
-                        visualDensity: VisualDensity.compact
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.image_outlined, size: 22), 
-                        color: iconColor, 
-                        onPressed: _pickImage, 
-                        visualDensity: VisualDensity.compact
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0, left: 4.0),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.info_outline, size: 26, color: iconColor),
+                        onPressed: _showInfoDialog,
+                      ),
+                    ),
+                  ),
+                  _buildAnimatedToggleBtn(quill.Attribute.bold, Icons.format_bold, activeColor, iconColor),
+                  _buildAnimatedToggleBtn(quill.Attribute.italic, Icons.format_italic, activeColor, iconColor),
+                  _buildAnimatedToggleBtn(quill.Attribute.underline, Icons.format_underline, activeColor, iconColor),
+                  _buildAnimatedToggleBtn(quill.Attribute.strikeThrough, Icons.format_strikethrough, activeColor, iconColor),
+                  _buildAnimatedToggleBtn(quill.Attribute.inlineCode, Icons.code, activeColor, iconColor),
+                  _buildAnimatedBlockBtn(quill.Attribute.ul, Icons.format_list_bulleted, activeColor, iconColor),
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.font_download_outlined, size: 26, color: iconColor),
+                        onPressed: _showFontFamilyPicker,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.image_outlined, size: 26, color: iconColor),
+                        onPressed: _pickImage,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Center(
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.palette_outlined, size: 26, color: iconColor),
+                        onPressed: () => setState(() => _showColorPalette = true),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _buildAnimatedToggleBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor) {
+    return AnimatedBuilder(
+      animation: _contentController,
+      builder: (context, _) {
+        final isSelected = _contentController.getSelectionStyle().containsKey(attribute.key);
+        return SizedBox(
+          width: 32,
+          height: 32,
+          child: Center(
             child: IconButton(
-              icon: Icon(_showColorPalette ? Icons.palette : Icons.palette_outlined),
-              color: _showColorPalette ? activeColor : iconColor,
-              onPressed: () => setState(() => _showColorPalette = !_showColorPalette),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(iconData, size: 26, color: isSelected ? activeColor : iconColor),
+              onPressed: () {
+                final isCurrentlySelected = _contentController.getSelectionStyle().containsKey(attribute.key);
+                _contentController.formatSelection(isCurrentlySelected ? quill.Attribute.clone(attribute, null) : attribute);
+              },
             ),
           ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAnimatedBlockBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor) {
+    return AnimatedBuilder(
+      animation: _contentController,
+      builder: (context, _) {
+        final attr = _contentController.getSelectionStyle().attributes[attribute.key];
+        final isSelected = attr?.value == attribute.value;
+        return SizedBox(
+          width: 32,
+          height: 32,
+          child: Center(
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(iconData, size: 26, color: isSelected ? activeColor : iconColor),
+              onPressed: () {
+                final isCurrentlySelected = _contentController.getSelectionStyle().attributes[attribute.key]?.value == attribute.value;
+                _contentController.formatSelection(isCurrentlySelected ? quill.Attribute.clone(attribute, null) : attribute);
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -894,9 +995,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
     final bgColor = _noteBackgroundColor(theme);
     final isDarkBg = _isBackgroundDark(bgColor);
-    final iconColor = isDarkBg ? AppColors.white : theme.colorScheme.onSurface;
-    final textColorOnBg =
-        isDarkBg ? AppColors.white : theme.colorScheme.onSurface;
+    final defaultTextColor = theme.brightness == Brightness.light
+        ? const Color(0xFF374241)
+        : theme.colorScheme.onSurface;
+    final iconColor = isDarkBg ? AppColors.white : defaultTextColor;
+    final textColorOnBg = isDarkBg ? AppColors.white : defaultTextColor;
 
     final visibilityIcon = switch (_visibility) {
       NoteVisibility.private_ => Icons.lock_outline,
@@ -908,32 +1011,39 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
-        
+
         if (_hasUnsavedChanges) {
           await _save(showSnackbar: false);
         }
-        
+
         if (context.mounted) {
           Navigator.of(context).pop();
         }
       },
       child: Scaffold(
         backgroundColor: bgColor,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          iconTheme: IconThemeData(color: iconColor),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              if (_hasUnsavedChanges) {
-                await _save(showSnackbar: false);
-              }
-              if (context.mounted) {
-                context.pop();
-              }
-            },
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(72),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              iconTheme: IconThemeData(color: iconColor, size: 30),
+              leadingWidth: 72,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () async {
+                if (_hasUnsavedChanges) {
+                  await _save(showSnackbar: false);
+                }
+                if (context.mounted) {
+                  context.pop();
+                }
+              },
+            ),
           ),
           actions: [
             IconButton(
@@ -943,10 +1053,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               tooltip: _isDeleted ? l10n.deletePermanently : l10n.delete,
             ),
             IconButton(
-              icon: Icon(
-                _isPinned ? Icons.push_pin : Icons.push_pin_outlined,
-              ),
-              color: _isPinned ? theme.colorScheme.primary : iconColor,
+              icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
+              color: _isPinned ? textColorOnBg : iconColor,
+              style: _isPinned ? IconButton.styleFrom(backgroundColor: textColorOnBg.withValues(alpha: 0.15)) : null,
               onPressed: _handlePin,
               tooltip: _isPinned ? l10n.unpinNote : l10n.pinNote,
             ),
@@ -957,34 +1066,42 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               tooltip: l10n.share,
             ),
             IconButton(
-              icon: Icon(
-                _isFavorite ? Icons.favorite : Icons.favorite_outline,
-              ),
-              color: _isFavorite ? theme.colorScheme.error : iconColor,
+              icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_outline),
+              color: _isFavorite ? textColorOnBg : iconColor,
+              style: _isFavorite ? IconButton.styleFrom(backgroundColor: textColorOnBg.withValues(alpha: 0.15)) : null,
               onPressed: _handleFavorite,
               tooltip: _isFavorite
                   ? l10n.removeFromFavorites
                   : l10n.addToFavorites,
             ),
-            IconButton(
-              icon: const Icon(Icons.restart_alt),
-              color: iconColor,
-              onPressed: _hasUnsavedChanges ? _resetChanges : null,
-              tooltip: l10n.resetChanges,
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: IconButton(
+                icon: const Icon(Icons.restart_alt),
+                color: iconColor,
+                onPressed: _hasUnsavedChanges ? _resetChanges : null,
+                tooltip: l10n.resetChanges,
+              ),
             ),
           ],
         ),
-        body: SafeArea(
+      ),
+    ),
+    body: SafeArea(
           child: Stack(
             children: [
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(28, 8, 28, 0),
+                    padding: const EdgeInsets.fromLTRB(56, 8, 56, 0),
                     child: TextField(
                       controller: _titleController,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20,
+                        height: 1.5,
+                        letterSpacing: 20 * 0.005,
                         color: textColorOnBg,
                       ),
                       decoration: InputDecoration(
@@ -999,7 +1116,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                         filled: false,
                         fillColor: Colors.transparent,
                         isCollapsed: true,
-                        contentPadding: const EdgeInsets.only(bottom: 16),
+                        contentPadding: const EdgeInsets.only(bottom: 0),
                         counterText: '',
                       ),
                       maxLength: AppConstants.maxNoteTitleLength,
@@ -1009,28 +1126,46 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     ),
                   ),
                   Divider(
-                    height: 1,
-                    thickness: 1.2,
-                    color: textColorOnBg.withValues(alpha: 0.15),
-                    indent: 28,
-                    endIndent: 28,
+                    height: 4,
+                    thickness: 2.5,
+                    color: textColorOnBg.withValues(alpha: 0.25),
+                    indent: 56,
+                    endIndent: 56,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 0),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 28),
+                      padding: const EdgeInsets.symmetric(horizontal: 56),
                       child: quill.QuillEditor(
                         focusNode: _focusNode,
                         scrollController: _scrollController,
                         controller: _contentController,
                         config: quill.QuillEditorConfig(
                           placeholder: l10n.startWriting,
-                          padding: const EdgeInsets.only(bottom: 100, top: 8),
+                          padding: const EdgeInsets.only(bottom: 100, top: 4),
                           customStyles: quill.DefaultStyles(
+                            placeHolder: quill.DefaultTextBlockStyle(
+                              GoogleFonts.poppins(
+                                fontWeight: FontWeight.w300,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16,
+                                height: 1.45,
+                                letterSpacing: -0.25,
+                                color: textColorOnBg.withValues(alpha: 0.5),
+                              ),
+                              const quill.HorizontalSpacing(0, 0),
+                              const quill.VerticalSpacing(0, 0),
+                              const quill.VerticalSpacing(0, 0),
+                              null,
+                            ),
                             paragraph: quill.DefaultTextBlockStyle(
-                              theme.textTheme.bodyLarge!.copyWith(
+                              GoogleFonts.poppins(
+                                fontWeight: FontWeight.w300,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16,
+                                height: 1.45,
+                                letterSpacing: -0.25,
                                 color: textColorOnBg,
-                                height: 1.6,
                               ),
                               const quill.HorizontalSpacing(0, 0),
                               const quill.VerticalSpacing(0, 0),
@@ -1038,9 +1173,13 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                               null,
                             ),
                             h1: quill.DefaultTextBlockStyle(
-                              theme.textTheme.headlineMedium!.copyWith(
+                              GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 20,
+                                height: 1.4,
+                                letterSpacing: 20 * 0.005,
                                 color: textColorOnBg,
-                                fontWeight: FontWeight.bold,
                               ),
                               const quill.HorizontalSpacing(0, 0),
                               const quill.VerticalSpacing(16, 0),
@@ -1069,8 +1208,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildFloatingToolbar(context, isDarkBg),
+                  padding: const EdgeInsets.only(bottom: 32.0, left: 16.0, right: 16.0),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 380),
+                    child: _buildFloatingToolbar(context, isDarkBg),
+                  ),
                 ),
               ),
             ],

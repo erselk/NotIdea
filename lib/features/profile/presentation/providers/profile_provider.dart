@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:notidea/features/profile/data/repositories/profile_repository_impl.dart';
@@ -35,7 +36,7 @@ Future<ProfileModel?> profileById(Ref ref, String userId) async {
   return repository.getProfileById(userId);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreateProfile extends _$CreateProfile {
   @override
   FutureOr<void> build() {}
@@ -47,7 +48,7 @@ class CreateProfile extends _$CreateProfile {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UpdateProfile extends _$UpdateProfile {
   @override
   FutureOr<void> build() {}
@@ -61,7 +62,7 @@ class UpdateProfile extends _$UpdateProfile {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UploadAvatar extends _$UploadAvatar {
   @override
   FutureOr<void> build() {}
@@ -83,7 +84,7 @@ class UploadAvatar extends _$UploadAvatar {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DeleteAccount extends _$DeleteAccount {
   @override
   FutureOr<void> build() {}

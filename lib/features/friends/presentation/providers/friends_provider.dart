@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/data/datasources/friends_remote_datasource.dart';
 import 'package:notidea/features/friends/data/repositories/friends_repository_impl.dart';
@@ -39,7 +40,7 @@ Future<List<FriendshipModel>> pendingRequests(Ref ref) async {
   return repository.getPendingRequests(currentUser.id);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SendFriendRequest extends _$SendFriendRequest {
   @override
   FutureOr<void> build() {}
@@ -58,7 +59,7 @@ class SendFriendRequest extends _$SendFriendRequest {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AcceptFriendRequest extends _$AcceptFriendRequest {
   @override
   FutureOr<void> build() {}
@@ -71,7 +72,7 @@ class AcceptFriendRequest extends _$AcceptFriendRequest {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RejectFriendRequest extends _$RejectFriendRequest {
   @override
   FutureOr<void> build() {}
@@ -83,7 +84,7 @@ class RejectFriendRequest extends _$RejectFriendRequest {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RemoveFriend extends _$RemoveFriend {
   @override
   FutureOr<void> build() {}

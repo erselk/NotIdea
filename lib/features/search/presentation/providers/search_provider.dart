@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
@@ -7,7 +8,7 @@ import 'package:notidea/features/profile/domain/models/profile_model.dart';
 
 part 'search_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SearchQuery extends _$SearchQuery {
   @override
   String build() => '';

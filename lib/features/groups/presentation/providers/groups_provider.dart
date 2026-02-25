@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/groups/data/datasources/groups_remote_datasource.dart';
 import 'package:notidea/features/groups/data/repositories/groups_repository_impl.dart';
@@ -45,7 +46,7 @@ Future<List<GroupMemberModel>> groupMembers(
   return repository.getGroupMembers(groupId);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreateGroup extends _$CreateGroup {
   @override
   FutureOr<void> build() {}
@@ -70,7 +71,7 @@ class CreateGroup extends _$CreateGroup {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UpdateGroup extends _$UpdateGroup {
   @override
   FutureOr<void> build() {}
@@ -84,7 +85,7 @@ class UpdateGroup extends _$UpdateGroup {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DeleteGroup extends _$DeleteGroup {
   @override
   FutureOr<void> build() {}
@@ -96,7 +97,7 @@ class DeleteGroup extends _$DeleteGroup {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AddGroupMember extends _$AddGroupMember {
   @override
   FutureOr<void> build() {}
@@ -112,7 +113,7 @@ class AddGroupMember extends _$AddGroupMember {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RemoveGroupMember extends _$RemoveGroupMember {
   @override
   FutureOr<void> build() {}
