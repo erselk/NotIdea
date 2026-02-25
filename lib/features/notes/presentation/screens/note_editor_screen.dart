@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/app_colors.dart';
@@ -699,14 +701,14 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       final index = _contentController.selection.baseOffset;
       final length = _contentController.selection.extentOffset - index;
       
+      // Hızlı (Çevrimdışı) Görsel Ekleme
+      final localPath = file.path;
+      _contentController.replaceText(index, length, quill.BlockEmbed.image(localPath), null);
+      
       try {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Yükleniyor...'), duration: Duration(seconds: 1)),
-        );
-
-        final authState = ref.read(authNotifierProvider);
-        final userId = authState.user?.id ?? 'anonymous';
-        final ext = file.path.split('.').last;
+        final currentUser = await ref.read(currentUserProvider.future);
+        final userId = currentUser?.id ?? 'anonymous';
+        final ext = localPath.split('.').last;
         final fileName = 'user_$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
         
         final bytes = await file.readAsBytes();
@@ -716,13 +718,20 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         );
         
         final imageUrl = SupabaseConfig.storage.from('images').getPublicUrl(fileName);
-        _contentController.replaceText(index, length, quill.BlockEmbed.image(imageUrl), null);
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Görsel yüklenemedi: $e')),
-          );
+        
+        // Supabase linkiyle editor içindeki yerel linki değiştir
+        final doc = _contentController.document;
+        int offset = 0;
+        for (var op in doc.toDelta().toList()) {
+          if (op.isInsert && op.data is Map && (op.data as Map)['image'] == localPath) {
+            _contentController.replaceText(offset, 1, quill.BlockEmbed.image(imageUrl), null);
+            break;
+          }
+          final val = op.value;
+          offset += (val is String) ? val.length : 1;
         }
+      } catch (e) {
+        // Sessizce başarısız ol; görsel çevrimdışı lokalde kalır
       }
     }
 
@@ -1041,7 +1050,14 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           ),
                           embedBuilders: [
                             ...FlutterQuillEmbeds.editorBuilders(
-                              imageEmbedConfig: const QuillEditorImageEmbedConfig(),
+                              imageEmbedConfig: QuillEditorImageEmbedConfig(
+                                imageProviderBuilder: (context, imageUrl) {
+                                  if (imageUrl.startsWith('http')) {
+                                    return CachedNetworkImageProvider(imageUrl);
+                                  }
+                                  return FileImage(File(imageUrl));
+                                },
+                              ),
                             ),
                           ],
                         ),

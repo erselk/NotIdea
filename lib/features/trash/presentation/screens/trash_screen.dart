@@ -139,7 +139,6 @@ class TrashScreen extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                Expanded(
                   child: MasonryGridView.builder(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 4),
@@ -251,7 +250,6 @@ class TrashScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                ),
                 ),
               ],
             );
