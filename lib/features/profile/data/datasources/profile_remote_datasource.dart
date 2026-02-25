@@ -40,6 +40,8 @@ class ProfileRemoteDatasource {
 
     final now = DateTime.now();
     final data = profile.copyWith(createdAt: now, updatedAt: now).toJson();
+    data.remove('note_count');
+    data.remove('friend_count');
 
     final response = await _client
         .from('profiles')
@@ -62,6 +64,8 @@ class ProfileRemoteDatasource {
     final data = profile.copyWith(updatedAt: DateTime.now()).toJson();
     data.remove('id');
     data.remove('created_at');
+    data.remove('note_count');
+    data.remove('friend_count');
 
     final response = await _client
         .from('profiles')

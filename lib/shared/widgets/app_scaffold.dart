@@ -83,10 +83,15 @@ class _AppDrawer extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 20, top: 14),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back_rounded,
-                        color: theme.colorScheme.primary, size: 30),
-                    onPressed: () => Navigator.of(context).pop(),
+                  child: Material(
+                    color: Colors.transparent,
+                    shape: const CircleBorder(),
+                    clipBehavior: Clip.antiAlias,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back_rounded,
+                          color: theme.colorScheme.primary, size: 28),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
                   ),
                 ),
               ),

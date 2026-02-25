@@ -33,12 +33,20 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leadingWidth: 72,
         leading: isOwnProfile
             ? Padding(
-                padding: const EdgeInsets.only(left: 24.0, top: 12.0),
-                child: IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.white, size: 28),
-                  onPressed: () => AppScaffold.openDrawer(context),
+                padding: const EdgeInsets.only(left: 14, top: 8),
+                child: Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    shape: const CircleBorder(),
+                    clipBehavior: Clip.antiAlias,
+                    child: IconButton(
+                      icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+                      onPressed: () => AppScaffold.openDrawer(context),
+                    ),
+                  ),
                 ),
               )
             : const BackButton(color: Colors.white),

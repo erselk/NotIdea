@@ -20,6 +20,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _displayNameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _bioController = TextEditingController();
   bool _isInitialized = false;
   bool _isUploadingAvatar = false;
@@ -52,50 +53,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _usernameDebounce?.cancel();
     _displayNameController.dispose();
     _usernameController.dispose();
+    _emailController.dispose();
     _bioController.dispose();
     super.dispose();
   }
 
-  void _onUsernameChanged(String value) {
-    _usernameDebounce?.cancel();
-    final trimmed = value.trim();
-
-    if (trimmed == _originalUsername) {
-      setState(() {
-        _isCheckingUsername = false;
-        _usernameTaken = false;
-      });
-      return;
-    }
-
-    if (trimmed.length < AppConstants.minUsernameLength) {
-      setState(() {
-        _isCheckingUsername = false;
-        _usernameTaken = false;
-      });
-      return;
-    }
-
-    setState(() => _isCheckingUsername = true);
-    _usernameDebounce = Timer(const Duration(milliseconds: 500), () async {
-      try {
-        final currentUser = await ref.read(currentUserProvider.future);
-        final repo = ref.read(profileRepositoryProvider);
-        final taken = await repo.isUsernameTaken(
-          trimmed,
-          excludeUserId: currentUser?.id,
-        );
-        if (mounted) {
-          setState(() {
-            _usernameTaken = taken;
-            _isCheckingUsername = false;
-          });
-        }
-      } catch (_) {
-        if (mounted) setState(() => _isCheckingUsername = false);
-      }
-    });
-  }
+  // Removed _onUsernameChanged since username is now read-only.
 
   Future<void> _pickAvatar() async {
     final l10n = AppLocalizations.of(context)!;
@@ -184,7 +147,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     final updated = profile.copyWith(
       displayName: _displayNameController.text.trim(),
-      username: _usernameController.text.trim(),
       bio: _bioController.text.trim().isEmpty
           ? null
           : _bioController.text.trim(),
@@ -202,57 +164,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final theme = Theme.of(context);
         setState(() => _isSavingProfile = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: theme.colorScheme.error,
           ),
         );
       }
     }
   }
 
-  void _confirmDeleteAccount() {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.deleteAccount),
-        content: Text(l10n.deleteAccountConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final currentUser =
-                  await ref.read(currentUserProvider.future);
-              if (currentUser == null) return;
-
-              await ref
-                  .read(deleteAccountProvider.notifier)
-                  .execute(currentUser.id);
-
-              await ref.read(logoutProvider.notifier).execute();
-
-              if (mounted) {
-                context.go('/login');
-              }
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-            ),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
-    );
-  }
+  // Removed _confirmDeleteAccount as requested.
 
   @override
   Widget build(BuildContext context) {
@@ -261,6 +185,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final profileAsync = ref.watch(currentProfileProvider);
     final isLoading = _isSavingProfile || _isUploadingAvatar;
 
+    final userAsync = ref.watch(currentUserProvider);
+
     profileAsync.whenData((profile) {
       if (profile != null && !_isInitialized) {
         _displayNameController.text = profile.displayName ?? '';
@@ -268,6 +194,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         _originalUsername = profile.username;
         _bioController.text = profile.bio ?? '';
         _currentAvatarUrl = profile.avatarUrl;
+
+        // Fetch email from userAsync
+        userAsync.whenData((user) {
+          if (user != null) {
+            _emailController.text = user.email;
+          }
+        });
+
         _isInitialized = true;
       }
     });
@@ -275,18 +209,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.editProfile),
-        actions: [
-          TextButton(
-            onPressed: isLoading ? null : _saveProfile,
-            child: isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(l10n.save),
-          ),
-        ],
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -350,9 +272,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   TextFormField(
                     controller: _displayNameController,
                     textCapitalization: TextCapitalization.words,
+                    textAlign: TextAlign.center,
                     enabled: !isLoading,
                     decoration: InputDecoration(
                       labelText: l10n.displayName,
+                      hintText: l10n.enterDisplayName,
                       prefixIcon: const Icon(Icons.person_outline),
                     ),
                     validator: (value) {
@@ -368,53 +292,33 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Username
+                  // Email (Read-only)
+                  TextFormField(
+                    controller: _emailController,
+                    readOnly: true,
+                    enabled: false,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      labelText: l10n.email,
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Username (Read-only)
                   TextFormField(
                     controller: _usernameController,
-                    enabled: !isLoading,
-                    onChanged: _onUsernameChanged,
+                    readOnly: true,
+                    enabled: false,
+                    textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       labelText: l10n.username,
                       prefixIcon: const Icon(Icons.alternate_email),
-                      suffixIcon: _isCheckingUsername
-                          ? const Padding(
-                              padding: EdgeInsets.all(12),
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                            )
-                          : _usernameController.text.trim().length >=
-                                      AppConstants.minUsernameLength &&
-                                  !_usernameTaken &&
-                                  _usernameController.text.trim() != _originalUsername
-                              ? const Icon(Icons.check_circle, color: Colors.green)
-                              : _usernameTaken
-                                  ? Icon(Icons.cancel, color: theme.colorScheme.error)
-                                  : null,
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
                     ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return l10n.usernameRequired;
-                      }
-                      if (value.trim().length <
-                          AppConstants.minUsernameLength) {
-                        return l10n.usernameTooShort;
-                      }
-                      if (value.trim().length >
-                          AppConstants.maxUsernameLength) {
-                        return l10n.usernameTooLong;
-                      }
-                      if (!RegExp(r'^[a-zA-Z0-9_]+$')
-                          .hasMatch(value.trim())) {
-                        return l10n.usernameInvalid;
-                      }
-                      if (_usernameTaken) {
-                        return l10n.usernameTaken;
-                      }
-                      return null;
-                    },
                   ),
                   const SizedBox(height: 16),
 
@@ -432,22 +336,33 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   const SizedBox(height: 48),
 
-                  // Delete Account
-                  OutlinedButton.icon(
-                    onPressed: isLoading ? null : _confirmDeleteAccount,
-                    icon: Icon(
-                      Icons.delete_forever_outlined,
-                      color: theme.colorScheme.error,
+                  // Save Button
+                  FilledButton(
+                    onPressed: isLoading ? null : _saveProfile,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    label: Text(
-                      l10n.deleteAccount,
-                      style: TextStyle(color: theme.colorScheme.error),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(48),
-                      side: BorderSide(color: theme.colorScheme.error),
-                    ),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            l10n.save,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),

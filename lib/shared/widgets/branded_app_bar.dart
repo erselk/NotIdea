@@ -45,10 +45,17 @@ class BrandedAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       leadingWidth: 72,
       leading: Padding(
-        padding: const EdgeInsets.only(left: 20),
-        child: IconButton(
-          icon: const Icon(Icons.menu, size: 30),
-          onPressed: () => AppScaffold.openDrawer(context),
+        padding: const EdgeInsets.only(left: 14),
+        child: Center(
+          child: Material(
+            color: Colors.transparent,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: IconButton(
+              icon: const Icon(Icons.menu, size: 28),
+              onPressed: () => AppScaffold.openDrawer(context),
+            ),
+          ),
         ),
       ),
       title: Row(
