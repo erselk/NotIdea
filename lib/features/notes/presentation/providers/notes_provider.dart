@@ -129,6 +129,50 @@ class ToggleFavorite extends _$ToggleFavorite {
 }
 
 @riverpod
+class TogglePin extends _$TogglePin {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> execute(String noteId, bool isPinned) async {
+    final repository = ref.read(notesRepositoryProvider);
+    await repository.togglePin(noteId, isPinned);
+    ref.invalidate(userNotesProvider);
+    ref.invalidate(noteByIdProvider(noteId));
+  }
+}
+
+@riverpod
+class PermanentlyDelete extends _$PermanentlyDelete {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> execute(String noteId) async {
+    final repository = ref.read(notesRepositoryProvider);
+    await repository.permanentlyDeleteNote(noteId);
+    ref.invalidate(userNotesProvider);
+  }
+}
+
+@riverpod
+class CreateShareLink extends _$CreateShareLink {
+  @override
+  FutureOr<void> build() {}
+
+  Future<String> execute({
+    required String noteId,
+    required String sharedByUserId,
+    required String permission,
+  }) async {
+    final repository = ref.read(notesRepositoryProvider);
+    return repository.createShareLink(
+      noteId: noteId,
+      sharedByUserId: sharedByUserId,
+      permission: permission,
+    );
+  }
+}
+
+@riverpod
 Future<List<NoteModel>> noteSearch(
   NoteSearchRef ref,
   String query,

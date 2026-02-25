@@ -455,7 +455,7 @@ abstract class AppLocalizations {
   /// No description provided for @noteDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Note moved to trash'**
+  /// **'Note deleted'**
   String get noteDeleted;
 
   /// No description provided for @noteRestored.
@@ -1975,6 +1975,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Checking availability...'**
   String get checkingUsername;
+
+  /// No description provided for @resetChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Changes'**
+  String get resetChanges;
+
+  /// No description provided for @resetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Changes?'**
+  String get resetConfirmTitle;
+
+  /// No description provided for @resetConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All unsaved changes will be lost. Are you sure?'**
+  String get resetConfirmMessage;
+
+  /// No description provided for @readOnlyPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Only'**
+  String get readOnlyPermission;
+
+  /// No description provided for @readWritePermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Read & Write'**
+  String get readWritePermission;
+
+  /// No description provided for @selectPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Permission'**
+  String get selectPermission;
+
+  /// No description provided for @shareViaSocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Share via Social Media'**
+  String get shareViaSocial;
+
+  /// No description provided for @notePinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Note pinned'**
+  String get notePinned;
+
+  /// No description provided for @noteUnpinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Note unpinned'**
+  String get noteUnpinned;
+
+  /// No description provided for @notePermanentlyDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Note permanently deleted'**
+  String get notePermanentlyDeleted;
+
+  /// No description provided for @movedToTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to trash'**
+  String get movedToTrash;
 }
 
 class _AppLocalizationsDelegate

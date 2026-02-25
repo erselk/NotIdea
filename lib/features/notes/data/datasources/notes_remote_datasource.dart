@@ -41,6 +41,8 @@ class NotesRemoteDatasource {
     final ascending = filter.sortOrder == NoteSortOrder.ascending;
 
     final response = await query
+        .order('is_pinned', ascending: false)
+        .order('pinned_at', ascending: false, nullsFirst: false)
         .order(sortColumn, ascending: ascending)
         .range(offset, offset + limit - 1);
 
@@ -61,9 +63,13 @@ class NotesRemoteDatasource {
   }
 
   Future<NoteModel> createNote(NoteModel note) async {
+    final data = note.toJson();
+    data.remove('pinned_at');
+    data.remove('deleted_at');
+
     final response = await _client
         .from('notes')
-        .insert(note.toJson())
+        .insert(data)
         .select()
         .single();
 
@@ -71,9 +77,14 @@ class NotesRemoteDatasource {
   }
 
   Future<NoteModel> updateNote(NoteModel note) async {
+    final data = note.copyWith(updatedAt: DateTime.now()).toJson();
+    data.remove('id');
+    data.remove('user_id');
+    data.remove('created_at');
+
     final response = await _client
         .from('notes')
-        .update(note.toJson())
+        .update(data)
         .eq('id', note.id)
         .select()
         .single();
@@ -97,6 +108,30 @@ class NotesRemoteDatasource {
       'is_favorite': isFavorite,
       'updated_at': DateTime.now().toIso8601String(),
     }).eq('id', noteId);
+  }
+
+  Future<void> togglePin(String noteId, bool isPinned) async {
+    await _client.from('notes').update({
+      'is_pinned': isPinned,
+      'pinned_at': isPinned ? DateTime.now().toIso8601String() : null,
+      'updated_at': DateTime.now().toIso8601String(),
+    }).eq('id', noteId);
+  }
+
+  Future<String> createShareLink({
+    required String noteId,
+    required String sharedByUserId,
+    required String permission,
+  }) async {
+    final token = DateTime.now().millisecondsSinceEpoch.toRadixString(36);
+    await _client.from('note_shares').insert({
+      'note_id': noteId,
+      'shared_by_user_id': sharedByUserId,
+      'share_token': token,
+      'permission': permission,
+      'created_at': DateTime.now().toIso8601String(),
+    });
+    return token;
   }
 
   Future<List<NoteModel>> searchNotes({

@@ -57,6 +57,14 @@ abstract class NotesRepository {
 
   Future<void> toggleFavorite(String noteId, bool isFavorite);
 
+  Future<void> togglePin(String noteId, bool isPinned);
+
+  Future<String> createShareLink({
+    required String noteId,
+    required String sharedByUserId,
+    required String permission,
+  });
+
   Future<List<NoteModel>> searchNotes({
     required String userId,
     required String query,

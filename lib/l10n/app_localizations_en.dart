@@ -189,7 +189,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteContentHint => 'Write your note in markdown...';
 
   @override
-  String get noteDeleted => 'Note moved to trash';
+  String get noteDeleted => 'Note deleted';
 
   @override
   String get noteRestored => 'Note restored';
@@ -972,4 +972,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkingUsername => 'Checking availability...';
+
+  @override
+  String get resetChanges => 'Reset Changes';
+
+  @override
+  String get resetConfirmTitle => 'Reset Changes?';
+
+  @override
+  String get resetConfirmMessage =>
+      'All unsaved changes will be lost. Are you sure?';
+
+  @override
+  String get readOnlyPermission => 'Read Only';
+
+  @override
+  String get readWritePermission => 'Read & Write';
+
+  @override
+  String get selectPermission => 'Select Permission';
+
+  @override
+  String get shareViaSocial => 'Share via Social Media';
+
+  @override
+  String get notePinned => 'Note pinned';
+
+  @override
+  String get noteUnpinned => 'Note unpinned';
+
+  @override
+  String get notePermanentlyDeleted => 'Note permanently deleted';
+
+  @override
+  String get movedToTrash => 'Moved to trash';
 }

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
+import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -36,6 +37,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
+      if (mounted) {
+        context.go(RoutePaths.home);
+      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoggingIn = false);

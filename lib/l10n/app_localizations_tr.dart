@@ -187,7 +187,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noteContentHint => 'Notunuzu markdown formatında yazın...';
 
   @override
-  String get noteDeleted => 'Not çöp kutusuna taşındı';
+  String get noteDeleted => 'Not silindi';
 
   @override
   String get noteRestored => 'Not geri yüklendi';
@@ -980,4 +980,38 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get checkingUsername => 'Uygunluk kontrol ediliyor...';
+
+  @override
+  String get resetChanges => 'Değişiklikleri Sıfırla';
+
+  @override
+  String get resetConfirmTitle => 'Değişiklikleri Sıfırla?';
+
+  @override
+  String get resetConfirmMessage =>
+      'Kaydedilmemiş tüm değişiklikler kaybolacak. Emin misiniz?';
+
+  @override
+  String get readOnlyPermission => 'Salt Okunur';
+
+  @override
+  String get readWritePermission => 'Okuma ve Yazma';
+
+  @override
+  String get selectPermission => 'İzin Seçin';
+
+  @override
+  String get shareViaSocial => 'Sosyal Medyada Paylaş';
+
+  @override
+  String get notePinned => 'Not sabitlendi';
+
+  @override
+  String get noteUnpinned => 'Sabitleme kaldırıldı';
+
+  @override
+  String get notePermanentlyDeleted => 'Not kalıcı olarak silindi';
+
+  @override
+  String get movedToTrash => 'Çöp kutusuna taşındı';
 }

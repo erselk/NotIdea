@@ -382,5 +382,18 @@
   "getStarted": "Get Started",
   "checkEmailToConfirm": "Please check your email to confirm your account, then log in.",
   "usernameTaken": "This username is already taken",
-  "checkingUsername": "Checking availability..."
+  "checkingUsername": "Checking availability...",
+
+  "resetChanges": "Reset Changes",
+  "resetConfirmTitle": "Reset Changes?",
+  "resetConfirmMessage": "All unsaved changes will be lost. Are you sure?",
+  "readOnlyPermission": "Read Only",
+  "readWritePermission": "Read & Write",
+  "selectPermission": "Select Permission",
+  "shareViaSocial": "Share via Social Media",
+  "notePinned": "Note pinned",
+  "noteUnpinned": "Note unpinned",
+  "noteDeleted": "Note deleted",
+  "notePermanentlyDeleted": "Note permanently deleted",
+  "movedToTrash": "Moved to trash"
 }

@@ -17,7 +17,6 @@ class RouteNames {
   // Notlar
   static const String notesList = 'notesList';
   static const String noteEditor = 'noteEditor';
-  static const String noteDetail = 'noteDetail';
 
   // Profil
   static const String editProfile = 'editProfile';
@@ -63,7 +62,6 @@ class RoutePaths {
   static const String notesList = 'notes';
   static const String noteEditor = 'editor';
   static const String noteEditorWithId = 'editor/:noteId';
-  static const String noteDetail = 'note/:noteId';
 
   // Profil
   static const String editProfile = 'edit';

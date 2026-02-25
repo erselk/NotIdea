@@ -43,6 +43,8 @@ dependencies:
   # Markdown
   flutter_markdown: ^0.7.6
   markdown: ^7.3.0
+  flutter_quill: ^11.5.0
+  markdown_quill: ^4.3.0
 
   # Image Handling
   image_picker: ^1.1.2

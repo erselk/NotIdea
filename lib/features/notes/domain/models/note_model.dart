@@ -8,18 +8,20 @@ part 'note_model.g.dart';
 sealed class NoteModel with _$NoteModel {
   const factory NoteModel({
     required String id,
-    required String userId,
+    @JsonKey(name: 'user_id') required String userId,
     required String title,
     required String content,
     String? color,
     @Default(NoteVisibility.private_) NoteVisibility visibility,
-    @Default(false) bool isFavorite,
-    @Default(false) bool isDeleted,
-    DateTime? deletedAt,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    @Default(false) @JsonKey(name: 'is_favorite') bool isFavorite,
+    @Default(false) @JsonKey(name: 'is_pinned') bool isPinned,
+    @JsonKey(name: 'pinned_at') DateTime? pinnedAt,
+    @Default(false) @JsonKey(name: 'is_deleted') bool isDeleted,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     @Default([]) List<String> tags,
-    @Default([]) List<String> imageUrls,
+    @JsonKey(name: 'image_urls') @Default([]) List<String> imageUrls,
   }) = _NoteModel;
 
   factory NoteModel.fromJson(Map<String, dynamic> json) =>

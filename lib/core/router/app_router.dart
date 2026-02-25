@@ -10,7 +10,6 @@ import 'package:notidea/features/auth/presentation/screens/signup_screen.dart';
 import 'package:notidea/features/auth/presentation/screens/profile_setup_screen.dart';
 import 'package:notidea/features/notes/presentation/screens/notes_list_screen.dart';
 import 'package:notidea/features/notes/presentation/screens/note_editor_screen.dart';
-import 'package:notidea/features/notes/presentation/screens/note_detail_screen.dart';
 import 'package:notidea/features/explore/presentation/screens/explore_screen.dart';
 import 'package:notidea/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:notidea/features/profile/presentation/screens/profile_screen.dart';
@@ -34,9 +33,23 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
+  final authListenable = ValueNotifier<bool>(true);
+  
+  final sub = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    if (data.event == AuthChangeEvent.signedIn || data.event == AuthChangeEvent.signedOut) {
+      authListenable.value = !authListenable.value;
+    }
+  });
+
+  ref.onDispose(() {
+    sub.cancel();
+    authListenable.dispose();
+  });
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: RoutePaths.splash,
+    refreshListenable: authListenable,
     debugLogDiagnostics: true,
     redirect: (context, state) async {
       final session = Supabase.instance.client.auth.currentSession;
@@ -120,15 +133,7 @@ GoRouter appRouter(AppRouterRef ref) {
                   return NoteEditorScreen(noteId: noteId);
                 },
               ),
-              GoRoute(
-                path: 'note/:noteId',
-                name: RouteNames.noteDetail,
-                parentNavigatorKey: _rootNavigatorKey,
-                builder: (context, state) {
-                  final noteId = state.pathParameters['noteId']!;
-                  return NoteDetailScreen(noteId: noteId);
-                },
-              ),
+
               GoRoute(
                 path: RoutePaths.trash,
                 name: RouteNames.trash,

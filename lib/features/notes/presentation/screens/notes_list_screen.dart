@@ -174,7 +174,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 title: Text(l10n.edit),
                 onTap: () {
                   Navigator.pop(ctx);
-                  context.push('/notes/edit/${note.id}');
+                  context.push('/home/editor/${note.id}');
                 },
               ),
               ListTile(
@@ -381,7 +381,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 final note = notes[index];
                 return NoteCard(
                   note: note,
-                  onTap: () => context.push('/notes/${note.id}'),
+                  onTap: () => context.push('/home/editor/${note.id}'),
                   onLongPress: () => _showNoteActions(note),
                 );
               },
@@ -390,7 +390,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/notes/new'),
+        onPressed: () => context.push('/home/editor'),
         child: const Icon(Icons.add),
       ),
     );

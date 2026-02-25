@@ -382,5 +382,18 @@
   "getStarted": "Başla",
   "checkEmailToConfirm": "Hesabınızı onaylamak için e-postanızı kontrol edin, ardından giriş yapın.",
   "usernameTaken": "Bu kullanıcı adı zaten alınmış",
-  "checkingUsername": "Uygunluk kontrol ediliyor..."
+  "checkingUsername": "Uygunluk kontrol ediliyor...",
+
+  "resetChanges": "Değişiklikleri Sıfırla",
+  "resetConfirmTitle": "Değişiklikleri Sıfırla?",
+  "resetConfirmMessage": "Kaydedilmemiş tüm değişiklikler kaybolacak. Emin misiniz?",
+  "readOnlyPermission": "Salt Okunur",
+  "readWritePermission": "Okuma ve Yazma",
+  "selectPermission": "İzin Seçin",
+  "shareViaSocial": "Sosyal Medyada Paylaş",
+  "notePinned": "Not sabitlendi",
+  "noteUnpinned": "Sabitleme kaldırıldı",
+  "noteDeleted": "Not silindi",
+  "notePermanentlyDeleted": "Not kalıcı olarak silindi",
+  "movedToTrash": "Çöp kutusuna taşındı"
 }

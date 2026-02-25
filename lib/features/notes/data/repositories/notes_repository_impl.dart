@@ -79,6 +79,24 @@ class NotesRepositoryImpl implements NotesRepository {
   }
 
   @override
+  Future<void> togglePin(String noteId, bool isPinned) async {
+    await _remoteDatasource.togglePin(noteId, isPinned);
+  }
+
+  @override
+  Future<String> createShareLink({
+    required String noteId,
+    required String sharedByUserId,
+    required String permission,
+  }) async {
+    return _remoteDatasource.createShareLink(
+      noteId: noteId,
+      sharedByUserId: sharedByUserId,
+      permission: permission,
+    );
+  }
+
+  @override
   Future<List<NoteModel>> searchNotes({
     required String userId,
     required String query,
