@@ -6,12 +6,12 @@ import 'package:notidea/features/profile/data/datasources/profile_remote_datasou
 import 'package:notidea/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
 import 'package:notidea/features/profile/domain/repositories/profile_repository.dart';
+import 'package:notidea/core/database/app_database.dart';
 
 part 'profile_provider.g.dart';
 
 @riverpod
-ProfileRemoteDatasource profileRemoteDatasource(
-    Ref ref) {
+ProfileRemoteDatasource profileRemoteDatasource(Ref ref) {
   return ProfileRemoteDatasource();
 }
 
@@ -22,18 +22,55 @@ ProfileRepository profileRepository(Ref ref) {
 }
 
 @riverpod
-Future<ProfileModel?> currentProfile(Ref ref) async {
+Stream<ProfileModel?> currentProfile(Ref ref) async* {
   final currentUser = await ref.watch(currentUserProvider.future);
-  if (currentUser == null) return null;
+  if (currentUser == null) {
+    yield null;
+    return;
+  }
 
   final repository = ref.watch(profileRepositoryProvider);
-  return repository.getProfileById(currentUser.id);
+  final db = AppDatabase.instance;
+
+  final local = db.getProfileById(currentUser.id);
+  if (local != null) {
+    yield local;
+  }
+
+  try {
+    final remote = await repository.getProfileById(currentUser.id);
+    if (remote != null) {
+      await db.cacheProfile(remote);
+      yield remote;
+    } else if (local == null) {
+      yield null;
+    }
+  } catch (e) {
+    if (local == null) rethrow; // rethrow only if no local data
+  }
 }
 
 @riverpod
-Future<ProfileModel?> profileById(Ref ref, String userId) async {
+Stream<ProfileModel?> profileById(Ref ref, String userId) async* {
   final repository = ref.watch(profileRepositoryProvider);
-  return repository.getProfileById(userId);
+  final db = AppDatabase.instance;
+
+  final local = db.getProfileById(userId);
+  if (local != null) {
+    yield local;
+  }
+
+  try {
+    final remote = await repository.getProfileById(userId);
+    if (remote != null) {
+      await db.cacheProfile(remote);
+      yield remote;
+    } else if (local == null) {
+      yield null;
+    }
+  } catch (e) {
+    if (local == null) rethrow;
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -44,6 +81,7 @@ class CreateProfile extends _$CreateProfile {
   Future<void> execute(ProfileModel profile) async {
     final repository = ref.read(profileRepositoryProvider);
     await repository.createProfile(profile);
+    await AppDatabase.instance.cacheProfile(profile);
     ref.invalidate(currentProfileProvider);
   }
 }
@@ -56,6 +94,7 @@ class UpdateProfile extends _$UpdateProfile {
   Future<ProfileModel> execute(ProfileModel profile) async {
     final repository = ref.read(profileRepositoryProvider);
     final updated = await repository.updateProfile(profile);
+    await AppDatabase.instance.cacheProfile(updated);
     ref.invalidate(currentProfileProvider);
     ref.invalidate(profileByIdProvider(profile.id));
     return updated;

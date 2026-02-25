@@ -30,6 +30,9 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    // Arkaplanda profil bilgisini hazırda tutmak için izliyoruz
+    ref.watch(currentProfileProvider);
+
     return Scaffold(
       key: _scaffoldKey,
       drawerScrimColor: Theme.of(context).colorScheme.scrim.withOpacity(0.12),
