@@ -8,26 +8,42 @@ class FriendsRemoteDatasource {
   final SupabaseClient _client = SupabaseConfig.client;
 
   Future<List<FriendshipModel>> getFriends(String userId) async {
-    final response = await _client.rpc('get_user_friends', params: {
-      'p_user_id': userId,
-    });
+    final response = await _client
+        .from('friendships')
+        .select('''
+          *,
+          requester_profile:profiles!requester_id(*),
+          addressee_profile:profiles!addressee_id(*)
+        ''')
+        .or('requester_id.eq.$userId,addressee_id.eq.$userId')
+        .eq('status', FriendshipStatus.accepted.value);
 
-    return (response as List)
-        .map((json) => FriendshipModel.fromJson(json as Map<String, dynamic>))
-        .toList();
+    return (response as List).map((json) {
+      final map = json as Map<String, dynamic>;
+      final requesterProfile = map.remove('requester_profile');
+      final addresseeProfile = map.remove('addressee_profile');
+      return FriendshipModel.fromJson(map).copyWith(
+        requesterProfile: requesterProfile != null
+            ? ProfileModel.fromJson(requesterProfile as Map<String, dynamic>)
+            : null,
+        addresseeProfile: addresseeProfile != null
+            ? ProfileModel.fromJson(addresseeProfile as Map<String, dynamic>)
+            : null,
+      );
+    }).toList();
   }
 
   Future<List<FriendshipModel>> getPendingRequests(String userId) async {
     final incoming = await _client
         .from('friendships')
-        .select('*, requester_profile:profiles!friendships_requester_id_fkey(*)')
+        .select('*, requester_profile:profiles!requester_id(*)')
         .eq('addressee_id', userId)
         .eq('status', FriendshipStatus.pending.value)
         .order('created_at', ascending: false);
 
     final outgoing = await _client
         .from('friendships')
-        .select('*, addressee_profile:profiles!friendships_addressee_id_fkey(*)')
+        .select('*, addressee_profile:profiles!addressee_id(*)')
         .eq('requester_id', userId)
         .eq('status', FriendshipStatus.pending.value)
         .order('created_at', ascending: false);
@@ -125,11 +141,12 @@ class FriendsRemoteDatasource {
     required String currentUserId,
     int limit = 20,
   }) async {
-    final response = await _client.rpc('search_users', params: {
-      'search_query': query,
-      'current_user_id': currentUserId,
-      'result_limit': limit,
-    });
+    final response = await _client
+        .from('profiles')
+        .select()
+        .neq('id', currentUserId)
+        .or('username.ilike.%$query%,display_name.ilike.%$query%')
+        .limit(limit);
 
     return (response as List)
         .map((json) => ProfileModel.fromJson(json as Map<String, dynamic>))
