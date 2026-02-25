@@ -18,18 +18,18 @@ class ExploreSortNotifier extends _$ExploreSortNotifier {
 
 @riverpod
 Future<List<NoteModel>> publicNotes(
-  PublicNotesRef ref, {
+  Ref ref, {
   int offset = 0,
   int limit = 30,
 }) async {
-  ref.watch(exploreSortNotifierProvider);
+  ref.watch(exploreSortProvider);
   final repository = ref.watch(notesRepositoryProvider);
   return repository.getPublicNotes(offset: offset, limit: limit);
 }
 
 @riverpod
 Future<List<NoteModel>> searchPublicNotes(
-  SearchPublicNotesRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().isEmpty) return [];

@@ -32,7 +32,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
       _isSearching = !_isSearching;
       if (!_isSearching) {
         _searchController.clear();
-        ref.read(noteFilterNotifierProvider.notifier).setSearchQuery(null);
+        ref.read(noteFilterProvider.notifier).setSearchQuery(null);
       }
     });
   }
@@ -165,7 +165,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                   border: InputBorder.none,
                 ),
                 onChanged: (query) {
-                  ref.read(noteFilterNotifierProvider.notifier)
+                  ref.read(noteFilterProvider.notifier)
                       .setSearchQuery(query);
                 },
               )

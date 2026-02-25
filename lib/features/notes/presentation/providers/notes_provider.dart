@@ -9,17 +9,17 @@ import 'package:notidea/features/notes/domain/repositories/notes_repository.dart
 part 'notes_provider.g.dart';
 
 @riverpod
-NotesRemoteDatasource notesRemoteDatasource(NotesRemoteDatasourceRef ref) {
+NotesRemoteDatasource notesRemoteDatasource(Ref ref) {
   return NotesRemoteDatasource();
 }
 
 @riverpod
-NotesLocalDatasource notesLocalDatasource(NotesLocalDatasourceRef ref) {
+NotesLocalDatasource notesLocalDatasource(Ref ref) {
   return NotesLocalDatasource();
 }
 
 @riverpod
-NotesRepository notesRepository(NotesRepositoryRef ref) {
+NotesRepository notesRepository(Ref ref) {
   return NotesRepositoryImpl(
     remoteDatasource: ref.watch(notesRemoteDatasourceProvider),
     localDatasource: ref.watch(notesLocalDatasourceProvider),
@@ -57,11 +57,11 @@ class NoteFilterNotifier extends _$NoteFilterNotifier {
 }
 
 @riverpod
-Future<List<NoteModel>> userNotes(UserNotesRef ref) async {
+Future<List<NoteModel>> userNotes(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 
-  final filter = ref.watch(noteFilterNotifierProvider);
+  final filter = ref.watch(noteFilterProvider);
   final repository = ref.watch(notesRepositoryProvider);
 
   return repository.getUserNotes(
@@ -71,7 +71,7 @@ Future<List<NoteModel>> userNotes(UserNotesRef ref) async {
 }
 
 @riverpod
-Future<NoteModel?> noteById(NoteByIdRef ref, String noteId) async {
+Future<NoteModel?> noteById(Ref ref, String noteId) async {
   final repository = ref.watch(notesRepositoryProvider);
   return repository.getNoteById(noteId);
 }
@@ -174,7 +174,7 @@ class CreateShareLink extends _$CreateShareLink {
 
 @riverpod
 Future<List<NoteModel>> noteSearch(
-  NoteSearchRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().isEmpty) return [];

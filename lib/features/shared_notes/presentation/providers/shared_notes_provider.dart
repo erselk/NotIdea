@@ -9,7 +9,7 @@ part 'shared_notes_provider.g.dart';
 
 @riverpod
 Future<List<NoteShareModel>> sharedWithMeNotes(
-    SharedWithMeNotesRef ref) async {
+    Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 

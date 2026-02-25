@@ -13,11 +13,11 @@ dependencies:
     sdk: flutter
 
   # State Management
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.6.1
+  flutter_riverpod: ^3.1.0
+  riverpod_annotation: ^4.0.0
 
   # Routing
-  go_router: ^14.8.1
+  go_router: ^17.1.0
 
   # Supabase
   supabase_flutter: ^2.9.0
@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.2
   shimmer: ^3.0.0
-  google_fonts: ^6.2.1
+  google_fonts: ^8.0.2
   flutter_svg: ^2.0.17
 
   # Markdown
@@ -47,7 +47,7 @@ dependencies:
 
   # Image Handling
   image_picker: ^1.1.2
-  image_cropper: ^8.0.2
+  image_cropper: ^11.0.0
   cached_network_image: ^3.4.1
   flutter_image_compress: ^2.3.0
 
@@ -55,9 +55,9 @@ dependencies:
   intl: ^0.20.2
   uuid: ^4.5.1
   url_launcher: ^6.3.1
-  share_plus: ^10.1.4
-  flutter_secure_storage: ^9.2.4
-  flutter_dotenv: ^5.2.1
+  share_plus: ^12.0.1
+  flutter_secure_storage: ^10.0.0
+  flutter_dotenv: ^6.0.0
   timeago: ^3.7.0
   collection: ^1.19.0
 
@@ -75,9 +75,9 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   build_runner: ^2.4.14
-  riverpod_generator: ^2.6.3
-  riverpod_lint: ^2.6.3
-  custom_lint: ^0.7.5
+  riverpod_generator: ^4.0.0+1
+  riverpod_lint: ^3.1.0
+  custom_lint: ^0.8.1
   freezed: ^3.0.0
   json_serializable: ^6.9.4
   hive_ce_generator: ^1.7.0

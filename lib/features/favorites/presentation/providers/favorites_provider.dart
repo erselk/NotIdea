@@ -7,7 +7,7 @@ import 'package:notidea/features/notes/presentation/providers/notes_provider.dar
 part 'favorites_provider.g.dart';
 
 @riverpod
-Future<List<NoteModel>> favoriteNotes(FavoriteNotesRef ref) async {
+Future<List<NoteModel>> favoriteNotes(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 

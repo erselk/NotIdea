@@ -179,7 +179,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final l10n = AppLocalizations.of(context)!;
-    final profile = ref.read(currentProfileProvider).valueOrNull;
+    final profile = ref.read(currentProfileProvider).value;
     if (profile == null) return;
 
     final updated = profile.copyWith(

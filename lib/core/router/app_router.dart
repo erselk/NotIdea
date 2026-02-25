@@ -32,7 +32,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
-GoRouter appRouter(AppRouterRef ref) {
+GoRouter appRouter(Ref ref) {
   final authListenable = ValueNotifier<bool>(true);
   
   final sub = Supabase.instance.client.auth.onAuthStateChange.listen((data) {

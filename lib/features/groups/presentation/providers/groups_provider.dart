@@ -10,19 +10,19 @@ part 'groups_provider.g.dart';
 
 @riverpod
 GroupsRemoteDatasource groupsRemoteDatasource(
-    GroupsRemoteDatasourceRef ref) {
+    Ref ref) {
   return GroupsRemoteDatasource();
 }
 
 @riverpod
-GroupsRepository groupsRepository(GroupsRepositoryRef ref) {
+GroupsRepository groupsRepository(Ref ref) {
   return GroupsRepositoryImpl(
     remoteDatasource: ref.watch(groupsRemoteDatasourceProvider),
   );
 }
 
 @riverpod
-Future<List<GroupModel>> myGroups(MyGroupsRef ref) async {
+Future<List<GroupModel>> myGroups(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 
@@ -31,14 +31,14 @@ Future<List<GroupModel>> myGroups(MyGroupsRef ref) async {
 }
 
 @riverpod
-Future<GroupModel?> groupById(GroupByIdRef ref, String groupId) async {
+Future<GroupModel?> groupById(Ref ref, String groupId) async {
   final repository = ref.watch(groupsRepositoryProvider);
   return repository.getGroupById(groupId);
 }
 
 @riverpod
 Future<List<GroupMemberModel>> groupMembers(
-  GroupMembersRef ref,
+  Ref ref,
   String groupId,
 ) async {
   final repository = ref.watch(groupsRepositoryProvider);

@@ -18,8 +18,8 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsExtension>()!;
-    final currentThemeMode = ref.watch(themeModeNotifierProvider);
-    final currentLocale = ref.watch(localeNotifierProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final currentLocale = ref.watch(localeProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
@@ -30,13 +30,13 @@ class SettingsScreen extends ConsumerWidget {
           _ThemeTile(
             currentMode: currentThemeMode,
             onChanged: (mode) {
-              ref.read(themeModeNotifierProvider.notifier).setThemeMode(mode);
+              ref.read(themeModeProvider.notifier).setThemeMode(mode);
             },
           ),
           _LanguageTile(
             currentLocale: currentLocale,
             onChanged: (locale) {
-              ref.read(localeNotifierProvider.notifier).setLocale(locale);
+              ref.read(localeProvider.notifier).setLocale(locale);
             },
           ),
           Divider(height: 1, color: appColors.divider),

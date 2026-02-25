@@ -46,7 +46,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsExtension>()!;
-    final sortMode = ref.watch(exploreSortNotifierProvider);
+    final sortMode = ref.watch(exploreSortProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +83,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           if (!_isSearching)
             PopupMenuButton<ExploreSortMode>(
               onSelected: (mode) =>
-                  ref.read(exploreSortNotifierProvider.notifier).setSort(mode),
+                  ref.read(exploreSortProvider.notifier).setSort(mode),
               icon: const Icon(Icons.sort),
               itemBuilder: (ctx) => [
                 PopupMenuItem(

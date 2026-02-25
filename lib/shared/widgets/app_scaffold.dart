@@ -46,7 +46,7 @@ class _AppDrawer extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final profileAsync = ref.watch(currentProfileProvider);
-    final profile = profileAsync.valueOrNull;
+    final profile = profileAsync.value;
     final currentPath = GoRouterState.of(context).uri.path;
 
     return NavigationDrawer(

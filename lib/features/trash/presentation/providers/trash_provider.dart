@@ -7,7 +7,7 @@ import 'package:notidea/features/notes/presentation/providers/notes_provider.dar
 part 'trash_provider.g.dart';
 
 @riverpod
-Future<List<NoteModel>> trashedNotes(TrashedNotesRef ref) async {
+Future<List<NoteModel>> trashedNotes(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 

@@ -10,18 +10,18 @@ part 'profile_provider.g.dart';
 
 @riverpod
 ProfileRemoteDatasource profileRemoteDatasource(
-    ProfileRemoteDatasourceRef ref) {
+    Ref ref) {
   return ProfileRemoteDatasource();
 }
 
 @riverpod
-ProfileRepository profileRepository(ProfileRepositoryRef ref) {
+ProfileRepository profileRepository(Ref ref) {
   final datasource = ref.watch(profileRemoteDatasourceProvider);
   return ProfileRepositoryImpl(remoteDatasource: datasource);
 }
 
 @riverpod
-Future<ProfileModel?> currentProfile(CurrentProfileRef ref) async {
+Future<ProfileModel?> currentProfile(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return null;
 
@@ -30,7 +30,7 @@ Future<ProfileModel?> currentProfile(CurrentProfileRef ref) async {
 }
 
 @riverpod
-Future<ProfileModel?> profileById(ProfileByIdRef ref, String userId) async {
+Future<ProfileModel?> profileById(Ref ref, String userId) async {
   final repository = ref.watch(profileRepositoryProvider);
   return repository.getProfileById(userId);
 }

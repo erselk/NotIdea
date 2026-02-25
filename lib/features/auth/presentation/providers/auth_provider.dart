@@ -7,24 +7,24 @@ import 'package:notidea/features/auth/domain/repositories/auth_repository.dart';
 part 'auth_provider.g.dart';
 
 @riverpod
-AuthRemoteDatasource authRemoteDatasource(AuthRemoteDatasourceRef ref) {
+AuthRemoteDatasource authRemoteDatasource(Ref ref) {
   return AuthRemoteDatasource();
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   final datasource = ref.watch(authRemoteDatasourceProvider);
   return AuthRepositoryImpl(remoteDatasource: datasource);
 }
 
 @riverpod
-Stream<UserModel?> authState(AuthStateRef ref) {
+Stream<UserModel?> authState(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return repository.authStateChanges();
 }
 
 @riverpod
-Future<UserModel?> currentUser(CurrentUserRef ref) async {
+Future<UserModel?> currentUser(Ref ref) async {
   final repository = ref.watch(authRepositoryProvider);
   return repository.getCurrentUser();
 }

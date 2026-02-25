@@ -23,7 +23,7 @@ class SearchQuery extends _$SearchQuery {
 
 @riverpod
 Future<List<NoteModel>> searchMyNotes(
-  SearchMyNotesRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().isEmpty) return [];
@@ -40,7 +40,7 @@ Future<List<NoteModel>> searchMyNotes(
 
 @riverpod
 Future<List<NoteModel>> searchPublicNotesGlobal(
-  SearchPublicNotesGlobalRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().isEmpty) return [];
@@ -60,7 +60,7 @@ Future<List<NoteModel>> searchPublicNotesGlobal(
 
 @riverpod
 Future<List<ProfileModel>> searchUsersGlobal(
-  SearchUsersGlobalRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().length < 2) return [];

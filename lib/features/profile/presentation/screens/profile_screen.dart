@@ -20,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
     final currentUserAsync = ref.watch(currentUserProvider);
 
     final isOwnProfile =
-        userId == null || userId == currentUserAsync.valueOrNull?.id;
+        userId == null || userId == currentUserAsync.value?.id;
 
     final profileAsync = isOwnProfile
         ? ref.watch(currentProfileProvider)

@@ -10,19 +10,19 @@ part 'friends_provider.g.dart';
 
 @riverpod
 FriendsRemoteDatasource friendsRemoteDatasource(
-    FriendsRemoteDatasourceRef ref) {
+    Ref ref) {
   return FriendsRemoteDatasource();
 }
 
 @riverpod
-FriendsRepository friendsRepository(FriendsRepositoryRef ref) {
+FriendsRepository friendsRepository(Ref ref) {
   return FriendsRepositoryImpl(
     remoteDatasource: ref.watch(friendsRemoteDatasourceProvider),
   );
 }
 
 @riverpod
-Future<List<FriendshipModel>> friendsList(FriendsListRef ref) async {
+Future<List<FriendshipModel>> friendsList(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 
@@ -31,7 +31,7 @@ Future<List<FriendshipModel>> friendsList(FriendsListRef ref) async {
 }
 
 @riverpod
-Future<List<FriendshipModel>> pendingRequests(PendingRequestsRef ref) async {
+Future<List<FriendshipModel>> pendingRequests(Ref ref) async {
   final currentUser = await ref.watch(currentUserProvider.future);
   if (currentUser == null) return [];
 
@@ -97,7 +97,7 @@ class RemoveFriend extends _$RemoveFriend {
 
 @riverpod
 Future<List<ProfileModel>> searchUsers(
-  SearchUsersRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.trim().length < 2) return [];
