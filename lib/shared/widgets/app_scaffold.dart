@@ -58,7 +58,7 @@ class _AppDrawer extends ConsumerWidget {
     final avatarUrl = profile?.avatarUrl;
 
     final menuItems = [
-      _MenuItem(Icons.note_alt_outlined, l10n.myNotes),
+      _MenuItem(Icons.note_alt_outlined, 'Notes'),
       _MenuItem(Icons.explore_outlined, l10n.explore),
       _MenuItem(Icons.favorite_outline_rounded, l10n.favorites),
       _MenuItem(Icons.person_outline_rounded, l10n.profile),

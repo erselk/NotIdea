@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notidea/l10n/app_localizations.dart';
-import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
-import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final String? userId;
@@ -28,20 +27,20 @@ class ProfileScreen extends ConsumerWidget {
         : ref.watch(profileByIdProvider(userId!));
 
     return Scaffold(
-      appBar: isOwnProfile
-          ? BrandedAppBar(
-              titleFirst: 'Pro',
-              titleSecond: 'file',
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.edit_outlined),
-                  onPressed: () => context.push('/profile/edit'),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: isOwnProfile
+            ? Padding(
+                padding: const EdgeInsets.only(left: 24.0, top: 12.0),
+                child: IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+                  onPressed: () => AppScaffold.openDrawer(context),
                 ),
-              ],
-            )
-          : AppBar(
-              title: Text(l10n.profile),
-            ),
+              )
+            : const BackButton(color: Colors.white),
+      ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -87,194 +86,179 @@ class ProfileScreen extends ConsumerWidget {
               }
             },
             child: SingleChildScrollView(
+              padding: EdgeInsets.zero,
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
+              child: Stack(
                 children: [
-                  const SizedBox(height: 24),
-
-                  // Avatar
-                  Stack(
-                    alignment: Alignment.bottomRight,
+                  Container(
+                    height: 150, // Resmin tam ortasinda hizalanacak seviyeye daraltildi
+                    width: double.infinity,
+                    color: const Color(0xFF06A74D),
+                  ),
+                  Column(
                     children: [
-                      CircleAvatar(
-                        radius: AppConstants.avatarSizeXLarge / 2,
-                        backgroundColor:
-                            theme.colorScheme.surfaceContainerHighest,
-                        backgroundImage: profile.avatarUrl != null
-                            ? CachedNetworkImageProvider(profile.avatarUrl!)
-                            : null,
-                        child: profile.avatarUrl == null
-                            ? Icon(
-                                Icons.person,
-                                size: AppConstants.avatarSizeXLarge / 2,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              )
-                            : null,
-                      ),
-                      if (isOwnProfile)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: theme.colorScheme.surface,
-                                width: 2,
-                              ),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.camera_alt,
-                                size: 18,
-                                color: theme.colorScheme.onPrimary,
-                              ),
-                              onPressed: () =>
-                                  context.push('/profile/edit'),
-                              constraints: const BoxConstraints(
-                                minWidth: 36,
-                                minHeight: 36,
-                              ),
-                              padding: EdgeInsets.zero,
-                            ),
+                      const SizedBox(height: 70), // Push avatar higher up
+                      // Avatar
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          CircleAvatar(
+                            radius: 80, // Increased size
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
+                            backgroundImage: profile.avatarUrl != null
+                                ? CachedNetworkImageProvider(profile.avatarUrl!)
+                                : null,
+                            child: profile.avatarUrl == null
+                                ? Icon(
+                                    Icons.person,
+                                    size: 80,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  )
+                                : null,
                           ),
+                          if (isOwnProfile)
+                            Positioned(
+                              bottom: 0, // was 8
+                              right: 0, // was 8
+                              child: GestureDetector(
+                                onTap: () => context.push('/profile/edit'),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF06A74D), // Green background
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: const EdgeInsets.all(7), // Smaller padding for smaller circle
+                                  child: const Icon(
+                                    Icons.edit,
+                                    size: 20, // Keep icon size same
+                                    color: Colors.white, // White icon
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 28), // Üst boşluk arttirildi
+
+                      // Display name
+                      Text(
+                        profile.displayName ?? profile.username,
+                        style: GoogleFonts.poppins(
+                          fontSize: 24, // 1. Display Name
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Display name
-                  Text(
-                    profile.displayName ?? profile.username,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '@${profile.username}',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-
-                  // Bio
-                  if (profile.bio != null && profile.bio!.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
-                      child: Text(
-                        profile.bio!,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                      ),
+                      const SizedBox(height: 2), // Alt boşluk düşürüldü
+                      Text(
+                        '@${profile.username}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16, // 2. Username
+                          fontWeight: FontWeight.w300,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                    ),
-                  ],
 
-                  const SizedBox(height: 24),
-
-                  // Stats
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _StatItem(
-                        count: profile.noteCount,
-                        label: l10n.notes,
-                        theme: theme,
-                      ),
-                      Container(
-                        width: 1,
-                        height: 40,
-                        margin: const EdgeInsets.symmetric(horizontal: 32),
-                        color: theme.colorScheme.outlineVariant,
-                      ),
-                      _StatItem(
-                        count: profile.friendCount,
-                        label: l10n.friends,
-                        theme: theme,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Action button
-                  if (isOwnProfile)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: OutlinedButton.icon(
-                        onPressed: () => context.push('/profile/edit'),
-                        icon: const Icon(Icons.edit_outlined),
-                        label: Text(l10n.editProfile),
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(44),
-                        ),
-                      ),
-                    )
-                  else
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: FilledButton.icon(
-                        onPressed: () {
-                          // TODO: Arkadaş ekleme
-                        },
-                        icon: const Icon(Icons.person_add_outlined),
-                        label: Text(l10n.addFriend),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(44),
-                        ),
-                      ),
-                    ),
-
-                  const SizedBox(height: 24),
-
-                  // Tabs
-                  DefaultTabController(
-                    length: isOwnProfile ? 3 : 2,
-                    child: Column(
-                      children: [
-                        TabBar(
-                          tabs: [
-                            Tab(text: l10n.myNotes),
-                            Tab(text: l10n.publicNotes),
-                            if (isOwnProfile) Tab(text: l10n.sharedWithMe),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 400,
-                          child: TabBarView(
-                            children: [
-                              _PlaceholderTab(
-                                icon: Icons.note_outlined,
-                                label: l10n.myNotes,
-                                theme: theme,
-                              ),
-                              _PlaceholderTab(
-                                icon: Icons.public,
-                                label: l10n.publicNotes,
-                                theme: theme,
-                              ),
-                              if (isOwnProfile)
-                                _PlaceholderTab(
-                                  icon: Icons.share_outlined,
-                                  label: l10n.sharedWithMe,
-                                  theme: theme,
-                                ),
-                            ],
+                      // Bio
+                      if (profile.bio != null && profile.bio!.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Text(
+                            profile.bio!,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+
+                      const SizedBox(height: 24),
+
+                      // Stats
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _StatItem(
+                            count: profile.noteCount, // TODO: Replace with total notes logic if different
+                            label: 'Notes',
+                            theme: theme,
+                          ),
+                          const SizedBox(width: 48),
+                          _StatItem(
+                            count: profile.friendCount,
+                            label: l10n.friends,
+                            theme: theme,
+                          ),
+                          const SizedBox(width: 48),
+                          _StatItem(
+                            count: 0, // Profile model'de group count varsa güncellenmeli
+                            label: 'Groups',
+                            theme: theme,
+                          ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60), // Uzatıldı
+                        child: const Divider(
+                          color: Color(0xFF06A74D), 
+                          thickness: 3, // Hafif Kalınlaştırıldı
+                        ),
+                      ),
+                      const SizedBox(height: 24), // Alt bosluk arttirildi
+
+                      // Action button
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 80, top: 8, bottom: 24), // Ortaya doğru daha da itildi
+                          child: InkWell(
+                            onTap: () {
+                              if (isOwnProfile) {
+                                context.push('/profile/edit');
+                              } else {
+                                // TODO: Arkadaş ekleme
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    isOwnProfile ? Icons.edit_outlined : Icons.person_add_outlined, 
+                                    color: const Color(0xFF06A74D), // Green icon
+                                    size: 28 // Büyütüldü
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    isOwnProfile ? l10n.editProfile : l10n.addFriend,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16, // 5. Action Text
+                                      fontWeight: FontWeight.w400, // Regular weight
+                                      color: theme.colorScheme.onSurface, // Siyah/Tema rengi
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                ], // Column children
+              ), // Column
+            ], // Stack children
+          ), // Stack
+        ), // SingleChildScrollView
+      ); // RefreshIndicator
+    }, // data callback
+      ), // profileAsync.when
+    ); // Scaffold
   }
 }
 
@@ -295,16 +279,20 @@ class _StatItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          count.toString(),
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+          count.toString().padLeft(2, '0'),
+          style: GoogleFonts.poppins(
+            fontSize: 16, // 3. Stats Title
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          style: GoogleFonts.poppins(
+            fontSize: 14, // 4. Stats Subtitle
+            fontWeight: FontWeight.w400,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -312,37 +300,3 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-class _PlaceholderTab extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final ThemeData theme;
-
-  const _PlaceholderTab({
-    required this.icon,
-    required this.label,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 48,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
