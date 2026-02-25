@@ -7,6 +7,8 @@ import 'package:notidea/features/notes/domain/repositories/notes_repository.dart
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class NotesListScreen extends ConsumerStatefulWidget {
   const NotesListScreen({super.key});
@@ -35,124 +37,6 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
     });
   }
 
-  void _showSortFilterSheet() {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final filter = ref.read(noteFilterNotifierProvider);
-    final notifier = ref.read(noteFilterNotifierProvider.notifier);
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(l10n.sortBy, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: [
-                ChoiceChip(
-                  label: Text(l10n.dateModified),
-                  selected: filter.sortBy == NoteSortBy.updatedAt,
-                  onSelected: (_) {
-                    notifier.setSortBy(NoteSortBy.updatedAt);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                ChoiceChip(
-                  label: Text(l10n.dateCreated),
-                  selected: filter.sortBy == NoteSortBy.createdAt,
-                  onSelected: (_) {
-                    notifier.setSortBy(NoteSortBy.createdAt);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                ChoiceChip(
-                  label: Text(l10n.titleLabel),
-                  selected: filter.sortBy == NoteSortBy.title,
-                  onSelected: (_) {
-                    notifier.setSortBy(NoteSortBy.title);
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(l10n.filterBy, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: [
-                FilterChip(
-                  label: Text(l10n.favorites),
-                  selected: filter.isFavorite == true,
-                  onSelected: (selected) {
-                    notifier.setFavoriteFilter(selected ? true : null);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                FilterChip(
-                  label: Text(l10n.privateNotes),
-                  selected: filter.visibility == NoteVisibility.private_,
-                  onSelected: (selected) {
-                    notifier.setVisibilityFilter(
-                        selected ? NoteVisibility.private_ : null);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                FilterChip(
-                  label: Text(l10n.publicNotes),
-                  selected: filter.visibility == NoteVisibility.public_,
-                  onSelected: (selected) {
-                    notifier.setVisibilityFilter(
-                        selected ? NoteVisibility.public_ : null);
-                    Navigator.pop(ctx);
-                  },
-                ),
-                FilterChip(
-                  label: Text(l10n.friendsNotes),
-                  selected: filter.visibility == NoteVisibility.friends,
-                  onSelected: (selected) {
-                    notifier.setVisibilityFilter(
-                        selected ? NoteVisibility.friends : null);
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  notifier.reset();
-                  Navigator.pop(ctx);
-                },
-                child: Text(l10n.clearFilters),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   void _showNoteActions(dynamic note) {
     final l10n = AppLocalizations.of(context)!;
@@ -262,6 +146,10 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        elevation: 0,
+        scrolledUnderElevation: 0,
         leading: _isSearching
             ? null
             : IconButton(
@@ -281,15 +169,24 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                       .setSearchQuery(query);
                 },
               )
-            : Text(l10n.myNotes),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/logolight-notext.svg',
+                    height: 26,
+                  ),
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    'assets/images/logolight-onlytext.svg',
+                    height: 20,
+                  ),
+                ],
+              ),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: _toggleSearch,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showSortFilterSheet,
           ),
         ],
       ),
@@ -368,17 +265,20 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
               );
             }
 
-            return GridView.builder(
+            final pinnedNotes = notes.where((n) => n.isPinned).toList();
+            final unpinnedNotes = notes.where((n) => !n.isPinned).toList();
+            final sortedNotes = [...pinnedNotes, ...unpinnedNotes];
+
+            return MasonryGridView.builder(
               padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.85,
               ),
-              itemCount: notes.length,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              itemCount: sortedNotes.length,
               itemBuilder: (context, index) {
-                final note = notes[index];
+                final note = sortedNotes[index];
                 return NoteCard(
                   note: note,
                   onTap: () => context.push('/home/editor/${note.id}'),
@@ -391,8 +291,11 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/home/editor'),
-        child: const Icon(Icons.add),
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: const Icon(Icons.add, size: 28),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

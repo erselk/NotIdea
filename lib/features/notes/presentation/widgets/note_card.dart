@@ -146,13 +146,8 @@ class _NoteCardState extends State<NoteCard> {
     }
   }
 
-  IconData _visibilityIcon() {
-    return switch (widget.note.visibility) {
-      NoteVisibility.private_ => Icons.lock_outline,
-      NoteVisibility.public_ => Icons.public,
-      NoteVisibility.friends => Icons.people_outline,
-    };
-  }
+  // Visibility icon removed
+
 
   @override
   Widget build(BuildContext context) {
@@ -180,65 +175,80 @@ class _NoteCardState extends State<NoteCard> {
           padding: const EdgeInsets.all(14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Title row with indicators
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.note.title.isEmpty ? 'Untitled' : widget.note.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: onCardColor,
+              if (widget.note.title.isNotEmpty)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.note.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: onCardColor,
+                          letterSpacing: -0.5,
+                          height: 1.2,
+                        ),
                       ),
                     ),
-                  ),
-                  if (widget.note.isFavorite)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Icon(
-                        Icons.favorite,
-                        size: 16,
-                        color: onCardColor.withValues(alpha: 0.7),
+                    if (widget.note.isFavorite)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.favorite,
+                          size: 16,
+                          color: onCardColor.withValues(alpha: 0.7),
+                        ),
                       ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 8),
+                    if (widget.note.isPinned)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.push_pin,
+                          size: 16,
+                          color: onCardColor.withValues(alpha: 0.7),
+                        ),
+                      ),
+                  ],
+                ),
+              
+              if (widget.note.title.isNotEmpty && widget.note.content.isNotEmpty)
+                const SizedBox(height: 10),
 
               // Content preview
               if (widget.note.content.isNotEmpty)
-                Expanded(
-                  child: ClipRect(
-                    child: IgnorePointer(
-                      child: quill.QuillEditor(
-                        focusNode: FocusNode(),
-                        scrollController: ScrollController(),
-                        controller: _controller,
-                        config: quill.QuillEditorConfig(
-                          checkBoxReadOnly: true,
-                          scrollable: false,
-                          expands: false,
-                          padding: EdgeInsets.zero,
-                          embedBuilders: [
-                            _ImagePlaceholderEmbedBuilder(
-                              theme: theme,
-                              onCardColor: onCardColor,
+                ClipRect(
+                  child: IgnorePointer(
+                    child: quill.QuillEditor(
+                      focusNode: FocusNode(),
+                      scrollController: ScrollController(),
+                      controller: _controller,
+                      config: quill.QuillEditorConfig(
+                        checkBoxReadOnly: true,
+                        scrollable: false,
+                        expands: false,
+                        padding: EdgeInsets.zero,
+                        maxHeight: 200, // Limit content height so bento boxes don't get absurdly long
+                        embedBuilders: [
+                          _ImagePlaceholderEmbedBuilder(
+                            theme: theme,
+                            onCardColor: onCardColor,
+                          ),
+                        ],
+                        customStyles: quill.DefaultStyles(
+                          paragraph: quill.DefaultTextBlockStyle(
+                            theme.textTheme.bodySmall!.copyWith(
+                              color: onCardColor.withValues(alpha: 0.75),
+                              height: 1.4,
                             ),
-                          ],
-                          customStyles: quill.DefaultStyles(
-                            paragraph: quill.DefaultTextBlockStyle(
-                              theme.textTheme.bodySmall!.copyWith(
-                                color: onCardColor.withValues(alpha: 0.75),
-                                height: 1.4,
-                              ),
-                              const quill.HorizontalSpacing(0, 0),
-                              const quill.VerticalSpacing(0, 0),
-                              const quill.VerticalSpacing(0, 0),
-                              null,
-                            ),
+                            const quill.HorizontalSpacing(0, 0),
+                            const quill.VerticalSpacing(0, 0),
+                            const quill.VerticalSpacing(0, 0),
+                            null,
                           ),
                         ),
                       ),
@@ -246,35 +256,21 @@ class _NoteCardState extends State<NoteCard> {
                   ),
                 ),
 
-              const SizedBox(height: 8),
-
-              // Footer: date + visibility
-              Row(
-                children: [
-                  Icon(
-                    _visibilityIcon(),
-                    size: 14,
-                    color: onCardColor.withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      timeago.format(widget.note.updatedAt),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: onCardColor.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ),
-                  if (widget.note.tags.isNotEmpty)
+              if (widget.note.tags.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                
+                // Footer
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Icon(
                       Icons.label_outline,
                       size: 14,
-                      color: onCardColor.withValues(alpha: 0.5),
+                      color: onCardColor.withValues(alpha: 0.4),
                     ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
