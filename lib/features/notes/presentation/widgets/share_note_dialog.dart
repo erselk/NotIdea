@@ -56,7 +56,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         );
   }
 
-  Future<void> _shareWithUser(String userId) async {
+  Future<void> _shareWithUser(String userId, String permission) async {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return;
 
@@ -64,6 +64,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
       'note_id': widget.note.id,
       'shared_by_user_id': currentUser.id,
       'shared_with_user_id': userId,
+      'permission': permission,
       'created_at': DateTime.now().toIso8601String(),
     });
 
@@ -75,7 +76,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     }
   }
 
-  Future<void> _shareWithGroup(String groupId) async {
+  Future<void> _shareWithGroup(String groupId, String permission) async {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return;
 
@@ -83,6 +84,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
       'note_id': widget.note.id,
       'shared_by_user_id': currentUser.id,
       'shared_with_group_id': groupId,
+      'permission': permission,
       'created_at': DateTime.now().toIso8601String(),
     });
 
@@ -94,13 +96,29 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     }
   }
 
-  void _copyLink() {
-    final link = '${AppConstants.baseUrl}/n/${widget.note.id}';
-    Clipboard.setData(ClipboardData(text: link));
-    final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.linkCopied)),
-    );
+  Future<void> _copyLink(String permission) async {
+    final currentUser = ref.read(currentUserProvider).value;
+    if (currentUser == null) return;
+
+    try {
+      final token = await ref
+          .read(createShareLinkProvider.notifier)
+          .execute(
+            noteId: widget.note.id,
+            sharedByUserId: currentUser.id,
+            permission: permission,
+          );
+
+      final link = '${AppConstants.baseUrl}/n/${widget.note.id}?t=$token';
+      await Clipboard.setData(ClipboardData(text: link));
+
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.linkCopied)),
+        );
+      }
+    } catch (_) {}
   }
 
   @override
@@ -155,68 +173,29 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              // Visibility Selector
-              Text(
-                l10n.noteVisibility,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: appColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _VisibilityOption(
-                icon: Icons.lock_outline,
-                label: l10n.visibilityPrivate,
-                description: l10n.visibilityPrivateDesc,
-                isSelected: _selectedVisibility == NoteVisibility.private_,
-                appColors: appColors,
-                onTap: () => _updateVisibility(NoteVisibility.private_),
-              ),
-              _VisibilityOption(
-                icon: Icons.people_outline,
-                label: l10n.visibilityFriends,
-                description: l10n.visibilitySharedDesc,
-                isSelected: _selectedVisibility == NoteVisibility.friends,
-                appColors: appColors,
-                onTap: () => _updateVisibility(NoteVisibility.friends),
-              ),
-              _VisibilityOption(
-                icon: Icons.public,
-                label: l10n.visibilityPublic,
-                description: l10n.visibilityPublicDesc,
-                isSelected: _selectedVisibility == NoteVisibility.public_,
-                appColors: appColors,
-                onTap: () => _updateVisibility(NoteVisibility.public_),
-              ),
-
-              const SizedBox(height: 16),
-              Divider(color: appColors.divider),
-              const SizedBox(height: 16),
-
-              // Share via Link
-              OutlinedButton.icon(
-                onPressed: _copyLink,
-                icon: const Icon(Icons.link),
-                label: Text(l10n.copyLink),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Görüntüleyici Ekle',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: appColors.textSecondary,
+                    ),
                   ),
-                ),
+                  TextButton.icon(
+                    onPressed: () => _copyLink('read_only'),
+                    icon: const Icon(Icons.link, size: 16),
+                    label: Text(l10n.copyLink, style: const TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 12),
 
-              const SizedBox(height: 20),
-
-              // Share with Friends
-              Text(
-                l10n.shareWithFriends,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: appColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 8),
               friendsAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(16),
@@ -237,52 +216,30 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                   }
 
                   return Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: friends.map((friendship) {
-                      final friendProfile = _getFriendProfile(
-                        friendship,
-                        currentUser?.id ?? '',
-                      );
-                      if (friendProfile == null) {
-                        return const SizedBox.shrink();
-                      }
+                      final friendProfile = _getFriendProfile(friendship, currentUser?.id ?? '');
+                      if (friendProfile == null) return const SizedBox.shrink();
+                      
                       return ListTile(
                         dense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 4),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                         leading: CircleAvatar(
                           radius: 18,
                           backgroundColor: appColors.surfaceVariant,
-                          backgroundImage: friendProfile.avatarUrl != null
-                              ? CachedNetworkImageProvider(
-                                  friendProfile.avatarUrl!)
-                              : null,
+                          backgroundImage: friendProfile.avatarUrl != null ? CachedNetworkImageProvider(friendProfile.avatarUrl!) : null,
                           child: friendProfile.avatarUrl == null
                               ? Text(
-                                  (friendProfile.displayName ??
-                                          friendProfile.username)[0]
-                                      .toUpperCase(),
-                                  style: TextStyle(
-                                    color: appColors.primary,
-                                    fontSize: 12,
-                                  ),
+                                  (friendProfile.displayName ?? friendProfile.username)[0].toUpperCase(),
+                                  style: TextStyle(color: appColors.primary, fontSize: 12),
                                 )
                               : null,
                         ),
-                        title: Text(
-                          friendProfile.displayName ?? friendProfile.username,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        subtitle: Text(
-                          '@${friendProfile.username}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: appColors.textTertiary,
-                          ),
-                        ),
+                        title: Text(friendProfile.displayName ?? friendProfile.username, style: theme.textTheme.bodyMedium),
+                        subtitle: Text('@${friendProfile.username}', style: theme.textTheme.bodySmall?.copyWith(color: appColors.textTertiary)),
                         trailing: IconButton(
-                          icon: Icon(Icons.send, size: 18,
-                              color: appColors.primary),
-                          onPressed: () =>
-                              _shareWithUser(friendProfile.id),
+                          icon: Icon(Icons.send, size: 18, color: appColors.primary),
+                          onPressed: () => _shareWithUser(friendProfile.id, 'read_only'),
                         ),
                       );
                     }).toList(),
@@ -290,29 +247,45 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                 },
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
+              Divider(color: appColors.divider),
+              const SizedBox(height: 32),
 
-              // Share with Groups
-              Text(
-                l10n.shareWithGroups,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: appColors.textSecondary,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Düzenleyici Ekle',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: appColors.textSecondary,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () => _copyLink('read_write'),
+                    icon: const Icon(Icons.link, size: 16),
+                    label: Text(l10n.copyLink, style: const TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              groupsAsync.when(
+              const SizedBox(height: 12),
+
+              friendsAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (e, _) => Text(e.toString()),
-                data: (groups) {
-                  if (groups.isEmpty) {
+                data: (friends) {
+                  if (friends.isEmpty) {
                     return Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        l10n.noGroups,
+                        l10n.noFriends,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: appColors.textTertiary,
                         ),
@@ -321,29 +294,30 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                   }
 
                   return Column(
-                    children: groups.map((group) {
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                    children: friends.map((friendship) {
+                      final friendProfile = _getFriendProfile(friendship, currentUser?.id ?? '');
+                      if (friendProfile == null) return const SizedBox.shrink();
+                      
                       return ListTile(
                         dense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 4),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                         leading: CircleAvatar(
                           radius: 18,
-                          backgroundColor: appColors.primaryLight,
-                          child: Icon(Icons.group, size: 18,
-                              color: appColors.primary),
+                          backgroundColor: appColors.surfaceVariant,
+                          backgroundImage: friendProfile.avatarUrl != null ? CachedNetworkImageProvider(friendProfile.avatarUrl!) : null,
+                          child: friendProfile.avatarUrl == null
+                              ? Text(
+                                  (friendProfile.displayName ?? friendProfile.username)[0].toUpperCase(),
+                                  style: TextStyle(color: appColors.primary, fontSize: 12),
+                                )
+                              : null,
                         ),
-                        title: Text(group.name,
-                            style: theme.textTheme.bodyMedium),
-                        subtitle: Text(
-                          l10n.memberCount(group.memberCount),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: appColors.textTertiary,
-                          ),
-                        ),
+                        title: Text(friendProfile.displayName ?? friendProfile.username, style: theme.textTheme.bodyMedium),
+                        subtitle: Text('@${friendProfile.username}', style: theme.textTheme.bodySmall?.copyWith(color: appColors.textTertiary)),
                         trailing: IconButton(
-                          icon: Icon(Icons.send, size: 18,
-                              color: appColors.primary),
-                          onPressed: () => _shareWithGroup(group.id),
+                          icon: Icon(Icons.edit, size: 18, color: appColors.primary),
+                          onPressed: () => _shareWithUser(friendProfile.id, 'read_write'),
                         ),
                       );
                     }).toList(),
@@ -364,80 +338,5 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
       return friendship.addresseeProfile;
     }
     return friendship.requesterProfile;
-  }
-}
-
-class _VisibilityOption extends StatelessWidget {
-  const _VisibilityOption({
-    required this.icon,
-    required this.label,
-    required this.description,
-    required this.isSelected,
-    required this.appColors,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final String description;
-  final bool isSelected;
-  final AppColorsExtension appColors;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Material(
-        color: isSelected
-            ? appColors.primary.withValues(alpha: 0.08)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: isSelected ? appColors.primary : appColors.textTertiary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w400,
-                          color: isSelected
-                              ? appColors.primary
-                              : appColors.textPrimary,
-                        ),
-                      ),
-                      Text(
-                        description,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: appColors.textTertiary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (isSelected)
-                  Icon(Icons.check_circle, size: 20, color: appColors.primary),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

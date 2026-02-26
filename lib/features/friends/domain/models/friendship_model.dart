@@ -9,13 +9,13 @@ part 'friendship_model.g.dart';
 sealed class FriendshipModel with _$FriendshipModel {
   const factory FriendshipModel({
     required String id,
-    required String requesterId,
-    required String addresseeId,
+    @JsonKey(name: 'requester_id') required String requesterId,
+    @JsonKey(name: 'addressee_id') required String addresseeId,
     @Default(FriendshipStatus.pending) FriendshipStatus status,
-    required DateTime createdAt,
-    DateTime? updatedAt,
-    ProfileModel? requesterProfile,
-    ProfileModel? addresseeProfile,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    @JsonKey(name: 'requester_profile') ProfileModel? requesterProfile,
+    @JsonKey(name: 'addressee_profile') ProfileModel? addresseeProfile,
   }) = _FriendshipModel;
 
   factory FriendshipModel.fromJson(Map<String, dynamic> json) =>

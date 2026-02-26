@@ -59,10 +59,14 @@ class FriendCard extends StatelessWidget {
   }
 
   String _getInitials() {
-    final name = profile.displayName ?? profile.username;
-    final words = name.trim().split(RegExp(r'\s+'));
-    if (words.isEmpty) return '';
-    if (words.length == 1) return words.first[0].toUpperCase();
-    return '${words.first[0]}${words.last[0]}'.toUpperCase();
+    final name = (profile.displayName ?? profile.username).trim();
+    if (name.isEmpty) return '?';
+    final words = name.split(RegExp(r'\s+'));
+    if (words.length == 1) {
+      return words.first.isNotEmpty ? words.first[0].toUpperCase() : '?';
+    }
+    final firstChar = words.first.isNotEmpty ? words.first[0] : '';
+    final lastChar = words.last.isNotEmpty ? words.last[0] : '';
+    return '$firstChar$lastChar'.toUpperCase();
   }
 }

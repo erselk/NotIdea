@@ -59,7 +59,9 @@ class NotesRepositoryImpl implements NotesRepository {
       
       await _localDatasource.cacheNotes(updatedRemoteNotes);
       return updatedRemoteNotes;
-    } catch (_) {
+    } catch (e, st) {
+      print('🚀 [getUserNotes] SUPABASE ERROR: $e');
+      print(st);
       return _localDatasource.getCachedNotes(userId);
     }
   }

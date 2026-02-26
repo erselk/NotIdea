@@ -181,7 +181,7 @@ class PublicNoteScreen extends ConsumerWidget {
                 $box.decoration.color(appColors.primary),
               ),
               child: PressableBox(
-                onPressed: () => context.go(RoutePaths.signup),
+                onPress: () => context.go(RoutePaths.signup),
                 child: Center(
                   child: Text(
                     l10n.signupWithEmail,
@@ -213,10 +213,11 @@ class _ErrorView extends StatelessWidget {
     final appColors = theme.extension<AppColorsExtension>()!;
 
     return Center(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
           Icon(icon, size: 64, color: appColors.textTertiary),
           const SizedBox(height: 16),
           Text(
@@ -233,7 +234,8 @@ class _ErrorView extends StatelessWidget {
             icon: const Icon(Icons.login),
             label: Text(AppLocalizations.of(context)!.login),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -166,9 +166,9 @@ class SharedNotesScreen extends ConsumerWidget {
                                               : null,
                                       child: sharedBy.avatarUrl == null
                                           ? Text(
-                                              (sharedBy.displayName ??
-                                                      sharedBy.username)[0]
-                                                  .toUpperCase(),
+                                              (sharedBy.displayName ?? sharedBy.username).trim().isNotEmpty
+                                                  ? (sharedBy.displayName ?? sharedBy.username).trim()[0].toUpperCase()
+                                                  : '?',
                                               style: TextStyle(
                                                 fontSize: 8,
                                                 color: appColors.primary,

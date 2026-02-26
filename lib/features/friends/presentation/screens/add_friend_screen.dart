@@ -135,6 +135,8 @@ class _SearchResults extends ConsumerWidget {
     final appColors = theme.extension<AppColorsExtension>()!;
     final searchAsync = ref.watch(searchUsersProvider(query));
     final sendState = ref.watch(sendFriendRequestProvider);
+    final friendsList = ref.watch(friendsListProvider).value ?? [];
+    final pendingList = ref.watch(pendingRequestsProvider).value ?? [];
 
     return searchAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -182,9 +184,32 @@ class _SearchResults extends ConsumerWidget {
           ),
           itemBuilder: (context, index) {
             final user = users[index];
-            return FriendCard(
-              profile: user,
-              trailing: FilledButton.tonal(
+            final isFriend = friendsList.any(
+                (f) => f.requesterId == user.id || f.addresseeId == user.id);
+            final isPending = pendingList.any(
+                (f) => f.requesterId == user.id || f.addresseeId == user.id);
+
+            Widget trailing;
+            if (isFriend) {
+              trailing = Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check, color: appColors.primary, size: 16),
+                  const SizedBox(width: 4),
+                  Text('Arkadaş', style: TextStyle(color: appColors.primary)),
+                ],
+              );
+            } else if (isPending) {
+              trailing = Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.access_time, color: appColors.textTertiary, size: 16),
+                  const SizedBox(width: 4),
+                  Text('Bekliyor', style: TextStyle(color: appColors.textTertiary)),
+                ],
+              );
+            } else {
+              trailing = FilledButton.tonal(
                 onPressed: sendState.isLoading
                     ? null
                     : () => ref
@@ -197,7 +222,12 @@ class _SearchResults extends ConsumerWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(l10n.sendFriendRequest),
-              ),
+              );
+            }
+
+            return FriendCard(
+              profile: user,
+              trailing: trailing,
             );
           },
         );

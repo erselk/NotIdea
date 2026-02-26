@@ -22,6 +22,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notidea/features/notes/presentation/widgets/share_note_dialog.dart';
 
 class NoteEditorScreen extends ConsumerStatefulWidget {
   final String? noteId;
@@ -379,132 +380,19 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
   }
 
-  void _handleShare() {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            ListTile(
-              leading: const Icon(Icons.send_outlined),
-              title: Text(l10n.shareViaSocial),
-              onTap: () {
-                Navigator.pop(ctx);
-                final title = _titleController.text.trim();
-                final content = _deltaToMd
-                    .convert(_contentController.document.toDelta())
-                    .trim();
-                final text = title.isNotEmpty ? '$title\n\n$content' : content;
-                Share.share(text);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.link),
-              title: Text(l10n.shareViaLink),
-              subtitle: Text(l10n.selectPermission),
-              onTap: () async {
-                Navigator.pop(ctx);
-                if (!_isEditing) {
-                  await _save(showSnackbar: false);
-                }
-                if (_isEditing) {
-                  _showPermissionSheet();
-                }
-              },
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showPermissionSheet() {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: Text(
-                l10n.selectPermission,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.visibility_outlined),
-              title: Text(l10n.readOnlyPermission),
-              onTap: () {
-                Navigator.pop(ctx);
-                _createAndCopyShareLink('read_only');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_note_outlined),
-              title: Text(l10n.readWritePermission),
-              onTap: () {
-                Navigator.pop(ctx);
-                _createAndCopyShareLink('read_write');
-              },
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _createAndCopyShareLink(String permission) async {
-    if (!_isEditing) return;
-    final l10n = AppLocalizations.of(context)!;
-    final currentUser = await ref.read(currentUserProvider.future);
-    if (currentUser == null) return;
-
-    try {
-      final token = await ref
-          .read(createShareLinkProvider.notifier)
-          .execute(
-            noteId: _currentNoteId!,
-            sharedByUserId: currentUser.id,
-            permission: permission,
-          );
-
-      final link = '${AppConstants.baseUrl}/n/$_currentNoteId';
-      await Clipboard.setData(ClipboardData(text: link));
-
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.linkCopied)));
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
+  void _handleShare() async {
+    if (!_isEditing) {
+      await _save(showSnackbar: false);
+    }
+    if (_isEditing && _currentNoteId != null) {
+      final note = await ref.read(noteByIdProvider(_currentNoteId!).future);
+      if (note != null && mounted) {
+        ShareNoteDialog.show(context, note);
       }
     }
   }
 
+  // --- End of Share Modal ---
   void _showColorPicker() {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
@@ -1055,7 +943,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             IconButton(
               icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
               color: _isPinned ? textColorOnBg : iconColor,
-              style: _isPinned ? IconButton.styleFrom(backgroundColor: textColorOnBg.withValues(alpha: 0.15)) : null,
               onPressed: _handlePin,
               tooltip: _isPinned ? l10n.unpinNote : l10n.pinNote,
             ),
@@ -1068,7 +955,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             IconButton(
               icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_outline),
               color: _isFavorite ? textColorOnBg : iconColor,
-              style: _isFavorite ? IconButton.styleFrom(backgroundColor: textColorOnBg.withValues(alpha: 0.15)) : null,
               onPressed: _handleFavorite,
               tooltip: _isFavorite
                   ? l10n.removeFromFavorites

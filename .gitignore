@@ -75,3 +75,6 @@ lcov.info
 # Isar
 *.isar
 *.isar.lock
+
+# Web Landing
+web_landing/
