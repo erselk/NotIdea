@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,7 @@ import 'package:notidea/features/friends/presentation/widgets/friend_card.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
+import 'package:notidea/features/search/presentation/providers/search_provider.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});
@@ -20,12 +23,17 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _searchController = TextEditingController();
   final _selectedMemberIds = <String>{};
+  Timer? _debounce;
+  String _searchQuery = '';
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -145,69 +153,130 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                   ),
               ],
             ),
-            const SizedBox(height: 8),
-            friendsAsync.when(
-              loading: () => const Padding(
-                padding: EdgeInsets.all(24),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-              error: (e, _) => Text(e.toString()),
-              data: (friends) {
-                if (friends.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(
-                      l10n.noFriends,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: appColors.textTertiary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }
-
-                return Column(
-                  children: friends.map((friendship) {
-                    final friendProfile = _getFriendProfile(
-                      friendship,
-                      currentUser?.id ?? '',
-                    );
-                    if (friendProfile == null) {
-                      return const SizedBox.shrink();
-                    }
-                    final isSelected =
-                        _selectedMemberIds.contains(friendProfile.id);
-
-                    return FriendCard(
-                      profile: friendProfile,
-                      onTap: () {
-                        setState(() {
-                          if (isSelected) {
-                            _selectedMemberIds.remove(friendProfile.id);
-                          } else {
-                            _selectedMemberIds.add(friendProfile.id);
-                          }
-                        });
-                      },
-                      trailing: Checkbox(
-                        value: isSelected,
-                        onChanged: (value) {
-                          setState(() {
-                            if (value == true) {
-                              _selectedMemberIds.add(friendProfile.id);
-                            } else {
-                              _selectedMemberIds.remove(friendProfile.id);
-                            }
-                          });
-                        },
-                      ),
-                    );
-                  }).toList(),
-                );
+            const SizedBox(height: 16),
+            TextField(
+              controller: _searchController,
+              onChanged: (val) {
+                _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 400), () {
+                  setState(() => _searchQuery = val.trim());
+                });
               },
+              decoration: InputDecoration(
+                hintText: l10n.searchUsers,
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _searchQuery = '');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: appColors.surfaceVariant,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
+            const SizedBox(height: 8),
+            if (_searchQuery.length < 2)
+              friendsAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Text(e.toString()),
+                data: (friends) {
+                  if (friends.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        l10n.noFriends,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: appColors.textTertiary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: friends.map((friendship) {
+                      final friendProfile = _getFriendProfile(
+                        friendship,
+                        currentUser?.id ?? '',
+                      );
+                      if (friendProfile == null) {
+                        return const SizedBox.shrink();
+                      }
+                      return _buildUserItem(friendProfile);
+                    }).toList(),
+                  );
+                },
+              )
+            else
+              ref.watch(searchUsersProvider(_searchQuery)).when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Text(e.toString()),
+                data: (users) {
+                  if (users.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        'Kullanıcı bulunamadı',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: appColors.textTertiary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: users.map((user) {
+                      return _buildUserItem(user);
+                    }).toList(),
+                  );
+                },
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserItem(ProfileModel profile) {
+    final isSelected = _selectedMemberIds.contains(profile.id);
+
+    return FriendCard(
+      profile: profile,
+      onTap: () {
+        setState(() {
+          if (isSelected) {
+            _selectedMemberIds.remove(profile.id);
+          } else {
+            _selectedMemberIds.add(profile.id);
+          }
+        });
+      },
+      trailing: Checkbox(
+        value: isSelected,
+        onChanged: (value) {
+          setState(() {
+            if (value == true) {
+              _selectedMemberIds.add(profile.id);
+            } else {
+              _selectedMemberIds.remove(profile.id);
+            }
+          });
+        },
       ),
     );
   }

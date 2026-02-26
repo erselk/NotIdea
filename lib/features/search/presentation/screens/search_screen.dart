@@ -327,7 +327,9 @@ class _UserResultTile extends StatelessWidget {
             : null,
         child: profile.avatarUrl == null
             ? Text(
-                (profile.displayName ?? profile.username)[0].toUpperCase(),
+                profile.displayNameOrUsername.isNotEmpty
+                    ? profile.displayNameOrUsername[0].toUpperCase()
+                    : '?',
                 style: TextStyle(
                   color: appColors.primary,
                   fontWeight: FontWeight.w600,
@@ -336,7 +338,7 @@ class _UserResultTile extends StatelessWidget {
             : null,
       ),
       title: _HighlightText(
-        text: profile.displayName ?? profile.username,
+        text: profile.displayNameOrUsername,
         query: query,
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w600,

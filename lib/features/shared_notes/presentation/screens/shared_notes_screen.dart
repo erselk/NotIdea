@@ -166,8 +166,8 @@ class SharedNotesScreen extends ConsumerWidget {
                                               : null,
                                       child: sharedBy.avatarUrl == null
                                           ? Text(
-                                              (sharedBy.displayName ?? sharedBy.username).trim().isNotEmpty
-                                                  ? (sharedBy.displayName ?? sharedBy.username).trim()[0].toUpperCase()
+                                              sharedBy.displayNameOrUsername.isNotEmpty
+                                                  ? sharedBy.displayNameOrUsername[0].toUpperCase()
                                                   : '?',
                                               style: TextStyle(
                                                 fontSize: 8,
@@ -180,8 +180,7 @@ class SharedNotesScreen extends ConsumerWidget {
                                     Expanded(
                                       child: Text(
                                         l10n.sharedByUser(
-                                          sharedBy.displayName ??
-                                              sharedBy.username,
+                                          sharedBy.displayNameOrUsername,
                                         ),
                                         style: theme.textTheme.labelSmall
                                             ?.copyWith(

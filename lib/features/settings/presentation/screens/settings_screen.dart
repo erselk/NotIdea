@@ -106,10 +106,21 @@ class SettingsScreen extends ConsumerWidget {
               if (confirmed && context.mounted) {
                 final currentUser = await ref.read(currentUserProvider.future);
                 if (currentUser != null) {
-                  await ref.read(deleteAccountProvider.notifier).execute(currentUser.id);
-                  await ref.read(logoutProvider.notifier).execute();
-                  if (context.mounted) {
-                    context.go(RoutePaths.login);
+                  try {
+                    await ref.read(deleteAccountProvider.notifier).execute(currentUser.id);
+                    await ref.read(logoutProvider.notifier).execute();
+                    if (context.mounted) {
+                      context.go(RoutePaths.login);
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString().replaceFirst('Exception: ', '')),
+                          backgroundColor: theme.colorScheme.error,
+                        ),
+                      );
+                    }
                   }
                 }
               }

@@ -55,7 +55,7 @@ class _AppDrawer extends ConsumerWidget {
     final currentPath = GoRouterState.of(context).uri.path;
     final selectedIdx = _selectedIndex(currentPath);
 
-    final displayName = profile?.displayName ?? profile?.username ?? '';
+    final displayName = profile?.displayNameOrUsername ?? '';
     final avatarUrl = profile?.avatarUrl;
 
     final menuItems = [

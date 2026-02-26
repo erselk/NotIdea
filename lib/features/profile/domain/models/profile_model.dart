@@ -5,6 +5,8 @@ part 'profile_model.g.dart';
 
 @freezed
 sealed class ProfileModel with _$ProfileModel {
+  const ProfileModel._();
+
   const factory ProfileModel({
     required String id,
     required String username,
@@ -16,6 +18,12 @@ sealed class ProfileModel with _$ProfileModel {
     @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _ProfileModel;
+
+  /// Gösterim için isim: displayName doluysa o, değilse username.
+  String get displayNameOrUsername {
+    final name = (displayName ?? '').trim();
+    return name.isNotEmpty ? name : username;
+  }
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) =>
       _$ProfileModelFromJson(json);

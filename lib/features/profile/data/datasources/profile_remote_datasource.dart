@@ -113,6 +113,7 @@ class ProfileRemoteDatasource {
   Future<void> deleteAccount(String userId) async {
     await _client.from('notes').delete().eq('user_id', userId);
     await _client.from('profiles').delete().eq('id', userId);
-    await SupabaseConfig.auth.admin.deleteUser(userId);
+
+    await _client.rpc('delete_my_account');
   }
 }

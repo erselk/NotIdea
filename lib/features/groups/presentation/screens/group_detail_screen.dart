@@ -253,16 +253,16 @@ class GroupDetailScreen extends ConsumerWidget {
                                 : null,
                             child: profile?.avatarUrl == null
                                 ? Text(
-                                    (profile?.displayName ?? profile?.username ?? '?')[0]
-                                        .toUpperCase(),
+                                    () {
+                                      final n = profile?.displayNameOrUsername ?? '?';
+                                      return n.isNotEmpty ? n[0].toUpperCase() : '?';
+                                    }(),
                                     style: TextStyle(color: appColors.primary),
                                   )
                                 : null,
                           ),
                           title: Text(
-                            profile?.displayName ??
-                                profile?.username ??
-                                member.userId,
+                            profile?.displayNameOrUsername ?? member.userId,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -588,13 +588,14 @@ class _AddMemberSheet extends ConsumerWidget {
                           : null,
                       child: profile.avatarUrl == null
                           ? Text(
-                              (profile.displayName ?? profile.username)[0]
-                                  .toUpperCase(),
+                              profile.displayNameOrUsername.isNotEmpty
+                                  ? profile.displayNameOrUsername[0].toUpperCase()
+                                  : '?',
                               style: TextStyle(color: appColors.primary),
                             )
                           : null,
                     ),
-                    title: Text(profile.displayName ?? profile.username),
+                    title: Text(profile.displayNameOrUsername),
                     subtitle: Text('@${profile.username}'),
                     trailing: FilledButton.tonal(
                       onPressed: () {

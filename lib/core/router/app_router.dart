@@ -73,11 +73,13 @@ GoRouter appRouter(Ref ref) {
 
       final profile = await Supabase.instance.client
           .from('profiles')
-          .select('id')
+          .select('id, username')
           .eq('id', session!.user.id)
           .maybeSingle();
 
-      final hasProfile = profile != null;
+      final hasProfile = profile != null &&
+          profile['username'] != null &&
+          (profile['username'] as String).isNotEmpty;
 
       if (!hasProfile && !isProfileSetup) {
         return RoutePaths.profileSetup;

@@ -153,7 +153,7 @@ class ProfileScreen extends ConsumerWidget {
 
                       // Display name
                       Text(
-                        profile.displayName ?? profile.username,
+                        profile.displayNameOrUsername,
                         style: GoogleFonts.poppins(
                           fontSize: 24, // 1. Display Name
                           fontWeight: FontWeight.w600,

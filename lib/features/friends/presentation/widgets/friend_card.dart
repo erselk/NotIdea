@@ -42,7 +42,7 @@ class FriendCard extends StatelessWidget {
             : null,
       ),
       title: Text(
-        profile.displayName ?? profile.username,
+        profile.displayNameOrUsername,
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: appColors.textPrimary,
@@ -59,7 +59,7 @@ class FriendCard extends StatelessWidget {
   }
 
   String _getInitials() {
-    final name = (profile.displayName ?? profile.username).trim();
+    final name = profile.displayNameOrUsername.trim();
     if (name.isEmpty) return '?';
     final words = name.split(RegExp(r'\s+'));
     if (words.length == 1) {
