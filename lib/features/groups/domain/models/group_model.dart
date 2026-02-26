@@ -9,11 +9,11 @@ sealed class GroupModel with _$GroupModel {
     required String id,
     required String name,
     String? description,
-    required String ownerId,
-    String? avatarUrl,
-    @Default(0) int memberCount,
-    required DateTime createdAt,
-    DateTime? updatedAt,
+    @JsonKey(name: 'owner_id') required String ownerId,
+    @JsonKey(name: 'avatar_url') String? avatarUrl,
+    @JsonKey(name: 'member_count') @Default(0) int memberCount,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _GroupModel;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) =>

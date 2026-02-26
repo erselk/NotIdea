@@ -858,6 +858,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get shareWithGroups => 'Gruplarla Paylaş';
 
   @override
+  String get viewerRole => 'İzleyici';
+
+  @override
+  String get editorRole => 'Düzenleyici';
+
+  @override
+  String get add => 'Ekle';
+
+  @override
+  String get permissionUpdated => 'Erişim güncellendi';
+
+  @override
   String get editGroup => 'Grubu Düzenle';
 
   @override
@@ -895,6 +907,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get requestPending => 'İstek beklemede';
+
+  @override
+  String get statusFriend => 'Arkadaş';
+
+  @override
+  String get statusPending => 'Bekliyor';
 
   @override
   String get visibilityFriends => 'Sadece Arkadaşlar';

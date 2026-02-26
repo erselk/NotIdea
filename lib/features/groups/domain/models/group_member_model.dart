@@ -9,10 +9,10 @@ part 'group_member_model.g.dart';
 sealed class GroupMemberModel with _$GroupMemberModel {
   const factory GroupMemberModel({
     required String id,
-    required String groupId,
-    required String userId,
+    @JsonKey(name: 'group_id') required String groupId,
+    @JsonKey(name: 'user_id') required String userId,
     @Default(GroupMemberRole.member) GroupMemberRole role,
-    required DateTime joinedAt,
+    @JsonKey(name: 'joined_at') required DateTime joinedAt,
     ProfileModel? profile,
   }) = _GroupMemberModel;
 

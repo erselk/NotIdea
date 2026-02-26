@@ -55,7 +55,6 @@ class GroupsRemoteDatasource {
           'name': name,
           'description': description,
           'owner_id': ownerId,
-          'member_count': memberIds.length + 1,
           'created_at': now,
         })
         .select()
@@ -113,12 +112,6 @@ class GroupsRemoteDatasource {
       'role': GroupMemberRole.member.value,
       'joined_at': DateTime.now().toIso8601String(),
     });
-
-    final groupRes = await _client.from('groups').select('member_count').eq('id', groupId).single();
-    if (groupRes != null) {
-      final currentCount = groupRes['member_count'] as int? ?? 0;
-      await _client.from('groups').update({'member_count': currentCount + 1}).eq('id', groupId);
-    }
   }
 
   Future<void> removeMember({
@@ -130,13 +123,6 @@ class GroupsRemoteDatasource {
         .delete()
         .eq('group_id', groupId)
         .eq('user_id', userId);
-
-    final groupRes = await _client.from('groups').select('member_count').eq('id', groupId).single();
-    if (groupRes != null) {
-      final currentCount = groupRes['member_count'] as int? ?? 0;
-      final newCount = currentCount > 0 ? currentCount - 1 : 0;
-      await _client.from('groups').update({'member_count': newCount}).eq('id', groupId);
-    }
   }
 
   Future<List<GroupMemberModel>> getGroupMembers(String groupId) async {

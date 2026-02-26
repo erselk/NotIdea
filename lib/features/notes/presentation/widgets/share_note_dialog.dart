@@ -9,6 +9,7 @@ import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
+import 'package:notidea/features/groups/domain/models/group_model.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
@@ -47,6 +48,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
   late NoteVisibility _selectedVisibility;
   List<Map<String, dynamic>> _currentShares = [];
   bool _isLoadingShares = true;
+  int _selectedTabIndex = 0; // 0: users, 1: groups
 
   final _searchController = TextEditingController();
   Timer? _debounce;
@@ -89,6 +91,32 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     await ref.read(updateNoteProvider.notifier).execute(
           widget.note.copyWith(visibility: visibility),
         );
+
+    if (visibility == NoteVisibility.friends) {
+      final currentUser = ref.read(currentUserProvider).value;
+      if (currentUser != null) {
+        final friends = await ref.read(friendsListProvider.future);
+        final friendIds = friends.map((f) {
+          return f.requesterId == currentUser.id ? f.addresseeId : f.requesterId;
+        }).toList();
+        final existingUserIds = _currentShares
+            .where((s) => s['shared_with_user_id'] != null)
+            .map((s) => s['shared_with_user_id'] as String)
+            .toSet();
+        for (final friendId in friendIds) {
+          if (!existingUserIds.contains(friendId)) {
+            await SupabaseConfig.client.from('note_shares').insert({
+              'note_id': widget.note.id,
+              'shared_by_user_id': currentUser.id,
+              'shared_with_user_id': friendId,
+              'permission': 'read_only',
+              'created_at': DateTime.now().toIso8601String(),
+            });
+          }
+        }
+        await _fetchShares();
+      }
+    }
   }
 
   Future<void> _shareWithUser(String userId, String permission) async {
@@ -106,7 +134,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         if (mounted) {
           final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Erişim kaldırıldı')),
+            SnackBar(content: Text(l10n.removeShare)),
           );
         }
         return;
@@ -141,7 +169,11 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(existingShare == null ? l10n.noteShared : 'Erişim güncellendi')),
+        SnackBar(
+          content: Text(
+            existingShare == null ? l10n.noteShared : l10n.permissionUpdated,
+          ),
+        ),
       );
     }
   }
@@ -150,14 +182,49 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) return;
 
-    await SupabaseConfig.client.from('note_shares').insert({
-      'note_id': widget.note.id,
-      'shared_by_user_id': currentUser.id,
-      'shared_with_group_id': groupId,
-      'permission': permission,
-      'created_at': DateTime.now().toIso8601String(),
-    });
+    final existingShare = _currentShares
+        .where((s) => s['shared_with_group_id'] == groupId)
+        .firstOrNull;
 
+    if (existingShare != null) {
+      if (existingShare['permission'] == permission) {
+        await SupabaseConfig.client
+            .from('note_shares')
+            .delete()
+            .eq('id', existingShare['id']);
+        setState(() {
+          _currentShares.removeWhere((s) => s['id'] == existingShare['id']);
+        });
+        if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.removeShare)),
+          );
+        }
+        return;
+      }
+      // RLS may not allow UPDATE; delete and re-insert
+      await SupabaseConfig.client
+          .from('note_shares')
+          .delete()
+          .eq('id', existingShare['id']);
+      await SupabaseConfig.client.from('note_shares').insert({
+        'note_id': widget.note.id,
+        'shared_by_user_id': currentUser.id,
+        'shared_with_group_id': groupId,
+        'permission': permission,
+        'created_at': DateTime.now().toIso8601String(),
+      });
+    } else {
+      await SupabaseConfig.client.from('note_shares').insert({
+        'note_id': widget.note.id,
+        'shared_by_user_id': currentUser.id,
+        'shared_with_group_id': groupId,
+        'permission': permission,
+        'created_at': DateTime.now().toIso8601String(),
+      });
+    }
+    await _fetchShares();
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,11 +264,11 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsExtension>()!;
     final friendsAsync = ref.watch(friendsListProvider);
+    final groupsAsync = ref.watch(myGroupsProvider);
     final currentUser = ref.watch(currentUserProvider).value;
 
     return Column(
       children: [
-        // Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
@@ -220,18 +287,60 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
             ],
           ),
         ),
-
         Divider(height: 1, color: appColors.divider),
-
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              // Görünürlük (Herkese Açık / Arkadaşlar / Gizli)
+              Text(
+                l10n.noteVisibility,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: appColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _visibilityChip(
+                      context,
+                      label: l10n.privateNotes,
+                      icon: Icons.lock_outline,
+                      visibility: NoteVisibility.private_,
+                      theme: theme,
+                      appColors: appColors,
+                    ),
+                    const SizedBox(width: 8),
+                    _visibilityChip(
+                      context,
+                      label: l10n.friendsNotes,
+                      icon: Icons.people_outline,
+                      visibility: NoteVisibility.friends,
+                      theme: theme,
+                      appColors: appColors,
+                    ),
+                    const SizedBox(width: 8),
+                    _visibilityChip(
+                      context,
+                      label: l10n.publicNotes,
+                      icon: Icons.public,
+                      visibility: NoteVisibility.public_,
+                      theme: theme,
+                      appColors: appColors,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Bağlantı ile paylaş
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Bağlantı Paylaş',
+                    l10n.shareViaLink,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: appColors.textSecondary,
@@ -242,7 +351,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                       TextButton.icon(
                         onPressed: () => _copyLink('read_only'),
                         icon: const Icon(Icons.link, size: 16),
-                        label: const Text('İzleme K.', style: TextStyle(fontSize: 12)),
+                        label: Text(l10n.viewerRole, style: const TextStyle(fontSize: 12)),
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                           visualDensity: VisualDensity.compact,
@@ -251,7 +360,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                       TextButton.icon(
                         onPressed: () => _copyLink('read_write'),
                         icon: const Icon(Icons.link, size: 16),
-                        label: const Text('Düz. K.', style: TextStyle(fontSize: 12)),
+                        label: Text(l10n.editorRole, style: const TextStyle(fontSize: 12)),
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                           visualDensity: VisualDensity.compact,
@@ -261,83 +370,138 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-
-              TextField(
-                controller: _searchController,
-                onChanged: (val) {
-                  _debounce?.cancel();
-                  _debounce = Timer(const Duration(milliseconds: 400), () {
-                    setState(() => _searchQuery = val.trim());
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: l10n.searchUsers,
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() => _searchQuery = '');
-                          },
-                        )
-                      : null,
-                  filled: true,
-                  fillColor: appColors.surfaceVariant,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
               const SizedBox(height: 16),
-
-              if (_searchQuery.length < 2)
-                friendsAsync.when(
-                  loading: () => const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  error: (e, _) => Text(e.toString()),
-                  data: (friends) {
-                    if (friends.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Text(
-                          l10n.noFriends,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: appColors.textTertiary,
+              // Sekmeler: Kullanıcılar | Gruplar
+              Row(
+                children: [
+                  Expanded(
+                    child: _selectedTabIndex == 0
+                        ? FilledButton.tonal(
+                            onPressed: () => setState(() => _selectedTabIndex = 0),
+                            child: Text(l10n.shareWithFriends),
+                          )
+                        : OutlinedButton(
+                            onPressed: () => setState(() => _selectedTabIndex = 0),
+                            child: Text(l10n.shareWithFriends),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: friends.map((friendship) {
-                        final friendProfile = _getFriendProfile(friendship, currentUser?.id ?? '');
-                        if (friendProfile == null) return const SizedBox.shrink();
-                        
-                        return _buildUserItem(friendProfile, theme, appColors);
-                      }).toList(),
-                    );
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _selectedTabIndex == 1
+                        ? FilledButton.tonal(
+                            onPressed: () => setState(() => _selectedTabIndex = 1),
+                            child: Text(l10n.shareWithGroups),
+                          )
+                        : OutlinedButton(
+                            onPressed: () => setState(() => _selectedTabIndex = 1),
+                            child: Text(l10n.shareWithGroups),
+                          ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (_selectedTabIndex == 0) ...[
+                TextField(
+                  controller: _searchController,
+                  onChanged: (val) {
+                    _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 400), () {
+                      setState(() => _searchQuery = val.trim());
+                    });
                   },
-                )
-              else
-                ref.watch(searchUsersProvider(_searchQuery)).when(
+                  decoration: InputDecoration(
+                    hintText: l10n.searchUsers,
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() => _searchQuery = '');
+                            },
+                          )
+                        : null,
+                    filled: true,
+                    fillColor: appColors.surfaceVariant,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                if (_searchQuery.length < 2)
+                  friendsAsync.when(
+                    loading: () => const Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                    error: (e, _) => Text(e.toString()),
+                    data: (friends) {
+                      if (friends.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            l10n.noFriends,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: appColors.textTertiary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: friends.map((friendship) {
+                          final friendProfile =
+                              _getFriendProfile(friendship, currentUser?.id ?? '');
+                          if (friendProfile == null) return const SizedBox.shrink();
+                          return _buildUserItem(friendProfile, theme, appColors, l10n);
+                        }).toList(),
+                      );
+                    },
+                  )
+                else
+                  ref.watch(searchUsersProvider(_searchQuery)).when(
+                        loading: () => const Padding(
+                          padding: EdgeInsets.all(24),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                        error: (e, _) => Text(e.toString()),
+                        data: (users) {
+                          if (users.isEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Text(
+                                l10n.noSearchResults,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: appColors.textTertiary,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: users
+                                .where((u) => u.id != currentUser?.id)
+                                .map((user) => _buildUserItem(user, theme, appColors, l10n))
+                                .toList(),
+                          );
+                        },
+                      ),
+              ] else ...[
+                groupsAsync.when(
                   loading: () => const Padding(
                     padding: EdgeInsets.all(24),
                     child: Center(child: CircularProgressIndicator()),
                   ),
                   error: (e, _) => Text(e.toString()),
-                  data: (users) {
-                    if (users.isEmpty) {
+                  data: (groups) {
+                    if (groups.isEmpty) {
                       return Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          'Kullanıcı bulunamadı',
+                          l10n.noGroups,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: appColors.textTertiary,
                           ),
@@ -345,14 +509,14 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
                         ),
                       );
                     }
-
                     return Column(
-                      children: users.map((user) {
-                        return _buildUserItem(user, theme, appColors);
-                      }).toList(),
+                      children: groups
+                          .map((g) => _buildGroupItem(g, theme, appColors, l10n))
+                          .toList(),
                     );
                   },
                 ),
+              ],
               const SizedBox(height: 24),
             ],
           ),
@@ -361,13 +525,36 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     );
   }
 
-  Widget _buildUserItem(ProfileModel profile, ThemeData theme, AppColorsExtension appColors) {
-    final existingShare = _currentShares.where((s) => s['shared_with_user_id'] == profile.id).firstOrNull;
+  Widget _visibilityChip(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required NoteVisibility visibility,
+    required ThemeData theme,
+    required AppColorsExtension appColors,
+  }) {
+    final isSelected = _selectedVisibility == visibility;
+    return FilterChip(
+      selected: isSelected,
+      avatar: Icon(icon, size: 18, color: isSelected ? theme.colorScheme.onPrimary : appColors.textSecondary),
+      label: Text(label, style: TextStyle(fontSize: 12)),
+      onSelected: (_) => _updateVisibility(visibility),
+      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+      checkmarkColor: theme.colorScheme.primary,
+    );
+  }
+
+  Widget _buildGroupItem(
+    GroupModel group,
+    ThemeData theme,
+    AppColorsExtension appColors,
+    AppLocalizations l10n,
+  ) {
+    final existingShare = _currentShares
+        .where((s) => s['shared_with_group_id'] == group.id)
+        .firstOrNull;
     final hasAccess = existingShare != null;
     final permission = hasAccess ? existingShare['permission'] as String? : null;
-
-    final displayName = (profile.displayNameOrUsername);
-    final displayInitial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
 
     return ListTile(
       dense: true,
@@ -375,7 +562,94 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
       leading: CircleAvatar(
         radius: 18,
         backgroundColor: appColors.surfaceVariant,
-        backgroundImage: profile.avatarUrl != null ? CachedNetworkImageProvider(profile.avatarUrl!) : null,
+        backgroundImage: group.avatarUrl != null && group.avatarUrl!.isNotEmpty
+            ? CachedNetworkImageProvider(group.avatarUrl!)
+            : null,
+        child: group.avatarUrl == null || group.avatarUrl!.isEmpty
+            ? Text(
+                group.name.isNotEmpty ? group.name[0].toUpperCase() : '?',
+                style: TextStyle(color: appColors.primary, fontSize: 12),
+              )
+            : null,
+      ),
+      title: Text(group.name, style: theme.textTheme.bodyMedium),
+      subtitle: group.description != null && group.description!.isNotEmpty
+          ? Text(
+              group.description!,
+              style: theme.textTheme.bodySmall?.copyWith(color: appColors.textTertiary),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )
+          : null,
+      trailing: PopupMenuButton<String>(
+        initialValue: permission,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: appColors.surfaceVariant,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                !hasAccess
+                    ? l10n.add
+                    : (permission == 'read_write' ? l10n.editorRole : l10n.viewerRole),
+                style: TextStyle(
+                  color: !hasAccess ? appColors.textSecondary : appColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.arrow_drop_down, size: 16, color: appColors.textSecondary),
+            ],
+          ),
+        ),
+        onSelected: (val) {
+          if (val == 'remove') {
+            _shareWithGroup(group.id, permission ?? 'read_only');
+          } else {
+            _shareWithGroup(group.id, val);
+          }
+        },
+        itemBuilder: (context) => [
+          if (!hasAccess || permission != 'read_only')
+            PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
+          if (!hasAccess || permission != 'read_write')
+            PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
+          if (hasAccess)
+            PopupMenuItem(
+              value: 'remove',
+              child: Text(l10n.removeShare, style: const TextStyle(color: Colors.red)),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserItem(ProfileModel profile, ThemeData theme,
+      AppColorsExtension appColors, AppLocalizations l10n) {
+    final existingShare = _currentShares
+        .where((s) => s['shared_with_user_id'] == profile.id)
+        .firstOrNull;
+    final hasAccess = existingShare != null;
+    final permission = hasAccess ? existingShare['permission'] as String? : null;
+
+    final displayName = (profile.displayNameOrUsername);
+    final displayInitial =
+        displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+
+    return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+      leading: CircleAvatar(
+        radius: 18,
+        backgroundColor: appColors.surfaceVariant,
+        backgroundImage: profile.avatarUrl != null
+            ? CachedNetworkImageProvider(profile.avatarUrl!)
+            : null,
         child: profile.avatarUrl == null
             ? Text(
                 displayInitial,
@@ -383,49 +657,62 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
               )
             : null,
       ),
-      title: Text(profile.displayNameOrUsername, style: theme.textTheme.bodyMedium),
-      subtitle: Text('@${profile.username}', style: theme.textTheme.bodySmall?.copyWith(color: appColors.textTertiary)),
+      title: Text(
+          profile.displayNameOrUsername, style: theme.textTheme.bodyMedium),
+      subtitle: Text(
+        '@${profile.username}',
+        style: theme.textTheme.bodySmall
+            ?.copyWith(color: appColors.textTertiary),
+      ),
       trailing: PopupMenuButton<String>(
         initialValue: permission,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-             color: appColors.surfaceVariant,
-             borderRadius: BorderRadius.circular(16),
+            color: appColors.surfaceVariant,
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
-             mainAxisSize: MainAxisSize.min,
-             children: [
-               Text(
-                 !hasAccess 
-                   ? 'Ekle' 
-                   : (permission == 'read_write' ? 'Düzenleyici' : 'İzleyici'),
-                 style: TextStyle(
-                   color: !hasAccess ? appColors.textSecondary : appColors.primary,
-                   fontSize: 12,
-                   fontWeight: FontWeight.w500,
-                 )
-               ),
-               const SizedBox(width: 4),
-               Icon(Icons.arrow_drop_down, size: 16, color: appColors.textSecondary),
-             ]
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                !hasAccess
+                    ? l10n.add
+                    : (permission == 'read_write'
+                        ? l10n.editorRole
+                        : l10n.viewerRole),
+                style: TextStyle(
+                  color:
+                      !hasAccess ? appColors.textSecondary : appColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.arrow_drop_down,
+                  size: 16, color: appColors.textSecondary),
+            ],
           ),
         ),
         onSelected: (val) {
-           if (val == 'remove') {
-              _shareWithUser(profile.id, permission ?? 'read_only');
-           } else {
-              _shareWithUser(profile.id, val);
-           }
+          if (val == 'remove') {
+            _shareWithUser(profile.id, permission ?? 'read_only');
+          } else {
+            _shareWithUser(profile.id, val);
+          }
         },
         itemBuilder: (context) => [
           if (!hasAccess || permission != 'read_only')
-            const PopupMenuItem(value: 'read_only', child: Text('İzleyici yap')),
+            PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
           if (!hasAccess || permission != 'read_write')
-            const PopupMenuItem(value: 'read_write', child: Text('Düzenleyici yap')),
+            PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
           if (hasAccess)
-            const PopupMenuItem(value: 'remove', child: Text('Erişimi Kaldır', style: TextStyle(color: Colors.red))),
-        ]
+            PopupMenuItem(
+              value: 'remove',
+              child: Text(l10n.removeShare,
+                  style: const TextStyle(color: Colors.red)),
+            ),
+        ],
       ),
     );
   }

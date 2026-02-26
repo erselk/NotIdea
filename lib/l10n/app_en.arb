@@ -327,6 +327,10 @@
   "removeShare": "Remove Share",
   "shareWithFriends": "Share with Friends",
   "shareWithGroups": "Share with Groups",
+  "viewerRole": "Viewer",
+  "editorRole": "Editor",
+  "add": "Add",
+  "permissionUpdated": "Permission updated",
 
   "editGroup": "Edit Group",
   "owner": "Owner",
@@ -340,6 +344,8 @@
   "confirmDeleteGroup": "Are you sure you want to delete this group? This action cannot be undone.",
   "alreadyFriends": "Already friends",
   "requestPending": "Request pending",
+  "statusFriend": "Friend",
+  "statusPending": "Pending",
   "visibilityFriends": "Friends Only",
 
   "sharedByUser": "Shared by {name}",

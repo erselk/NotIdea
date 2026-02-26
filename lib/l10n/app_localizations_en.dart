@@ -852,6 +852,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareWithGroups => 'Share with Groups';
 
   @override
+  String get viewerRole => 'Viewer';
+
+  @override
+  String get editorRole => 'Editor';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get permissionUpdated => 'Permission updated';
+
+  @override
   String get editGroup => 'Edit Group';
 
   @override
@@ -888,6 +900,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestPending => 'Request pending';
+
+  @override
+  String get statusFriend => 'Friend';
+
+  @override
+  String get statusPending => 'Pending';
 
   @override
   String get visibilityFriends => 'Friends Only';

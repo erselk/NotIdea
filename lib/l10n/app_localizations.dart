@@ -1748,6 +1748,30 @@ abstract class AppLocalizations {
   /// **'Share with Groups'**
   String get shareWithGroups;
 
+  /// No description provided for @viewerRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewer'**
+  String get viewerRole;
+
+  /// No description provided for @editorRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Editor'**
+  String get editorRole;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @permissionUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission updated'**
+  String get permissionUpdated;
+
   /// No description provided for @editGroup.
   ///
   /// In en, this message translates to:
@@ -1819,6 +1843,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request pending'**
   String get requestPending;
+
+  /// No description provided for @statusFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend'**
+  String get statusFriend;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
 
   /// No description provided for @visibilityFriends.
   ///

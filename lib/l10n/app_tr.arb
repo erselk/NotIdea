@@ -327,6 +327,10 @@
   "removeShare": "Paylaşımı Kaldır",
   "shareWithFriends": "Arkadaşlarla Paylaş",
   "shareWithGroups": "Gruplarla Paylaş",
+  "viewerRole": "İzleyici",
+  "editorRole": "Düzenleyici",
+  "add": "Ekle",
+  "permissionUpdated": "Erişim güncellendi",
 
   "editGroup": "Grubu Düzenle",
   "owner": "Sahip",
@@ -340,6 +344,8 @@
   "confirmDeleteGroup": "Bu grubu silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
   "alreadyFriends": "Zaten arkadaşsınız",
   "requestPending": "İstek beklemede",
+  "statusFriend": "Arkadaş",
+  "statusPending": "Bekliyor",
   "visibilityFriends": "Sadece Arkadaşlar",
 
   "sharedByUser": "{name} tarafından paylaşıldı",

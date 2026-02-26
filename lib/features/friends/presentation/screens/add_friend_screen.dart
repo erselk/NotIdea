@@ -196,7 +196,7 @@ class _SearchResults extends ConsumerWidget {
                 children: [
                   Icon(Icons.check, color: appColors.primary, size: 16),
                   const SizedBox(width: 4),
-                  Text('Arkadaş', style: TextStyle(color: appColors.primary)),
+                  Text(l10n.statusFriend, style: TextStyle(color: appColors.primary)),
                 ],
               );
             } else if (isPending) {
@@ -205,7 +205,7 @@ class _SearchResults extends ConsumerWidget {
                 children: [
                   Icon(Icons.access_time, color: appColors.textTertiary, size: 16),
                   const SizedBox(width: 4),
-                  Text('Bekliyor', style: TextStyle(color: appColors.textTertiary)),
+                  Text(l10n.statusPending, style: TextStyle(color: appColors.textTertiary)),
                 ],
               );
             } else {
