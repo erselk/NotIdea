@@ -29,8 +29,10 @@ import 'package:notidea/features/notes/presentation/widgets/share_note_dialog.da
 
 class NoteEditorScreen extends ConsumerStatefulWidget {
   final String? noteId;
+  /// Liste vb. ekranlardan açılırken veri zaten elde ise hemen gösterilir (renk gecikmesi olmaz).
+  final NoteModel? initialNote;
 
-  const NoteEditorScreen({super.key, this.noteId});
+  const NoteEditorScreen({super.key, this.noteId, this.initialNote});
 
   @override
   ConsumerState<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -120,7 +122,32 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   void initState() {
     super.initState();
     _currentNoteId = widget.noteId;
-    _contentController = quill.QuillController.basic();
+
+    final initial = widget.initialNote;
+    if (initial != null && initial.id == widget.noteId) {
+      _selectedColor = initial.color;
+      _initialColor = initial.color;
+      _visibility = initial.visibility;
+      _initialVisibility = initial.visibility;
+      _isFavorite = initial.isFavorite;
+      _isPinned = initial.isPinned;
+      _isDeleted = initial.isDeleted;
+      _titleController.text = initial.title;
+      _initialTitle = initial.title;
+      _initialContent = initial.content;
+      try {
+        final delta = _mdToDelta.convert(initial.content);
+        _contentController = quill.QuillController(
+          document: quill.Document.fromDelta(delta),
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      } catch (_) {
+        _contentController = quill.QuillController.basic();
+      }
+      _isInitialized = true;
+    } else {
+      _contentController = quill.QuillController.basic();
+    }
     _contentController.document.changes.listen((_) => _onContentChanged());
   }
 

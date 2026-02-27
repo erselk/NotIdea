@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:notidea/core/router/route_names.dart';
+import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/splash/presentation/screens/splash_screen.dart';
 import 'package:notidea/features/auth/presentation/screens/login_screen.dart';
 import 'package:notidea/features/auth/presentation/screens/signup_screen.dart';
@@ -158,7 +159,13 @@ GoRouter appRouter(Ref ref) {
                 parentNavigatorKey: _rootNavigatorKey,
                 builder: (context, state) {
                   final noteId = state.pathParameters['noteId']!;
-                  return NoteEditorScreen(noteId: noteId);
+                  final initialNote = state.extra is NoteModel
+                      ? state.extra! as NoteModel
+                      : null;
+                  return NoteEditorScreen(
+                    noteId: noteId,
+                    initialNote: initialNote?.id == noteId ? initialNote : null,
+                  );
                 },
               ),
 

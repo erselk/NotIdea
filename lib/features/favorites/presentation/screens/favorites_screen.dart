@@ -111,7 +111,7 @@ class FavoritesScreen extends ConsumerWidget {
                   },
                   child: NoteCard(
                     note: note,
-                    onTap: () => context.push('/home/editor/${note.id}'),
+                    onTap: () => context.push('/home/editor/${note.id}', extra: note),
                   ),
                 );
               },

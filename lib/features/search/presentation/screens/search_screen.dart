@@ -256,7 +256,7 @@ class _NoteResultCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.push('/home/editor/${note.id}'),
+        onTap: () => context.push('/home/editor/${note.id}', extra: note),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(14),

@@ -221,7 +221,7 @@ class _PublicNotesView extends ConsumerWidget {
               final note = notes[index];
               return NoteCard(
                 note: note,
-                onTap: () => context.push('/home/editor/${note.id}'),
+                onTap: () => context.push('/home/editor/${note.id}', extra: note),
               );
             },
           );
@@ -272,7 +272,7 @@ class _SearchResultsView extends ConsumerWidget {
             final note = notes[index];
             return NoteCard(
               note: note,
-              onTap: () => context.push('/home/editor/${note.id}'),
+              onTap: () => context.push('/home/editor/${note.id}', extra: note),
             );
           },
         );

@@ -119,7 +119,7 @@ class SharedNotesScreen extends ConsumerWidget {
                       clipBehavior: Clip.antiAlias,
                       child: InkWell(
                         onTap: () =>
-                            context.push('/home/editor/${note.id}'),
+                            context.push('/home/editor/${note.id}', extra: note),
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
                           padding: const EdgeInsets.all(14),
@@ -234,7 +234,7 @@ class SharedNotesScreen extends ConsumerWidget {
                       clipBehavior: Clip.antiAlias,
                       child: InkWell(
                         onTap: () =>
-                            context.push('/home/editor/${note.id}'),
+                            context.push('/home/editor/${note.id}', extra: note),
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
                           padding: const EdgeInsets.all(14),

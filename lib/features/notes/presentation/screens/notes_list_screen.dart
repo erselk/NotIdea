@@ -74,7 +74,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 title: Text(l10n.edit),
                 onTap: () {
                   Navigator.pop(ctx);
-                  context.push('/home/editor/${note.id}');
+                  context.push('/home/editor/${note.id}', extra: note);
                 },
               ),
               ListTile(
@@ -171,7 +171,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
         final note = sortedNotes[index];
         return NoteCard(
           note: note,
-          onTap: () => context.push('/home/editor/${note.id}'),
+          onTap: () => context.push('/home/editor/${note.id}', extra: note),
           onLongPress: () => _showNoteActions(note),
         );
       },
