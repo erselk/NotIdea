@@ -46,6 +46,25 @@ Color getNoteColorByIndex(BuildContext context, int index) {
   return noteColors[index % noteColors.length];
 }
 
+/// Not rengi hex'i (light palette) mevcut temaya göre Color'a çevirir.
+/// Veritabanında light hex'ler saklandığı için dark modda doğru koyu rengi döndürür.
+Color noteColorHexToThemeColor(BuildContext context, String? colorHex) {
+  final hex = colorHex?.replaceFirst('#', '')?.toUpperCase();
+  if (hex == null || hex.isEmpty) {
+    return Theme.of(context).colorScheme.surfaceContainerHighest;
+  }
+  final hexWithHash = '#$hex';
+  final index = NoteCardColors.lightColorHexes.indexOf(hexWithHash);
+  if (index >= 0) {
+    return Theme.of(context).extension<NoteCardColorsExtension>()!.colors[index];
+  }
+  try {
+    return Color(int.parse('FF$hex', radix: 16));
+  } catch (_) {
+    return Theme.of(context).colorScheme.surfaceContainerHighest;
+  }
+}
+
 /// Not kartı light mode renk listesinden index'e göre renk döndürür
 /// (context gerektirmeyen versiyon — doğrudan AppColors kullanır)
 Color getNoteColorByIndexStatic(int index, {bool isDark = false}) {

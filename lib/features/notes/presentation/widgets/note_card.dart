@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notidea/core/utils/helpers.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -135,15 +136,7 @@ class _NoteCardState extends State<NoteCard> {
   }
 
   Color _parseNoteColor(BuildContext context) {
-    final hex = widget.note.color?.replaceFirst('#', '');
-    if (hex == null || hex.isEmpty) {
-      return Theme.of(context).colorScheme.surfaceContainerHighest;
-    }
-    try {
-      return Color(int.parse('FF$hex', radix: 16));
-    } catch (_) {
-      return Theme.of(context).colorScheme.surfaceContainerHighest;
-    }
+    return noteColorHexToThemeColor(context, widget.note.color);
   }
 
   // Visibility icon removed

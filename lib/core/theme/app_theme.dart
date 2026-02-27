@@ -59,8 +59,8 @@ class AppTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.primary500,
       brightness: Brightness.dark,
-      primary: AppColors.primary400,
-      onPrimary: AppColors.primary900,
+      primary: AppColors.primary500,
+      onPrimary: AppColors.white,
       primaryContainer: AppColors.primary800,
       onPrimaryContainer: AppColors.primary100,
       secondary: AppColors.neutral400,
@@ -124,7 +124,7 @@ class AppTheme {
   );
 
   static const _darkAppColors = AppColorsExtension(
-    primary: AppColors.primary400,
+    primary: AppColors.primary500,
     primaryLight: AppColors.primary800,
     primaryDark: AppColors.primary200,
     background: AppColors.backgroundDark,

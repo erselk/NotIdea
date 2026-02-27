@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
@@ -221,16 +222,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
               height: 36,
             ),
             const SizedBox(width: 10),
-            SvgPicture.asset(
-              'assets/images/notidea.svg',
-              height: 28,
-              colorFilter: theme.brightness == Brightness.dark
-                  ? const ColorFilter.mode(
-                      Color(0xFFE5EAE4),
-                      BlendMode.srcIn,
-                    )
-                  : null,
-            ),
+            _NotIdeaLogo(height: 28),
           ],
         ),
         actions: [
@@ -391,6 +383,34 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+}
+
+/// NotIdea yazı logosu. Dark modda sadece siyah (#374241) kısım beyaz olur, yeşil (#06A74D) aynı kalır.
+class _NotIdeaLogo extends StatelessWidget {
+  const _NotIdeaLogo({required this.height});
+
+  final double height;
+
+  static const _asset = 'assets/images/notidea.svg';
+  static const _blackFill = 'fill="#374241"';
+  static const _whiteFillDark = 'fill="#E5EAE4"';
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return FutureBuilder<String>(
+      future: rootBundle.loadString(_asset),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return SizedBox(height: height, width: 116 * height / 25);
+        String svg = snapshot.data!;
+        if (isDark) svg = svg.replaceAll(_blackFill, _whiteFillDark);
+        return SvgPicture.string(
+          svg,
+          height: height,
+        );
+      },
     );
   }
 }
