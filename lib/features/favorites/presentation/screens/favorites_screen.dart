@@ -100,8 +100,8 @@ class FavoritesScreen extends ConsumerWidget {
                       color: theme.colorScheme.error,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(Icons.favorite_border,
-                        color: Colors.white),
+                    child: Icon(Icons.favorite_border,
+                        color: theme.colorScheme.onError),
                   ),
                   onDismissed: (_) {
                     ref

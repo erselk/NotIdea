@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:notidea/core/theme/theme_extensions.dart';
+
 class MarkdownSyntaxController extends TextEditingController {
   MarkdownSyntaxController({super.text});
 
@@ -10,20 +12,18 @@ class MarkdownSyntaxController extends TextEditingController {
     required bool withComposing,
   }) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    final markdownSyntaxColor =
-        isDark ? Colors.blueGrey.shade400 : Colors.blueGrey.shade300;
+    final appColors = theme.extension<AppColorsExtension>()!;
+    final markdownSyntaxColor = appColors.textTertiary;
     
     final baseStyle = style ?? const TextStyle();
     
     // Fallback if parsing fails or for empty text
     if (text.isEmpty) return TextSpan(style: baseStyle, text: text);
 
-    return _parseMarkdown(text, baseStyle, markdownSyntaxColor);
+    return _parseMarkdown(text, baseStyle, markdownSyntaxColor, appColors);
   }
 
-  TextSpan _parseMarkdown(String source, TextStyle baseStyle, Color syntaxColor) {
+  TextSpan _parseMarkdown(String source, TextStyle baseStyle, Color syntaxColor, AppColorsExtension appColors) {
     final List<InlineSpan> spans = [];
     int currentPosition = 0;
 
@@ -84,7 +84,7 @@ class MarkdownSyntaxController extends TextEditingController {
       } else if (matchedText.startsWith('- [x]')) {
         currentStyle = currentStyle.copyWith(decoration: TextDecoration.lineThrough, color: syntaxColor);
         innerSpans = [
-           TextSpan(text: '- [x] ', style: baseStyle.copyWith(color: Colors.green, fontWeight: FontWeight.bold, fontSize: (baseStyle.fontSize ?? 14) * 1.2, decoration: TextDecoration.none)),
+           TextSpan(text: '- [x] ', style: baseStyle.copyWith(color: appColors.primary, fontWeight: FontWeight.bold, fontSize: (baseStyle.fontSize ?? 14) * 1.2, decoration: TextDecoration.none)),
            TextSpan(text: matchedText.substring(6), style: currentStyle),
         ];
       } else if (matchedText.startsWith('<u>') && matchedText.endsWith('</u>')) {

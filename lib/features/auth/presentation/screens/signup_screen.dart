@@ -118,8 +118,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         'assets/images/notidea.svg',
                         width: 150,
                         colorFilter: theme.brightness == Brightness.dark
-                            ? const ColorFilter.mode(
-                                Color(0xFFE5EAE4),
+                            ? ColorFilter.mode(
+                                theme.colorScheme.onSurface,
                                 BlendMode.srcIn,
                               )
                             : null,
@@ -298,7 +298,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: theme.colorScheme.onPrimary,
                               ),
                             )
                           : Text(

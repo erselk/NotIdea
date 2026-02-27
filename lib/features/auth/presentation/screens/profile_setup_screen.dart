@@ -328,7 +328,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                           : _usernameController.text.trim().length >=
                                     AppConstants.minUsernameLength &&
                                 !_usernameTaken
-                              ? const Icon(Icons.check_circle, color: Colors.green)
+                              ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
                               : _usernameTaken
                                   ? Icon(Icons.cancel, color: theme.colorScheme.error)
                                   : null,
@@ -371,7 +371,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: theme.colorScheme.onPrimary,
                             ),
                           )
                         : Text(

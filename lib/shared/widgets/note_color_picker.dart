@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/helpers.dart';
 
 /// The canonical names for note card colors, matching [NoteCardColors] order.
 const noteColorNames = [
@@ -75,8 +76,7 @@ class NoteColorPicker extends StatelessWidget {
   }
 
   Color _contrastColor(Color bg) {
-    final luminance = bg.computeLuminance();
-    return luminance > 0.5 ? Colors.black87 : Colors.white;
+    return getContrastTextColor(bg);
   }
 }
 

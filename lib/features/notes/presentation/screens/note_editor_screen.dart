@@ -13,6 +13,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/app_colors.dart';
+import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/helpers.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
@@ -450,9 +452,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     child: isSelected
                         ? Icon(
                             Icons.check,
-                            color: _isBackgroundDark(displayColor)
-                                ? AppColors.white
-                                : AppColors.black,
+                            color: getContrastTextColor(displayColor),
                             size: 20,
                           )
                         : null,
@@ -548,9 +548,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
   Widget _buildFloatingToolbar(BuildContext context, bool isDarkBg) {
     final theme = Theme.of(context);
+    final appColors = theme.extension<AppColorsExtension>()!;
     final isAppDark = theme.brightness == Brightness.dark;
-    final bgColor = isAppDark ? const Color(0xFFE5EAE4) : const Color(0xFF374241);
-    final iconColor = isAppDark ? const Color(0xFF374241) : const Color(0xFFB8B8B8);
+    final bgColor = appColors.surfaceVariant;
+    final iconColor = appColors.textSecondary;
     final activeColor = theme.colorScheme.primary;
 
     Future<void> _showFontFamilyPicker() async {
@@ -559,9 +560,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         builder: (ctx) => AlertDialog(
           title: Text(
             AppLocalizations.of(context)!.noteTitle,
-            style: TextStyle(color: isAppDark ? Colors.white : Colors.black),
+            style: TextStyle(color: theme.colorScheme.onSurface),
           ),
-          backgroundColor: isAppDark ? Colors.grey[900] : Colors.white,
+          backgroundColor: theme.colorScheme.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -679,7 +680,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDarkBg ? 0.3 : 0.1),
+            color: theme.colorScheme.onSurface.withValues(alpha: isDarkBg ? 0.3 : 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -883,11 +884,12 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
     final bgColor = _noteBackgroundColor(theme);
     final isDarkBg = _isBackgroundDark(bgColor);
+    final appColors = theme.extension<AppColorsExtension>()!;
     final defaultTextColor = theme.brightness == Brightness.light
-        ? const Color(0xFF374241)
+        ? appColors.textPrimary
         : theme.colorScheme.onSurface;
-    final iconColor = isDarkBg ? AppColors.white : defaultTextColor;
-    final textColorOnBg = isDarkBg ? AppColors.white : defaultTextColor;
+    final iconColor = isDarkBg ? appColors.textPrimaryDark : defaultTextColor;
+    final textColorOnBg = isDarkBg ? appColors.textPrimaryDark : defaultTextColor;
 
     final visibilityIcon = switch (_visibility) {
       NoteVisibility.private_ => Icons.lock_outline,

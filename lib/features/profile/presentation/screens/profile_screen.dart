@@ -43,13 +43,13 @@ class ProfileScreen extends ConsumerWidget {
                     shape: const CircleBorder(),
                     clipBehavior: Clip.antiAlias,
                     child: IconButton(
-                      icon: const Icon(Icons.menu, color: Colors.white, size: 28),
+                      icon: Icon(Icons.menu, color: theme.colorScheme.onPrimary, size: 28),
                       onPressed: () => AppScaffold.openDrawer(context),
                     ),
                   ),
                 ),
               )
-            : const BackButton(color: Colors.white),
+            : BackButton(color: theme.colorScheme.onPrimary),
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -142,7 +142,7 @@ class ProfileScreen extends ConsumerWidget {
                                   child: const Icon(
                                     Icons.edit,
                                     size: 20, // Keep icon size same
-                                    color: Colors.white, // White icon
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                                 ),
                               ),

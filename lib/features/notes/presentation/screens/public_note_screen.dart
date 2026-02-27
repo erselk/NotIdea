@@ -147,13 +147,14 @@ class PublicNoteScreen extends ConsumerWidget {
   }
 
   Widget _buildCTA(BuildContext context, AppColorsExtension appColors, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: appColors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -186,7 +187,7 @@ class PublicNoteScreen extends ConsumerWidget {
                   child: Text(
                     l10n.signupWithEmail,
                     style: GoogleFonts.poppins(
-                      color: Colors.white,
+                      color: theme.colorScheme.onPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),

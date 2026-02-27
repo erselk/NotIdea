@@ -110,17 +110,17 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE5EAE4),
+                  color: appColors.surfaceVariant,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: _searchController,
                   autofocus: true,
                   textAlign: TextAlign.left,
-                  style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  style: TextStyle(color: appColors.textPrimary, fontSize: 16),
                   decoration: InputDecoration(
                     hintText: l10n.searchHint,
-                    hintStyle: const TextStyle(color: Colors.black38),
+                    hintStyle: TextStyle(color: appColors.textTertiary),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.only(
                       left: 36, right: 20, top: 14, bottom: 14,

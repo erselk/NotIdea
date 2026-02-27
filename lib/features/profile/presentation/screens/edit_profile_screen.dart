@@ -351,7 +351,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: theme.colorScheme.onPrimary,
                             ),
                           )
                         : Text(

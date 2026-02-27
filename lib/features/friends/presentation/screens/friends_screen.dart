@@ -164,7 +164,7 @@ class _FriendsTab extends ConsumerWidget {
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 24),
                   color: theme.colorScheme.error,
-                  child: const Icon(Icons.person_remove, color: Colors.white),
+                  child: Icon(Icons.person_remove, color: theme.colorScheme.onError),
                 ),
                 confirmDismiss: (_) => _confirmRemove(context, l10n),
                 onDismissed: (_) {
@@ -334,7 +334,7 @@ class _PendingTab extends ConsumerWidget {
                           icon: const Icon(Icons.check, size: 20),
                           style: IconButton.styleFrom(
                             backgroundColor: appColors.success,
-                            foregroundColor: Colors.white,
+                            foregroundColor: theme.colorScheme.onPrimary,
                           ),
                         ),
                         const SizedBox(width: 8),
