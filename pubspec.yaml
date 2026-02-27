@@ -69,6 +69,10 @@ dependencies:
   flutter_quill_extensions: ^11.0.0
   flutter_markdown: ^0.7.7+1
   flutter_staggered_grid_view: ^0.7.0
+  sentry_flutter: ^9.14.0
+  firebase_core: ^4.4.0
+  firebase_messaging: ^16.1.1
+  flutter_local_notifications: ^20.1.0
 
 dev_dependencies:
   flutter_test:

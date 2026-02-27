@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689616631620",
+    "project_id": "notidea-22de1",
+    "storage_bucket": "notidea-22de1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689616631620:android:18b095e25624303f320911",
+        "android_client_info": {
+          "package_name": "com.notidea.notidea"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArUVovjfOKJip9GxUzPiS7MT4HL944Yf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

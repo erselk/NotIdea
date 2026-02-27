@@ -197,13 +197,13 @@ class ProfileScreen extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _StatItem(
-                                count: statsAsync.value?.noteCount ?? profile.noteCount,
+                                count: statsAsync.value?.noteCount ?? 0,
                                 label: 'Notes',
                                 theme: theme,
                               ),
                               const SizedBox(width: 48),
                               _StatItem(
-                                count: statsAsync.value?.friendCount ?? profile.friendCount,
+                                count: statsAsync.value?.friendCount ?? 0,
                                 label: l10n.friends,
                                 theme: theme,
                               ),

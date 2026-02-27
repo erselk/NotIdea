@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:notidea/core/router/route_names.dart';
@@ -63,6 +64,7 @@ GoRouter appRouter(Ref ref) {
     initialLocation: RoutePaths.splash,
     refreshListenable: authListenable,
     debugLogDiagnostics: kDebugMode,
+    observers: [SentryNavigatorObserver()],
     redirect: (context, state) async {
       final session = Supabase.instance.client.auth.currentSession;
       final isAuthenticated = session != null;
