@@ -175,6 +175,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
                           ),
+                          tooltip: _obscurePassword ? 'Show password' : 'Hide password',
                           onPressed: () {
                             setState(() => _obscurePassword = !_obscurePassword);
                           },

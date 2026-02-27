@@ -5,7 +5,7 @@ class AppConstants {
   // Uygulama bilgileri
   static const String appName = 'NotIdea';
   static const String appTagline = 'Your creative note-taking companion';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '2.0.0';
   
   // Link Paylaşımı için Base URL
   // Domain hazır olduğunda burayı 'https://notidea.ersel.dev' ile değiştirebilirsiniz.

@@ -90,6 +90,7 @@ class _AppDrawer extends ConsumerWidget {
                     child: IconButton(
                       icon: Icon(Icons.arrow_back_rounded,
                           color: theme.colorScheme.primary, size: 28),
+                      tooltip: 'Close menu',
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -103,19 +104,25 @@ class _AppDrawer extends ConsumerWidget {
                   Navigator.of(context).pop();
                   context.goNamed(RouteNames.profile);
                 },
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                  backgroundImage: avatarUrl != null
-                      ? CachedNetworkImageProvider(avatarUrl)
-                      : null,
-                  child: avatarUrl == null
-                      ? Icon(
-                          Icons.person,
-                          size: 40,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        )
-                      : null,
+                child: Semantics(
+                  label: displayName.isNotEmpty
+                      ? '$displayName – Go to profile'
+                      : 'Go to profile',
+                  button: true,
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    backgroundImage: avatarUrl != null
+                        ? CachedNetworkImageProvider(avatarUrl)
+                        : null,
+                    child: avatarUrl == null
+                        ? Icon(
+                            Icons.person,
+                            size: 40,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          )
+                        : null,
+                  ),
                 ),
               ),
 
@@ -157,6 +164,10 @@ class _AppDrawer extends ConsumerWidget {
                       child: Material(
                         color: isSelected ? appColors.surfaceVariant : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
+                        child: Semantics(
+                        label: item.label,
+                        selected: isSelected,
+                        button: true,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
@@ -185,6 +196,7 @@ class _AppDrawer extends ConsumerWidget {
                               ],
                             ),
                           ),
+                        ),
                         ),
                       ),
                     );

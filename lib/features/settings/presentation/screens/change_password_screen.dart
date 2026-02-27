@@ -70,6 +70,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureNew ? Icons.visibility_off : Icons.visibility),
+                      tooltip: _obscureNew ? 'Show password' : 'Hide password',
                       onPressed: () => setState(() => _obscureNew = !_obscureNew),
                     ),
                   ),
@@ -90,6 +91,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureConfirm ? Icons.visibility_off : Icons.visibility),
+                      tooltip: _obscureConfirm ? 'Show password' : 'Hide password',
                       onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
                     ),
                   ),

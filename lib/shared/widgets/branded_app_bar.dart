@@ -53,6 +53,7 @@ class BrandedAppBar extends StatelessWidget implements PreferredSizeWidget {
             clipBehavior: Clip.antiAlias,
             child: IconButton(
               icon: const Icon(Icons.menu, size: 28),
+              tooltip: 'Open menu',
               onPressed: () => AppScaffold.openDrawer(context),
             ),
           ),

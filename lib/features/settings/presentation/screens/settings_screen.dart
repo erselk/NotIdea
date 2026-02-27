@@ -3,6 +3,7 @@ import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:notidea/core/l10n/l10n.dart';
 import 'package:notidea/core/router/route_names.dart';
@@ -70,14 +71,20 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(l10n.privacyPolicy),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.goNamed(RouteNames.privacyPolicy),
+            trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+            onTap: () => launchUrl(
+              Uri.parse('https://www.notidea.ersel.dev/app-privacy'),
+              mode: LaunchMode.externalApplication,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.description_outlined),
             title: Text(l10n.termsOfService),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.goNamed(RouteNames.termsOfService),
+            trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+            onTap: () => launchUrl(
+              Uri.parse('https://www.notidea.ersel.dev/app-terms'),
+              mode: LaunchMode.externalApplication,
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),

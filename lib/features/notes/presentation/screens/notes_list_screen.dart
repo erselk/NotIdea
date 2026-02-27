@@ -209,6 +209,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
               clipBehavior: Clip.antiAlias,
               child: IconButton(
                 icon: const Icon(Icons.menu, size: 28),
+                tooltip: 'Open menu',
                 onPressed: () => AppScaffold.openDrawer(context),
               ),
             ),
@@ -230,6 +231,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
             icon: Icon(Icons.search, size: 30,
               color: _isSearching ? theme.colorScheme.primary : null,
             ),
+            tooltip: 'Search notes',
             onPressed: _toggleSearch,
           ),
           const SizedBox(width: 20),
@@ -377,6 +379,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
         height: 64,
         child: FloatingActionButton(
           onPressed: () => context.push('/home/editor'),
+          tooltip: 'New note',
           elevation: 3,
           shape: const CircleBorder(),
           child: const Icon(Icons.add, size: 32),

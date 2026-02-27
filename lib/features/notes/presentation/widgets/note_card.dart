@@ -140,23 +140,36 @@ class _NoteCardState extends State<NoteCard> {
     final brightness = ThemeData.estimateBrightnessForColor(cardColor);
     final onCardColor = getContrastTextColor(cardColor);
 
-    return Card(
-      color: cardColor,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+    return Semantics(
+      label: widget.note.title.isNotEmpty
+          ? widget.note.title
+          : (widget.note.content.isNotEmpty
+              ? widget.note.content.substring(
+                  0,
+                  widget.note.content.length > 60
+                      ? 60
+                      : widget.note.content.length)
+              : 'Note'),
+      hint: 'Tap to open, long press for options',
+      button: true,
+      child: Card(
+        color: cardColor,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
         ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: widget.onTap,
-        onLongPress: widget.onLongPress,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: widget.onTap,
+          onLongPress: widget.onLongPress,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: ExcludeSemantics(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -257,7 +270,9 @@ class _NoteCardState extends State<NoteCard> {
             ],
           ),
         ),
+        ),
       ),
-    );
+    ),
+  );
   }
 }

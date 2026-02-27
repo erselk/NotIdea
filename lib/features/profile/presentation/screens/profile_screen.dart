@@ -45,6 +45,7 @@ class ProfileScreen extends ConsumerWidget {
                     clipBehavior: Clip.antiAlias,
                     child: IconButton(
                       icon: Icon(Icons.menu, color: theme.colorScheme.onPrimary, size: 28),
+                      tooltip: 'Open menu',
                       onPressed: () => AppScaffold.openDrawer(context),
                     ),
                   ),

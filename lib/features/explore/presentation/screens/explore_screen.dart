@@ -58,6 +58,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             icon: Icon(Icons.search, size: 30,
               color: _isSearching ? theme.colorScheme.primary : null,
             ),
+            tooltip: 'Search',
             onPressed: () {
               setState(() {
                 _isSearching = !_isSearching;

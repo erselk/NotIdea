@@ -30,6 +30,7 @@ class PublicNoteScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: 'Back',
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -50,6 +51,7 @@ class PublicNoteScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.copy),
+            tooltip: 'Copy link',
             onPressed: () {
               final link = '${AppConstants.baseUrl}/n/$noteId';
               Clipboard.setData(ClipboardData(text: link));

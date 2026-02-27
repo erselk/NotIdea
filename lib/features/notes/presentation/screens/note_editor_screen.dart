@@ -739,6 +739,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
+                        tooltip: 'Change color',
                         icon: Icon(Icons.palette_outlined, size: 26, color: activeColor),
                         onPressed: () => setState(() => _showColorPalette = false),
                       ),
@@ -756,17 +757,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
+                        tooltip: 'Word count',
                         icon: Icon(Icons.info_outline, size: 26, color: iconColor),
                         onPressed: _showInfoDialog,
                       ),
                     ),
                   ),
-                  _buildAnimatedToggleBtn(quill.Attribute.bold, Icons.format_bold, activeColor, iconColor),
-                  _buildAnimatedToggleBtn(quill.Attribute.italic, Icons.format_italic, activeColor, iconColor),
-                  _buildAnimatedToggleBtn(quill.Attribute.underline, Icons.format_underline, activeColor, iconColor),
-                  _buildAnimatedToggleBtn(quill.Attribute.strikeThrough, Icons.format_strikethrough, activeColor, iconColor),
-                  _buildAnimatedToggleBtn(quill.Attribute.inlineCode, Icons.code, activeColor, iconColor),
-                  _buildAnimatedBlockBtn(quill.Attribute.ul, Icons.format_list_bulleted, activeColor, iconColor),
+                  _buildAnimatedToggleBtn(quill.Attribute.bold, Icons.format_bold, activeColor, iconColor, 'Bold'),
+                  _buildAnimatedToggleBtn(quill.Attribute.italic, Icons.format_italic, activeColor, iconColor, 'Italic'),
+                  _buildAnimatedToggleBtn(quill.Attribute.underline, Icons.format_underline, activeColor, iconColor, 'Underline'),
+                  _buildAnimatedToggleBtn(quill.Attribute.strikeThrough, Icons.format_strikethrough, activeColor, iconColor, 'Strikethrough'),
+                  _buildAnimatedToggleBtn(quill.Attribute.inlineCode, Icons.code, activeColor, iconColor, 'Code'),
+                  _buildAnimatedBlockBtn(quill.Attribute.ul, Icons.format_list_bulleted, activeColor, iconColor, 'Bullet list'),
                   SizedBox(
                     width: 32,
                     height: 32,
@@ -774,6 +776,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
+                        tooltip: 'Font',
                         icon: Icon(Icons.font_download_outlined, size: 26, color: iconColor),
                         onPressed: _showFontFamilyPicker,
                       ),
@@ -786,6 +789,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
+                        tooltip: 'Insert image',
                         icon: Icon(Icons.image_outlined, size: 26, color: iconColor),
                         onPressed: _pickImage,
                       ),
@@ -798,6 +802,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
+                        tooltip: 'Change color',
                         icon: Icon(Icons.palette_outlined, size: 26, color: iconColor),
                         onPressed: () => setState(() => _showColorPalette = true),
                       ),
@@ -809,7 +814,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 
-  Widget _buildAnimatedToggleBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor) {
+  Widget _buildAnimatedToggleBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor, String tooltip) {
     return AnimatedBuilder(
       animation: _contentController,
       builder: (context, _) {
@@ -821,6 +826,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             child: IconButton(
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
+              tooltip: tooltip,
               icon: Icon(iconData, size: 26, color: isSelected ? activeColor : iconColor),
               onPressed: () {
                 final isCurrentlySelected = _contentController.getSelectionStyle().containsKey(attribute.key);
@@ -833,7 +839,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 
-  Widget _buildAnimatedBlockBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor) {
+  Widget _buildAnimatedBlockBtn(quill.Attribute attribute, IconData iconData, Color activeColor, Color iconColor, String tooltip) {
     return AnimatedBuilder(
       animation: _contentController,
       builder: (context, _) {
@@ -846,6 +852,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             child: IconButton(
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
+              tooltip: tooltip,
               icon: Icon(iconData, size: 26, color: isSelected ? activeColor : iconColor),
               onPressed: () {
                 final isCurrentlySelected = _contentController.getSelectionStyle().attributes[attribute.key]?.value == attribute.value;
@@ -933,6 +940,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 padding: const EdgeInsets.only(left: 16.0),
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
+              tooltip: 'Back',
               onPressed: () async {
                 if (_hasUnsavedChanges) {
                   await _save(showSnackbar: false);
@@ -1118,3 +1126,4 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 }
+
