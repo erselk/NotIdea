@@ -6,6 +6,7 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/utils/extensions.dart';
+import 'package:notidea/core/utils/validators.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -151,16 +152,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         hintText: l10n.enterYourEmail,
                         prefixIcon: const Icon(Icons.email_outlined),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return l10n.emailRequired;
-                        }
-                        if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
-                            .hasMatch(value.trim())) {
-                          return l10n.emailInvalid;
-                        }
-                        return null;
-                      },
+                      validator: (value) => Validators.email(value, l10n),
                     ),
                     const SizedBox(height: 16),
 
@@ -191,9 +183,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return l10n.passwordRequired;
-                        }
-                        if (value.length < AppConstants.minPasswordLength) {
-                          return l10n.passwordTooShort;
                         }
                         return null;
                       },

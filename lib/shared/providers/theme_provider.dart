@@ -1,37 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notidea/core/database/app_database.dart';
 
 part 'theme_provider.g.dart';
 
 const _themeKey = 'theme_mode';
 
 /// Tema modu (light/dark/system) yönetimi.
-/// Kullanıcı tercihi güvenli depolamada saklanır.
+/// AppDatabase.instance (Hive) ile senkron okuma —
+/// main() içinde AppDatabase.init() beklendiğinden flash olmaz.
 @Riverpod(keepAlive: true)
 class ThemeModeNotifier extends _$ThemeModeNotifier {
-  final _storage = const FlutterSecureStorage();
-
   @override
   ThemeMode build() {
-    _loadSavedTheme();
-    return ThemeMode.system;
-  }
-
-  Future<void> _loadSavedTheme() async {
-    final saved = await _storage.read(key: _themeKey);
+    final saved = AppDatabase.instance.getPref<String>(_themeKey);
     if (saved != null) {
-      state = ThemeMode.values.firstWhere(
+      return ThemeMode.values.firstWhere(
         (m) => m.name == saved,
         orElse: () => ThemeMode.system,
       );
     }
+    return ThemeMode.system;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     state = mode;
-    await _storage.write(key: _themeKey, value: mode.name);
+    await AppDatabase.instance.setPref(_themeKey, mode.name);
   }
 
   Future<void> toggleTheme() async {

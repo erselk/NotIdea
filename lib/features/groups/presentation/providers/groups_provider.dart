@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notidea/core/database/app_database.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/groups/data/datasources/groups_remote_datasource.dart';
 import 'package:notidea/features/groups/data/repositories/groups_repository_impl.dart';
@@ -28,7 +29,20 @@ Future<List<GroupModel>> myGroups(Ref ref) async {
   if (currentUser == null) return [];
 
   final repository = ref.watch(groupsRepositoryProvider);
-  return repository.getMyGroups(currentUser.id);
+  try {
+    final groups = await repository.getMyGroups(currentUser.id);
+    await AppDatabase.instance.cacheGroups(
+      currentUser.id,
+      groups.map((g) => g.toJson()).toList(),
+    );
+    return groups;
+  } catch (_) {
+    final cached = AppDatabase.instance.getCachedGroups(currentUser.id);
+    if (cached != null) {
+      return cached.map((m) => GroupModel.fromJson(m)).toList();
+    }
+    rethrow;
+  }
 }
 
 @riverpod

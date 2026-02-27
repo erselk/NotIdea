@@ -11,11 +11,15 @@ class AppDatabase {
   static const String _profilesBox = 'profiles_cache';
   static const String _searchBox = 'search_history';
   static const String _prefsBox = 'app_prefs';
+  static const String _friendsBox = 'friends_cache';
+  static const String _groupsBox = 'groups_cache';
 
   late Box<Map> _notes;
   late Box<Map> _profiles;
   late Box<List> _search;
   late Box _prefs;
+  late Box<dynamic> _friends;
+  late Box<dynamic> _groups;
 
   bool _initialized = false;
 
@@ -28,6 +32,8 @@ class AppDatabase {
     _profiles = await Hive.openBox<Map>(_profilesBox);
     _search = await Hive.openBox<List>(_searchBox);
     _prefs = await Hive.openBox(_prefsBox);
+    _friends = await Hive.openBox<dynamic>(_friendsBox);
+    _groups = await Hive.openBox<dynamic>(_groupsBox);
 
     _initialized = true;
   }
@@ -128,12 +134,44 @@ class AppDatabase {
   T? getPref<T>(String key) => _prefs.get(key) as T?;
   Future<void> setPref<T>(String key, T value) => _prefs.put(key, value);
 
+  // ── Friends Cache ──
+
+  Future<void> cacheFriends(String userId, List<Map<String, dynamic>> data) =>
+      _friends.put(userId, data);
+
+  List<Map<String, dynamic>>? getCachedFriends(String userId) {
+    final raw = _friends.get(userId);
+    if (raw == null) return null;
+    return (raw as List)
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+  }
+
+  Future<void> clearFriendsCache() => _friends.clear();
+
+  // ── Groups Cache ──
+
+  Future<void> cacheGroups(String userId, List<Map<String, dynamic>> data) =>
+      _groups.put(userId, data);
+
+  List<Map<String, dynamic>>? getCachedGroups(String userId) {
+    final raw = _groups.get(userId);
+    if (raw == null) return null;
+    return (raw as List)
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+  }
+
+  Future<void> clearGroupsCache() => _groups.clear();
+
   // ── Lifecycle ──
 
   Future<void> clearAll() async {
     await _notes.clear();
     await _profiles.clear();
     await _search.clear();
+    await _friends.clear();
+    await _groups.clear();
   }
 
   Future<void> close() async {

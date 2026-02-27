@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notidea/core/database/app_database.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/data/datasources/friends_remote_datasource.dart';
 import 'package:notidea/features/friends/data/repositories/friends_repository_impl.dart';
@@ -28,7 +29,22 @@ Future<List<FriendshipModel>> friendsList(Ref ref) async {
   if (currentUser == null) return [];
 
   final repository = ref.watch(friendsRepositoryProvider);
-  return repository.getFriends(currentUser.id);
+  try {
+    final friends = await repository.getFriends(currentUser.id);
+    await AppDatabase.instance.cacheFriends(
+      currentUser.id,
+      friends.map((f) => f.toJson()).toList(),
+    );
+    return friends;
+  } catch (_) {
+    final cached = AppDatabase.instance.getCachedFriends(currentUser.id);
+    if (cached != null) {
+      return cached
+          .map((m) => FriendshipModel.fromJson(m))
+          .toList();
+    }
+    rethrow;
+  }
 }
 
 @riverpod

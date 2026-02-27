@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:notidea/l10n/app_localizations.dart';
+import 'package:notidea/config/supabase_config.dart';
+import 'package:notidea/core/constants/storage_constants.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
@@ -28,6 +32,8 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   final _selectedMemberIds = <String>{};
   Timer? _debounce;
   String _searchQuery = '';
+  Uint8List? _avatarBytes;
+  String _avatarExt = 'jpg';
 
   @override
   void dispose() {
@@ -50,8 +56,83 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         );
 
     if (created != null && mounted) {
+      // Upload group avatar if picked
+      if (_avatarBytes != null) {
+        try {
+          final path = 'groups/${created.id}/avatar.$_avatarExt';
+          await SupabaseConfig.storage
+              .from(StorageConstants.avatarsBucket)
+              .uploadBinary(
+                path,
+                _avatarBytes!,
+                fileOptions: const FileOptions(upsert: true),
+              );
+          final url = SupabaseConfig.storage
+              .from(StorageConstants.avatarsBucket)
+              .getPublicUrl(path);
+          await SupabaseConfig.client
+              .from('groups')
+              .update({'avatar_url': url})
+              .eq('id', created.id);
+        } catch (_) {
+          // Avatar upload failure is non-critical
+        }
+      }
       context.pop();
     }
+  }
+
+  Future<void> _pickGroupAvatar() async {
+    final l10n = AppLocalizations.of(context)!;
+    final picker = ImagePicker();
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: Text(l10n.camera),
+              onTap: () async {
+                Navigator.pop(ctx);
+                final file = await picker.pickImage(
+                  source: ImageSource.camera,
+                  imageQuality: 80,
+                );
+                if (file != null && mounted) {
+                  final bytes = await file.readAsBytes();
+                  final ext = file.path.split('.').last.toLowerCase();
+                  setState(() {
+                    _avatarBytes = bytes;
+                    _avatarExt = ext;
+                  });
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(l10n.gallery),
+              onTap: () async {
+                Navigator.pop(ctx);
+                final file = await picker.pickImage(
+                  source: ImageSource.gallery,
+                  imageQuality: 80,
+                );
+                if (file != null && mounted) {
+                  final bytes = await file.readAsBytes();
+                  final ext = file.path.split('.').last.toLowerCase();
+                  setState(() {
+                    _avatarBytes = bytes;
+                    _avatarExt = ext;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -96,6 +177,36 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            // Group avatar picker
+            Center(
+              child: GestureDetector(
+                onTap: _pickGroupAvatar,
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 44,
+                      backgroundColor: appColors.primaryLight,
+                      backgroundImage: _avatarBytes != null
+                          ? MemoryImage(_avatarBytes!)
+                          : null,
+                      child: _avatarBytes == null
+                          ? Icon(Icons.group, size: 40, color: appColors.primary)
+                          : null,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 14,
+                        backgroundColor: appColors.primary,
+                        child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
