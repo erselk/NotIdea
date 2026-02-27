@@ -76,7 +76,7 @@ class MarkdownSyntaxController extends TextEditingController {
              innerSpans = [TextSpan(text: matchedText, style: currentStyle)];
         }
       } else if (matchedText.startsWith('- [ ]')) {
-        currentStyle = currentStyle.copyWith(color: syntaxColor.withOpacity(0.8));
+        currentStyle = currentStyle.copyWith(color: syntaxColor.withValues(alpha: 0.8));
         innerSpans = [
            TextSpan(text: '- [ ] ', style: currentStyle.copyWith(fontWeight: FontWeight.bold, fontSize: (baseStyle.fontSize ?? 14) * 1.2)),
            TextSpan(text: matchedText.substring(6), style: baseStyle),

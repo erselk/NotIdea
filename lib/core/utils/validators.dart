@@ -1,105 +1,101 @@
+import 'package:notidea/core/constants/app_constants.dart';
+import 'package:notidea/l10n/app_localizations.dart';
+
 /// Form doğrulama fonksiyonları
 class Validators {
   Validators._();
 
   /// E-posta doğrulama
-  static String? email(String? value) {
+  static String? email(String? value, AppLocalizations l10n) {
     if (value == null || value.trim().isEmpty) {
-      return 'E-posta adresi gereklidir';
+      return l10n.emailRequired;
     }
     final emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     if (!emailRegex.hasMatch(value.trim())) {
-      return 'Geçerli bir e-posta adresi girin';
+      return l10n.emailInvalid;
     }
     return null;
   }
 
   /// Şifre doğrulama: min 8 karakter, büyük harf, küçük harf, rakam
-  static String? password(String? value) {
+  static String? password(String? value, AppLocalizations l10n) {
     if (value == null || value.isEmpty) {
-      return 'Şifre gereklidir';
+      return l10n.passwordRequired;
     }
-    if (value.length < 8) {
-      return 'Şifre en az 8 karakter olmalıdır';
+    if (value.length < AppConstants.minPasswordLength) {
+      return l10n.passwordTooShort;
     }
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Şifre en az bir büyük harf içermelidir';
+      return l10n.passwordUppercase;
     }
     if (!value.contains(RegExp(r'[a-z]'))) {
-      return 'Şifre en az bir küçük harf içermelidir';
+      return l10n.passwordLowercase;
     }
     if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Şifre en az bir rakam içermelidir';
+      return l10n.passwordDigit;
     }
     return null;
   }
 
   /// Şifre onay doğrulaması
-  static String? confirmPassword(String? value, String password) {
+  static String? confirmPassword(String? value, String password, AppLocalizations l10n) {
     if (value == null || value.isEmpty) {
-      return 'Şifre onayı gereklidir';
+      return l10n.confirmPasswordRequired;
     }
     if (value != password) {
-      return 'Şifreler eşleşmiyor';
+      return l10n.passwordsDoNotMatch;
     }
     return null;
   }
 
   /// Kullanıcı adı: alfanümerik, 3-20 karakter
-  static String? username(String? value) {
+  static String? username(String? value, AppLocalizations l10n) {
     if (value == null || value.trim().isEmpty) {
-      return 'Kullanıcı adı gereklidir';
+      return l10n.usernameRequired;
     }
     final trimmed = value.trim();
-    if (trimmed.length < 3) {
-      return 'Kullanıcı adı en az 3 karakter olmalıdır';
+    if (trimmed.length < AppConstants.minUsernameLength) {
+      return l10n.usernameTooShort;
     }
-    if (trimmed.length > 20) {
-      return 'Kullanıcı adı en fazla 20 karakter olabilir';
+    if (trimmed.length > AppConstants.maxUsernameLength) {
+      return l10n.usernameTooLong;
     }
     if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(trimmed)) {
-      return 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir';
+      return l10n.usernameInvalid;
     }
     return null;
   }
 
   /// Görünen ad doğrulama
-  static String? displayName(String? value) {
+  static String? displayName(String? value, AppLocalizations l10n) {
     if (value == null || value.trim().isEmpty) {
-      return 'Görünen ad gereklidir';
+      return l10n.displayNameRequired;
     }
-    if (value.trim().length > 50) {
-      return 'Görünen ad en fazla 50 karakter olabilir';
+    if (value.trim().length > AppConstants.maxDisplayNameLength) {
+      return l10n.displayNameTooLong;
     }
     return null;
   }
 
   /// Not başlığı doğrulama
-  static String? noteTitle(String? value) {
+  static String? noteTitle(String? value, AppLocalizations l10n) {
     if (value == null || value.trim().isEmpty) {
-      return 'Not başlığı gereklidir';
+      return l10n.required;
     }
-    if (value.trim().length > 200) {
-      return 'Not başlığı en fazla 200 karakter olabilir';
+    if (value.trim().length > AppConstants.maxNoteTitleLength) {
+      return l10n.required;
     }
     return null;
   }
 
   /// Genel boş alan kontrolü
-  static String? required(String? value, [String fieldName = 'Bu alan']) {
+  static String? required(String? value, AppLocalizations l10n) {
     if (value == null || value.trim().isEmpty) {
-      return '$fieldName gereklidir';
-    }
-    return null;
-  }
-
-  /// Genel uzunluk kontrolü
-  static String? maxLength(String? value, int max, [String fieldName = 'Bu alan']) {
-    if (value != null && value.length > max) {
-      return '$fieldName en fazla $max karakter olabilir';
+      return l10n.required;
     }
     return null;
   }
 }
+

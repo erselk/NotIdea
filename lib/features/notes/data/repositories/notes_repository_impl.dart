@@ -59,9 +59,7 @@ class NotesRepositoryImpl implements NotesRepository {
       
       await _localDatasource.cacheNotes(updatedRemoteNotes);
       return updatedRemoteNotes;
-    } catch (e, st) {
-      print('🚀 [getUserNotes] SUPABASE ERROR: $e');
-      print(st);
+    } catch (e) {
       return _localDatasource.getCachedNotes(userId);
     }
   }
@@ -123,12 +121,16 @@ class NotesRepositoryImpl implements NotesRepository {
 
   @override
   Future<void> toggleFavorite(String noteId, bool isFavorite) async {
-    await _remoteDatasource.toggleFavorite(noteId, isFavorite);
+    try {
+      await _remoteDatasource.toggleFavorite(noteId, isFavorite);
+    } catch (_) {}
   }
 
   @override
   Future<void> togglePin(String noteId, bool isPinned) async {
-    await _remoteDatasource.togglePin(noteId, isPinned);
+    try {
+      await _remoteDatasource.togglePin(noteId, isPinned);
+    } catch (_) {}
   }
 
   @override
@@ -169,7 +171,11 @@ class NotesRepositoryImpl implements NotesRepository {
     int offset = 0,
     int limit = 30,
   }) async {
-    return _remoteDatasource.getPublicNotes(offset: offset, limit: limit);
+    try {
+      return await _remoteDatasource.getPublicNotes(offset: offset, limit: limit);
+    } catch (_) {
+      return [];
+    }
   }
 
   @override
@@ -178,10 +184,14 @@ class NotesRepositoryImpl implements NotesRepository {
     int offset = 0,
     int limit = 20,
   }) async {
-    return _remoteDatasource.getSharedNotes(
-      userId: userId,
-      offset: offset,
-      limit: limit,
-    );
+    try {
+      return await _remoteDatasource.getSharedNotes(
+        userId: userId,
+        offset: offset,
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
   }
 }

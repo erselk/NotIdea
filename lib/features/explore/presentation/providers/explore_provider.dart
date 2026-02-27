@@ -23,9 +23,26 @@ Future<List<NoteModel>> publicNotes(
   int offset = 0,
   int limit = 30,
 }) async {
-  ref.watch(exploreSortProvider);
+  final sortMode = ref.watch(exploreSortProvider);
   final repository = ref.watch(notesRepositoryProvider);
-  return repository.getPublicNotes(offset: offset, limit: limit);
+  final notes = await repository.getPublicNotes(offset: offset, limit: limit);
+
+  if (sortMode == ExploreSortMode.trending) {
+    // Trending: son 7 gün içindeki notları güncelleme tarihine göre sırala
+    final oneWeekAgo = DateTime.now().subtract(const Duration(days: 7));
+    final recent = notes
+        .where((n) => n.updatedAt.isAfter(oneWeekAgo))
+        .toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final older = notes
+        .where((n) => !n.updatedAt.isAfter(oneWeekAgo))
+        .toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return [...recent, ...older];
+  }
+
+  // recent: oluşturulma tarihine göre (zaten sıralı geliyor)
+  return notes;
 }
 
 @riverpod
@@ -36,14 +53,6 @@ Future<List<NoteModel>> searchPublicNotes(
   if (query.trim().isEmpty) return [];
 
   final repository = ref.watch(notesRepositoryProvider);
-  final allPublic = await repository.getPublicNotes(limit: 100);
-  final lowerQuery = query.toLowerCase();
-
-  return allPublic
-      .where(
-        (note) =>
-            note.title.toLowerCase().contains(lowerQuery) ||
-            note.content.toLowerCase().contains(lowerQuery),
-      )
-      .toList();
+  // Server-side ilike filtresi ile arama yap
+  return repository.searchNotes(userId: '', query: query.trim(), limit: 50);
 }

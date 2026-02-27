@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -37,9 +38,17 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 @riverpod
 GoRouter appRouter(Ref ref) {
   final authListenable = ValueNotifier<bool>(true);
-  
+
+  // Profile check cache: keyed by userId, avoids Supabase query on every navigation.
+  String? _cachedUserId;
+  bool? _cachedHasProfile;
+
   final sub = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-    if (data.event == AuthChangeEvent.signedIn || data.event == AuthChangeEvent.signedOut) {
+    if (data.event == AuthChangeEvent.signedIn ||
+        data.event == AuthChangeEvent.signedOut) {
+      // Invalidate profile cache on auth change.
+      _cachedUserId = null;
+      _cachedHasProfile = null;
       authListenable.value = !authListenable.value;
     }
   });
@@ -53,7 +62,7 @@ GoRouter appRouter(Ref ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: authListenable,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
     redirect: (context, state) async {
       final session = Supabase.instance.client.auth.currentSession;
       final isAuthenticated = session != null;
@@ -62,25 +71,39 @@ GoRouter appRouter(Ref ref) {
       final isAuthRoute =
           currentPath == RoutePaths.login || currentPath == RoutePaths.signup;
       final isPublicNote = currentPath.startsWith('/n/');
-      final isLegalRoute = currentPath == RoutePaths.appTerms || currentPath == RoutePaths.appPrivacy;
+      final isLegalRoute =
+          currentPath == RoutePaths.appTerms ||
+          currentPath == RoutePaths.appPrivacy;
       final isSplash = currentPath == RoutePaths.splash;
       final isProfileSetup = currentPath == RoutePaths.profileSetup;
 
-      if (!isAuthenticated && !isAuthRoute && !isSplash && !isLegalRoute && !isPublicNote) {
+      if (!isAuthenticated &&
+          !isAuthRoute &&
+          !isSplash &&
+          !isLegalRoute &&
+          !isPublicNote) {
         return RoutePaths.login;
       }
 
       if (!isAuthenticated) return null;
 
-      final profile = await Supabase.instance.client
-          .from('profiles')
-          .select('id, username')
-          .eq('id', session!.user.id)
-          .maybeSingle();
-
-      final hasProfile = profile != null &&
-          profile['username'] != null &&
-          (profile['username'] as String).isNotEmpty;
+      // Use cached result when available to prevent per-navigation DB queries.
+      final userId = session!.user.id;
+      bool hasProfile;
+      if (_cachedUserId == userId && _cachedHasProfile != null) {
+        hasProfile = _cachedHasProfile!;
+      } else {
+        final profile = await Supabase.instance.client
+            .from('profiles')
+            .select('id, username')
+            .eq('id', userId)
+            .maybeSingle();
+        hasProfile = profile != null &&
+            profile['username'] != null &&
+            (profile['username'] as String).isNotEmpty;
+        _cachedUserId = userId;
+        _cachedHasProfile = hasProfile;
+      }
 
       if (!hasProfile && !isProfileSetup) {
         return RoutePaths.profileSetup;

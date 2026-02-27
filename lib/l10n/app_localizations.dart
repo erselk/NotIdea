@@ -2077,6 +2077,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Moved to trash'**
   String get movedToTrash;
+
+  /// No description provided for @noteInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Note Info'**
+  String get noteInfo;
+
+  /// No description provided for @wordCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Word count: {count}'**
+  String wordCount(int count);
+
+  /// No description provided for @fontFamilyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Font Style'**
+  String get fontFamilyTitle;
+
+  /// No description provided for @fontDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default (System)'**
+  String get fontDefault;
+
+  /// No description provided for @fontSerif.
+  ///
+  /// In en, this message translates to:
+  /// **'Serif'**
+  String get fontSerif;
+
+  /// No description provided for @fontMonospace.
+  ///
+  /// In en, this message translates to:
+  /// **'Monospace'**
+  String get fontMonospace;
+
+  /// No description provided for @fontCursive.
+  ///
+  /// In en, this message translates to:
+  /// **'Cursive'**
+  String get fontCursive;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @passwordUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter'**
+  String get passwordUppercase;
+
+  /// No description provided for @passwordLowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one lowercase letter'**
+  String get passwordLowercase;
+
+  /// No description provided for @passwordDigit.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one number'**
+  String get passwordDigit;
+
+  /// No description provided for @imageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get imageLabel;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
 }
 
 class _AppLocalizationsDelegate

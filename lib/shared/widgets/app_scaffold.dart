@@ -35,7 +35,7 @@ class _AppScaffoldState extends ConsumerState<AppScaffold> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawerScrimColor: Theme.of(context).colorScheme.scrim.withOpacity(0.12),
+      drawerScrimColor: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.12),
       drawer: const _AppDrawer(),
       body: widget.child,
     );

@@ -47,16 +47,8 @@ Future<List<NoteModel>> searchPublicNotesGlobal(
   if (query.trim().isEmpty) return [];
 
   final repository = ref.watch(notesRepositoryProvider);
-  final allPublic = await repository.getPublicNotes(limit: 100);
-  final lowerQuery = query.toLowerCase();
-
-  return allPublic
-      .where(
-        (note) =>
-            note.title.toLowerCase().contains(lowerQuery) ||
-            note.content.toLowerCase().contains(lowerQuery),
-      )
-      .toList();
+  // Server-side ilike filtresi: veritabanında arama yap, tüm kayıtları çekme
+  return repository.searchNotes(userId: '', query: query.trim(), limit: 50);
 }
 
 @riverpod

@@ -401,5 +401,25 @@
   "noteUnpinned": "Sabitleme kaldırıldı",
   "noteDeleted": "Not silindi",
   "notePermanentlyDeleted": "Not kalıcı olarak silindi",
-  "movedToTrash": "Çöp kutusuna taşındı"
+  "movedToTrash": "Çöp kutusuna taşındı",
+
+  "noteInfo": "Not Bilgisi",
+  "wordCount": "Kelime sayısı: {count}",
+  "@wordCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "fontFamilyTitle": "Yazı Tipi",
+  "fontDefault": "Varsayılan (Sistem)",
+  "fontSerif": "Serif",
+  "fontMonospace": "Tekdüze",
+  "fontCursive": "El Yazısı",
+  "newPassword": "Yeni Şifre",
+  "required": "Zorunlu",
+  "passwordUppercase": "Şifre en az bir büyük harf içermelidir",
+  "passwordLowercase": "Şifre en az bir küçük harf içermelidir",
+  "passwordDigit": "Şifre en az bir rakam içermelidir",
+  "imageLabel": "Görsel",
+  "clearAll": "Tümünü Temizle"
 }

@@ -401,5 +401,25 @@
   "noteUnpinned": "Note unpinned",
   "noteDeleted": "Note deleted",
   "notePermanentlyDeleted": "Note permanently deleted",
-  "movedToTrash": "Moved to trash"
+  "movedToTrash": "Moved to trash",
+
+  "noteInfo": "Note Info",
+  "wordCount": "Word count: {count}",
+  "@wordCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "fontFamilyTitle": "Font Style",
+  "fontDefault": "Default (System)",
+  "fontSerif": "Serif",
+  "fontMonospace": "Monospace",
+  "fontCursive": "Cursive",
+  "newPassword": "New Password",
+  "required": "Required",
+  "passwordUppercase": "Password must contain at least one uppercase letter",
+  "passwordLowercase": "Password must contain at least one lowercase letter",
+  "passwordDigit": "Password must contain at least one number",
+  "imageLabel": "Image",
+  "clearAll": "Clear All"
 }

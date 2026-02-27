@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/features/notes/data/datasources/notes_local_datasource.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
 import 'package:notidea/features/search/presentation/providers/search_provider.dart';
@@ -25,11 +26,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
   late final TabController _tabController;
   Timer? _debounce;
   String _query = '';
+  List<String> _recentSearches = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _loadRecentSearches();
+  }
+
+  Future<void> _loadRecentSearches() async {
+    final searches = await NotesLocalDatasource().getRecentSearches();
+    if (mounted) setState(() => _recentSearches = searches);
   }
 
   @override
@@ -43,8 +51,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
   void _onSearchChanged(String value) {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
-      setState(() => _query = value.trim());
+      final trimmed = value.trim();
+      setState(() => _query = trimmed);
+      if (trimmed.isNotEmpty) {
+        NotesLocalDatasource().addSearchQuery(trimmed);
+        _loadRecentSearches();
+      }
     });
+  }
+
+  void _applyRecentSearch(String query) {
+    _searchController.text = query;
+    setState(() => _query = query);
   }
 
   @override
@@ -83,7 +101,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
         ),
       ),
       body: _query.isEmpty
-          ? _EmptySearchState(appColors: appColors)
+          ? _EmptySearchState(
+              appColors: appColors,
+              recentSearches: _recentSearches,
+              onSearchTap: _applyRecentSearch,
+              onClearHistory: () async {
+                await NotesLocalDatasource().clearSearchHistory();
+                await _loadRecentSearches();
+              },
+            )
           : TabBarView(
               controller: _tabController,
               children: [
@@ -97,37 +123,76 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 }
 
 class _EmptySearchState extends StatelessWidget {
-  const _EmptySearchState({required this.appColors});
+  const _EmptySearchState({
+    required this.appColors,
+    required this.recentSearches,
+    required this.onSearchTap,
+    required this.onClearHistory,
+  });
 
   final AppColorsExtension appColors;
+  final List<String> recentSearches;
+  final ValueChanged<String> onSearchTap;
+  final VoidCallback onClearHistory;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(48),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+    if (recentSearches.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(48),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.search,
+                size: 72,
+                color: appColors.primary.withValues(alpha: 0.4),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.searchHint,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: appColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.search,
-              size: 72,
-              color: appColors.primary.withValues(alpha: 0.4),
-            ),
-            const SizedBox(height: 16),
             Text(
-              l10n.searchHint,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              l10n.recentSearches,
+              style: theme.textTheme.titleSmall?.copyWith(
                 color: appColors.textSecondary,
               ),
-              textAlign: TextAlign.center,
+            ),
+            TextButton(
+              onPressed: onClearHistory,
+              child: Text(l10n.clearAll),
             ),
           ],
         ),
-      ),
+        ...recentSearches.map(
+          (q) => ListTile(
+            leading: const Icon(Icons.history),
+            title: Text(q),
+            onTap: () => onSearchTap(q),
+            dense: true,
+          ),
+        ),
+      ],
     );
   }
 }

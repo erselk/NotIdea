@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -81,7 +82,7 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),
             title: Text(l10n.version),
-            subtitle: const Text('1.0.0 (1)'),
+            subtitle: Text(AppConstants.appVersion),
           ),
           Divider(height: 1, color: appColors.divider),
 

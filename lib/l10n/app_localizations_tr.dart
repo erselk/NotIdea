@@ -1032,4 +1032,48 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get movedToTrash => 'Çöp kutusuna taşındı';
+
+  @override
+  String get noteInfo => 'Not Bilgisi';
+
+  @override
+  String wordCount(int count) {
+    return 'Kelime sayısı: $count';
+  }
+
+  @override
+  String get fontFamilyTitle => 'Yazı Tipi';
+
+  @override
+  String get fontDefault => 'Varsayılan (Sistem)';
+
+  @override
+  String get fontSerif => 'Serif';
+
+  @override
+  String get fontMonospace => 'Tekdüze';
+
+  @override
+  String get fontCursive => 'El Yazısı';
+
+  @override
+  String get newPassword => 'Yeni Şifre';
+
+  @override
+  String get required => 'Zorunlu';
+
+  @override
+  String get passwordUppercase => 'Şifre en az bir büyük harf içermelidir';
+
+  @override
+  String get passwordLowercase => 'Şifre en az bir küçük harf içermelidir';
+
+  @override
+  String get passwordDigit => 'Şifre en az bir rakam içermelidir';
+
+  @override
+  String get imageLabel => 'Görsel';
+
+  @override
+  String get clearAll => 'Tümünü Temizle';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
@@ -79,14 +80,13 @@ class FavoritesScreen extends ConsumerWidget {
               );
             }
 
-            return GridView.builder(
+            return MasonryGridView.builder(
               padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.85,
               ),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
               itemCount: notes.length,
               itemBuilder: (context, index) {
                 final note = notes[index];

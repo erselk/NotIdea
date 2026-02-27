@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
@@ -65,7 +66,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   controller: _newPasswordController,
                   obscureText: _obscureNew,
                   decoration: InputDecoration(
-                    labelText: 'New Password',
+                    labelText: l10n.newPassword,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureNew ? Icons.visibility_off : Icons.visibility),
@@ -73,8 +74,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Required';
-                    if (value.length < 6) return l10n.passwordTooShort ?? 'Password too short (min 6)';
+                    if (value == null || value.isEmpty) return l10n.required;
+                    if (value.length < AppConstants.minPasswordLength) {
+                      return l10n.passwordTooShort;
+                    }
                     return null;
                   },
                 ),
@@ -83,7 +86,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirm,
                   decoration: InputDecoration(
-                    labelText: l10n.confirmPassword ?? 'Confirm Password',
+                    labelText: l10n.confirmPassword,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureConfirm ? Icons.visibility_off : Icons.visibility),
@@ -91,8 +94,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Required';
-                    if (value != _newPasswordController.text) return l10n.passwordsDoNotMatch ?? 'Passwords do not match';
+                    if (value == null || value.isEmpty) return l10n.required;
+                    if (value != _newPasswordController.text) return l10n.passwordsDoNotMatch;
                     return null;
                   },
                 ),
@@ -105,7 +108,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text(l10n.save ?? 'Save'),
+                      : Text(l10n.save),
                 ),
               ],
             ),

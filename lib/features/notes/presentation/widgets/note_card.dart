@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notidea/core/utils/helpers.dart';
+import 'package:notidea/core/utils/underline_syntax.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
+import 'package:notidea/l10n/app_localizations.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown_quill/markdown_quill.dart';
 import 'package:markdown/markdown.dart' as md;
-
-class UnderlineSyntax extends md.DelimiterSyntax {
-  UnderlineSyntax()
-      : super(
-          r'\+\+',
-          requiresDelimiterRun: true,
-          allowIntraWord: true,
-          startCharacter: 43,
-          tags: [md.DelimiterTag('u', 2)],
-        );
-}
 
 class _ImagePlaceholderEmbedBuilder extends quill.EmbedBuilder {
   final ThemeData theme;
@@ -55,7 +46,7 @@ class _ImagePlaceholderEmbedBuilder extends quill.EmbedBuilder {
               size: 12, color: onCardColor.withValues(alpha: 0.8)),
           const SizedBox(width: 4),
           Text(
-            'Görsel',
+            AppLocalizations.of(context)!.imageLabel,
             style: theme.textTheme.bodySmall?.copyWith(
               color: onCardColor.withValues(alpha: 0.8),
               fontSize: 10,

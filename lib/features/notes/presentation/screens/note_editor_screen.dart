@@ -21,6 +21,8 @@ import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/config/supabase_config.dart';
+import 'package:notidea/core/constants/storage_constants.dart';
+import 'package:notidea/core/utils/underline_syntax.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';
@@ -36,17 +38,6 @@ class NoteEditorScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<NoteEditorScreen> createState() => _NoteEditorScreenState();
-}
-
-class UnderlineSyntax extends md.DelimiterSyntax {
-  UnderlineSyntax()
-    : super(
-        r'\+\+',
-        requiresDelimiterRun: true,
-        allowIntraWord: true,
-        startCharacter: 43,
-        tags: [md.DelimiterTag('u', 2)],
-      );
 }
 
 class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
@@ -545,13 +536,16 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
   void _showInfoDialog() {
     final l10n = AppLocalizations.of(context)!;
+    final wordCount = _deltaToMd
+        .convert(_contentController.document.toDelta())
+        .trim()
+        .split(RegExp(r'\s+'))
+        .length;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Not Bilgisi'),
-        content: Text(
-          'Kelime Sayısı: ${_deltaToMd.convert(_contentController.document.toDelta()).trim().split(RegExp(r'\s+')).length}',
-        ),
+        title: Text(l10n.noteInfo),
+        content: Text(l10n.wordCount(wordCount)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.ok)),
         ],
@@ -568,11 +562,12 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     final activeColor = theme.colorScheme.primary;
 
     Future<void> _showFontFamilyPicker() async {
+      final l10n = AppLocalizations.of(context)!;
       final String? selectedFont = await showDialog<String>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(
-            AppLocalizations.of(context)!.noteTitle,
+            l10n.fontFamilyTitle,
             style: TextStyle(color: theme.colorScheme.onSurface),
           ),
           backgroundColor: theme.colorScheme.surface,
@@ -584,27 +579,27 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  title: const Text('Default (System)'),
+                  title: Text(l10n.fontDefault),
                   onTap: () => Navigator.pop(ctx, 'Clear'),
                 ),
                 ListTile(
-                  title: const Text(
-                    'Serif',
-                    style: TextStyle(fontFamily: 'serif'),
+                  title: Text(
+                    l10n.fontSerif,
+                    style: const TextStyle(fontFamily: 'serif'),
                   ),
                   onTap: () => Navigator.pop(ctx, 'serif'),
                 ),
                 ListTile(
-                  title: const Text(
-                    'Monospace',
-                    style: TextStyle(fontFamily: 'monospace'),
+                  title: Text(
+                    l10n.fontMonospace,
+                    style: const TextStyle(fontFamily: 'monospace'),
                   ),
                   onTap: () => Navigator.pop(ctx, 'monospace'),
                 ),
                 ListTile(
-                  title: const Text(
-                    'Cursive',
-                    style: TextStyle(fontFamily: 'cursive'),
+                  title: Text(
+                    l10n.fontCursive,
+                    style: const TextStyle(fontFamily: 'cursive'),
                   ),
                   onTap: () => Navigator.pop(ctx, 'cursive'),
                 ),
@@ -656,11 +651,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
         final bytes = await file.readAsBytes();
         await SupabaseConfig.storage
-            .from('images')
+            .from(StorageConstants.noteImagesBucket)
             .uploadBinary(fileName, bytes);
 
         final imageUrl = SupabaseConfig.storage
-            .from('images')
+            .from(StorageConstants.noteImagesBucket)
             .getPublicUrl(fileName);
 
         // Supabase linkiyle editor içindeki yerel linki değiştir

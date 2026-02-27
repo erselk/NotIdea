@@ -1024,4 +1024,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get movedToTrash => 'Moved to trash';
+
+  @override
+  String get noteInfo => 'Note Info';
+
+  @override
+  String wordCount(int count) {
+    return 'Word count: $count';
+  }
+
+  @override
+  String get fontFamilyTitle => 'Font Style';
+
+  @override
+  String get fontDefault => 'Default (System)';
+
+  @override
+  String get fontSerif => 'Serif';
+
+  @override
+  String get fontMonospace => 'Monospace';
+
+  @override
+  String get fontCursive => 'Cursive';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get passwordUppercase =>
+      'Password must contain at least one uppercase letter';
+
+  @override
+  String get passwordLowercase =>
+      'Password must contain at least one lowercase letter';
+
+  @override
+  String get passwordDigit => 'Password must contain at least one number';
+
+  @override
+  String get imageLabel => 'Image';
+
+  @override
+  String get clearAll => 'Clear All';
 }
