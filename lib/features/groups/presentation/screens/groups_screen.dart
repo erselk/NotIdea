@@ -5,7 +5,6 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class GroupsScreen extends ConsumerWidget {

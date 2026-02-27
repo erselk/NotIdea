@@ -16,7 +16,6 @@ import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
-import 'package:notidea/features/search/presentation/providers/search_provider.dart';
 import 'package:notidea/config/supabase_config.dart';
 
 class ShareNoteDialog extends ConsumerStatefulWidget {
@@ -48,7 +47,6 @@ class ShareNoteDialog extends ConsumerStatefulWidget {
 class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
   late NoteVisibility _selectedVisibility;
   List<Map<String, dynamic>> _currentShares = [];
-  bool _isLoadingShares = true;
   int _selectedTabIndex = 0; // 0: users, 1: groups
 
   final _searchController = TextEditingController();
@@ -79,11 +77,10 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
       if (mounted) {
         setState(() {
           _currentShares = List<Map<String, dynamic>>.from(data);
-          _isLoadingShares = false;
         });
       }
     } catch (e) {
-      if (mounted) setState(() => _isLoadingShares = false);
+      // error handled silently
     }
   }
 

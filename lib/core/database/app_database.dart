@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';

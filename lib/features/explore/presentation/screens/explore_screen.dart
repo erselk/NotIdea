@@ -1,18 +1,13 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/explore/presentation/providers/explore_provider.dart';
-import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
-import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/shared/widgets/branded_app_bar.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {

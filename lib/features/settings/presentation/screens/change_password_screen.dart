@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/utils/extensions.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/features/settings/presentation/providers/change_password_provider.dart';
 
 class ChangePasswordScreen extends ConsumerStatefulWidget {

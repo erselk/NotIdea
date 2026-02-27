@@ -14,7 +14,6 @@ import 'package:notidea/shared/providers/theme_provider.dart';
 import 'package:notidea/shared/widgets/confirm_dialog.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class SettingsScreen extends ConsumerWidget {

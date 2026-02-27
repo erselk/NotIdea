@@ -4,14 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
-import 'package:notidea/features/notes/domain/models/note_visibility.dart';
-import 'package:notidea/features/notes/domain/repositories/notes_repository.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
-import 'package:notidea/core/theme/app_colors.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:share_plus/share_plus.dart';
 

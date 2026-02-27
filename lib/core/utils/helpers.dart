@@ -49,7 +49,7 @@ Color getNoteColorByIndex(BuildContext context, int index) {
 /// Not rengi hex'i (light palette) mevcut temaya göre Color'a çevirir.
 /// Veritabanında light hex'ler saklandığı için dark modda doğru koyu rengi döndürür.
 Color noteColorHexToThemeColor(BuildContext context, String? colorHex) {
-  final hex = colorHex?.replaceFirst('#', '')?.toUpperCase();
+  final hex = colorHex?.replaceFirst('#', '').toUpperCase();
   if (hex == null || hex.isEmpty) {
     return Theme.of(context).colorScheme.surfaceContainerHighest;
   }

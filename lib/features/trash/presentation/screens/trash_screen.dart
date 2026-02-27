@@ -5,7 +5,6 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/trash/presentation/providers/trash_provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class TrashScreen extends ConsumerWidget {

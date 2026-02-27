@@ -6,6 +6,9 @@ class AppConstants {
   static const String appName = 'NotIdea';
   static const String appTagline = 'Your creative note-taking companion';
   static const String appVersion = '2.0.0';
+
+  // Supabase auth callback deep link URL
+  static const String authRedirectUrl = 'notidea://callback';
   
   // Link Paylaşımı için Base URL
   // Domain hazır olduğunda burayı 'https://notidea.ersel.dev' ile değiştirebilirsiniz.

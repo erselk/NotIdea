@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/core/utils/validators.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';

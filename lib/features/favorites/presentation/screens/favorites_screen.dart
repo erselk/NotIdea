@@ -7,7 +7,6 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/favorites/presentation/providers/favorites_provider.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
-import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/shared/widgets/branded_app_bar.dart';
 
 class FavoritesScreen extends ConsumerWidget {

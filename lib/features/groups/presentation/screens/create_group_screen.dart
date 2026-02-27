@@ -16,7 +16,6 @@ import 'package:notidea/features/friends/presentation/widgets/friend_card.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
-import 'package:notidea/features/search/presentation/providers/search_provider.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});

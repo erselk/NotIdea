@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notidea/core/utils/helpers.dart';
 import 'package:notidea/core/utils/underline_syntax.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
-import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/l10n/app_localizations.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:markdown_quill/markdown_quill.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -137,7 +135,6 @@ class _NoteCardState extends State<NoteCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cardColor = _parseNoteColor(context);
-    final brightness = ThemeData.estimateBrightnessForColor(cardColor);
     final onCardColor = getContrastTextColor(cardColor);
 
     return Semantics(

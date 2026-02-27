@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
-import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/core/utils/validators.dart';

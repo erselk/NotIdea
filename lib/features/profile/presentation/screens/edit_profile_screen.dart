@@ -26,10 +26,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   bool _isInitialized = false;
   bool _isUploadingAvatar = false;
   bool _isSavingProfile = false;
-  bool _isCheckingUsername = false;
-  bool _usernameTaken = false;
   Timer? _usernameDebounce;
-  String? _originalUsername;
 
   static String? _extensionFromMime(String? mime) {
     if (mime == null) return null;
@@ -63,7 +60,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _pickAvatar() async {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
 
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
@@ -180,7 +176,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       if (profile != null && !_isInitialized) {
         _displayNameController.text = profile.displayName ?? '';
         _usernameController.text = profile.username;
-        _originalUsername = profile.username;
         _bioController.text = profile.bio ?? '';
         _currentAvatarUrl = profile.avatarUrl;
 

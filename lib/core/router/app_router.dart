@@ -90,7 +90,7 @@ GoRouter appRouter(Ref ref) {
       if (!isAuthenticated) return null;
 
       // Use cached result when available to prevent per-navigation DB queries.
-      final userId = session!.user.id;
+      final userId = session.user.id;
       bool hasProfile;
       if (_cachedUserId == userId && _cachedHasProfile != null) {
         hasProfile = _cachedHasProfile!;

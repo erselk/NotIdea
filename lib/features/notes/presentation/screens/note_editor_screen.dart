@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:notidea/l10n/app_localizations.dart';
@@ -89,7 +87,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   );
 
   bool _showColorPalette = false;
-  bool _isPreview = false;
 
   NoteVisibility _visibility = NoteVisibility.private_;
   String? _selectedColor = NoteCardColors.lightColorHexes.isNotEmpty ? NoteCardColors.lightColorHexes[0] : null;
@@ -261,17 +258,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
   }
 
-  Future<void> _saveAndPop() async {
-    try {
-      if (_hasUnsavedChanges) {
-        await _save();
-      }
-      if (mounted) context.pop();
-    } catch (e) {
-      // Ignore pop if save failed, letting the user see the snackbar
-    }
-  }
-
   void _resetChanges() {
     final l10n = AppLocalizations.of(context)!;
     showDialog(
@@ -399,141 +385,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   // --- End of Share Modal ---
-  void _showColorPicker() {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.noteColor, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: _colorOptions.map((color) {
-                final isSelected = color == _selectedColor;
-                final index = NoteCardColors.lightColorHexes.indexOf(color);
-                final isDark = theme.brightness == Brightness.dark;
-                final displayColor = index != -1
-                    ? (isDark
-                          ? NoteCardColors.darkColors[index]
-                          : NoteCardColors.lightColors[index])
-                    : Color(
-                        int.parse(
-                          'FF${color.replaceFirst('#', '')}',
-                          radix: 16,
-                        ),
-                      );
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() => _selectedColor = color);
-                    _onContentChanged();
-                    Navigator.pop(ctx);
-                  },
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: displayColor,
-                      shape: BoxShape.circle,
-                      border: isSelected
-                          ? Border.all(
-                              color: theme.colorScheme.primary,
-                              width: 3,
-                            )
-                          : Border.all(color: theme.colorScheme.outlineVariant),
-                    ),
-                    child: isSelected
-                        ? Icon(
-                            Icons.check,
-                            color: getContrastTextColor(displayColor),
-                            size: 20,
-                          )
-                        : null,
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showVisibilityPicker() {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            ListTile(
-              leading: const Icon(Icons.lock_outline),
-              title: Text(l10n.privateNotes),
-              subtitle: Text(l10n.onlyYouCanSee),
-              selected: _visibility == NoteVisibility.private_,
-              selectedTileColor: theme.colorScheme.primary.withValues(
-                alpha: 0.08,
-              ),
-              onTap: () {
-                setState(() => _visibility = NoteVisibility.private_);
-                _onContentChanged();
-                Navigator.pop(ctx);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: Text(l10n.friendsNotes),
-              subtitle: Text(l10n.friendsCanSee),
-              selected: _visibility == NoteVisibility.friends,
-              selectedTileColor: theme.colorScheme.primary.withValues(
-                alpha: 0.08,
-              ),
-              onTap: () {
-                setState(() => _visibility = NoteVisibility.friends);
-                _onContentChanged();
-                Navigator.pop(ctx);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.public),
-              title: Text(l10n.publicNotes),
-              subtitle: Text(l10n.everyoneCanSee),
-              selected: _visibility == NoteVisibility.public_,
-              selectedTileColor: theme.colorScheme.primary.withValues(
-                alpha: 0.08,
-              ),
-              onTap: () {
-                setState(() => _visibility = NoteVisibility.public_);
-                _onContentChanged();
-                Navigator.pop(ctx);
-              },
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showInfoDialog() {
     final l10n = AppLocalizations.of(context)!;
     final wordCount = _deltaToMd
@@ -905,12 +756,6 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
         : theme.colorScheme.onSurface;
     final iconColor = isDarkBg ? getContrastTextColor(bgColor) : defaultTextColor;
     final textColorOnBg = isDarkBg ? getContrastTextColor(bgColor) : defaultTextColor;
-
-    final visibilityIcon = switch (_visibility) {
-      NoteVisibility.private_ => Icons.lock_outline,
-      NoteVisibility.public_ => Icons.public,
-      NoteVisibility.friends => Icons.people_outline,
-    };
 
     return PopScope(
       canPop: false,

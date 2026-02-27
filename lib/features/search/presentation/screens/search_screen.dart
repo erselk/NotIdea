@@ -205,7 +205,6 @@ class _NotesSearchTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final appColors = theme.extension<AppColorsExtension>()!;
     final notesAsync = ref.watch(searchMyNotesProvider(query));

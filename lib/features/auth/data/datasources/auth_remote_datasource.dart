@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notidea/config/supabase_config.dart';
+import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/features/auth/domain/models/user_model.dart';
 
 class AuthRemoteDatasource {
@@ -66,6 +67,8 @@ class AuthRemoteDatasource {
     final response = await _auth.signUp(
       email: email,
       password: password,
+      // APK deep link redirect — Supabase dashboard'unda izinli olmalı
+      emailRedirectTo: AppConstants.authRedirectUrl,
     );
 
     final user = response.user;
@@ -85,6 +88,9 @@ class AuthRemoteDatasource {
   }
 
   Future<void> resetPassword({required String email}) async {
-    await _auth.resetPasswordForEmail(email);
+    await _auth.resetPasswordForEmail(
+      email,
+      redirectTo: AppConstants.authRedirectUrl,
+    );
   }
 }
