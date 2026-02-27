@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/friends/domain/models/friendship_model.dart';
 import 'package:notidea/features/friends/domain/models/friendship_status.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
@@ -232,14 +233,10 @@ class _PendingTab extends ConsumerWidget {
 
     ref.listen(acceptFriendRequestProvider, (prev, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
-        );
+        context.showError(next.error);
       }
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.friendRequestAccepted)),
-        );
+        context.showSuccess(l10n.friendRequestAccepted);
       }
     });
 

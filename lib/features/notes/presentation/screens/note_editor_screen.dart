@@ -15,6 +15,7 @@ import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/app_colors.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/helpers.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
@@ -232,18 +233,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       setState(() => _hasUnsavedChanges = false);
 
       if (showSnackbar && mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.noteSaved)));
+        context.showSuccess(l10n.noteSaved);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Hata: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showError(e);
       }
       rethrow;
     }
@@ -329,17 +323,13 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             .read(permanentlyDeleteProvider.notifier)
             .execute(_currentNoteId!);
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.notePermanentlyDeleted)));
+          context.showSuccess(l10n.notePermanentlyDeleted);
           context.pop();
         }
       } else {
         await ref.read(deleteNoteProvider.notifier).execute(_currentNoteId!);
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.movedToTrash)));
+          context.showSuccess(l10n.movedToTrash);
           context.pop();
         }
       }
@@ -359,11 +349,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     if (mounted) {
       setState(() => _isPinned = newPinned);
       _onContentChanged();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(newPinned ? l10n.notePinned : l10n.noteUnpinned),
-        ),
-      );
+      context.showSuccess(newPinned ? l10n.notePinned : l10n.noteUnpinned);
     }
   }
 
@@ -888,8 +874,8 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     final defaultTextColor = theme.brightness == Brightness.light
         ? appColors.textPrimary
         : theme.colorScheme.onSurface;
-    final iconColor = isDarkBg ? appColors.textPrimaryDark : defaultTextColor;
-    final textColorOnBg = isDarkBg ? appColors.textPrimaryDark : defaultTextColor;
+    final iconColor = isDarkBg ? getContrastTextColor(bgColor) : defaultTextColor;
+    final textColorOnBg = isDarkBg ? getContrastTextColor(bgColor) : defaultTextColor;
 
     final visibilityIcon = switch (_visibility) {
       NoteVisibility.private_ => Icons.lock_outline,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
 import 'package:notidea/features/settings/presentation/providers/change_password_provider.dart';
 
@@ -36,13 +37,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     
     final state = ref.read(changePasswordProvider);
     if (state.hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.error.toString())),
-      );
+      context.showError(state.error);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password updated successfully')),
-      );
+      context.showSuccess(l10n.successUpdated);
       context.pop();
     }
   }

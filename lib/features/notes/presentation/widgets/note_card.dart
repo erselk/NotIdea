@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/core/utils/helpers.dart';
 import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
@@ -148,10 +147,7 @@ class _NoteCardState extends State<NoteCard> {
     final theme = Theme.of(context);
     final cardColor = _parseNoteColor(context);
     final brightness = ThemeData.estimateBrightnessForColor(cardColor);
-    final appColors = Theme.of(context).extension<AppColorsExtension>()!;
-    final onCardColor = brightness == Brightness.dark
-        ? appColors.textPrimaryDark
-        : appColors.textPrimaryLight;
+    final onCardColor = getContrastTextColor(cardColor);
 
     return Card(
       color: cardColor,

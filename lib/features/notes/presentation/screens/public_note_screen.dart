@@ -9,7 +9,7 @@ import 'package:notidea/core/theme/theme_extensions.dart';
 import 'package:notidea/features/notes/domain/models/note_visibility.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/l10n/app_localizations.dart';
-import 'package:notidea/core/constants/app_constants.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mix/mix.dart';
 
@@ -53,9 +53,7 @@ class PublicNoteScreen extends ConsumerWidget {
             onPressed: () {
               final link = '${AppConstants.baseUrl}/n/$noteId';
               Clipboard.setData(ClipboardData(text: link));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.linkCopied)),
-              );
+              context.showSuccess(l10n.linkCopied);
             },
           ),
         ],

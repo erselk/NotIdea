@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/router/route_names.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -43,12 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoggingIn = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showError(e);
       }
     }
   }
@@ -82,9 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               if (email.isNotEmpty) {
                 ref.read(resetPasswordProvider.notifier).execute(email: email);
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.resetPasswordEmailSent)),
-                );
+                context.showSuccess(l10n.resetPasswordEmailSent);
               }
             },
             child: Text(l10n.send),
@@ -226,7 +220,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       child: isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(

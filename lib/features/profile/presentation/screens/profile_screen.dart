@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notidea/l10n/app_localizations.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_stats_provider.dart';
@@ -139,7 +140,7 @@ class ProfileScreen extends ConsumerWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   padding: const EdgeInsets.all(7), // Smaller padding for smaller circle
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.edit,
                                     size: 20, // Keep icon size same
                                     color: theme.colorScheme.onPrimary,
@@ -238,9 +239,7 @@ class ProfileScreen extends ConsumerWidget {
                                 context.push('/profile/edit');
                               } else {
                                 ref.read(sendFriendRequestProvider.notifier).execute(profile.id);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(l10n.friendRequestSent ?? 'Friend request sent')),
-                                );
+                                context.showSuccess(l10n.friendRequestSent);
                               }
                             },
                             borderRadius: BorderRadius.circular(8),

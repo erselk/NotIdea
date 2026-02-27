@@ -6,6 +6,7 @@ import 'package:notidea/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notidea/core/constants/app_constants.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
@@ -39,9 +40,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     if (!_acceptedTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseAcceptTerms)),
-      );
+      context.showInfo(l10n.pleaseAcceptTerms);
       return;
     }
 
@@ -58,23 +57,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       if (session != null) {
         context.go('/profile-setup');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.checkEmailToConfirm),
-            duration: const Duration(seconds: 5),
-          ),
-        );
+        context.showInfo(l10n.checkEmailToConfirm);
         context.go('/login');
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isSigningUp = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showError(e);
       }
     }
   }
@@ -293,7 +282,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ),
                       child: isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(

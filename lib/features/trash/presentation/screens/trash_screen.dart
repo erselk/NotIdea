@@ -20,17 +20,13 @@ class TrashScreen extends ConsumerWidget {
 
     ref.listen(restoreNoteProvider, (prev, next) {
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.noteRestored)),
-        );
+        context.showSuccess(l10n.noteRestored);
       }
     });
 
     ref.listen(emptyTrashProvider, (prev, next) {
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.successDeleted)),
-        );
+        context.showSuccess(l10n.successDeleted);
       }
     });
 

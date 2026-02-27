@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../theme/theme_extensions.dart';
+import '../notification/app_notification.dart';
+import '../error/error_message_resolver.dart';
 
 // ─────────────────── BuildContext Uzantıları ───────────────────
 
@@ -35,13 +37,23 @@ extension BuildContextX on BuildContext {
 
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
 
+  /// Başarı bildirimi (yeşil, ikonlu).
+  void showSuccess(String message) =>
+      AppNotification.showSuccess(this, message);
+
+  /// Hata bildirimi. [error] Object ise kullanıcı mesajına çevrilir.
+  void showError(Object? error) => AppNotification.showError(this, error);
+
+  /// Bilgi bildirimi.
+  void showInfo(String message) => AppNotification.showInfo(this, message);
+
+  /// Eski API: mesaj + isError. Mümkünse [showSuccess] / [showError] kullanın.
   void showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? colorScheme.error : null,
-      ),
-    );
+    if (isError) {
+      AppNotification.showError(this, message);
+    } else {
+      AppNotification.showSuccess(this, message);
+    }
   }
 }
 

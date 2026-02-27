@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/features/friends/presentation/widgets/friend_card.dart';
 import 'package:notidea/features/groups/presentation/providers/groups_provider.dart';
@@ -64,14 +65,10 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
     ref.listen(createGroupProvider, (prev, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
-        );
+        context.showError(next.error);
       }
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.groupCreated)),
-        );
+        context.showSuccess(l10n.groupCreated);
       }
     });
 

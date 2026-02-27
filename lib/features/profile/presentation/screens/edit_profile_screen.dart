@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 
@@ -124,16 +125,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           _currentAvatarUrl = url;
           _isUploadingAvatar = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.avatarUpdated)),
-        );
+        context.showSuccess(l10n.avatarUpdated);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isUploadingAvatar = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        context.showError(e);
       }
     }
   }
@@ -157,21 +154,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       await ref.read(updateProfileProvider.notifier).execute(updated);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.profileUpdated)),
-        );
+        context.showSuccess(l10n.profileUpdated);
         context.pop();
       }
     } catch (e) {
       if (mounted) {
-        final theme = Theme.of(context);
         setState(() => _isSavingProfile = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: theme.colorScheme.error,
-          ),
-        );
+        context.showError(e);
       }
     }
   }
@@ -346,7 +335,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       ),
                     ),
                     child: isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(

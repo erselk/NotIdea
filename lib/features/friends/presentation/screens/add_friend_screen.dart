@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/features/friends/presentation/widgets/friend_card.dart';
 
@@ -43,14 +44,10 @@ class _AddFriendScreenState extends ConsumerState<AddFriendScreen> {
 
     ref.listen(sendFriendRequestProvider, (prev, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
-        );
+        context.showError(next.error);
       }
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.friendRequestSent)),
-        );
+        context.showSuccess(l10n.friendRequestSent);
       }
     });
 

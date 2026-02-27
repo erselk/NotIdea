@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/groups/domain/models/group_member_role.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
@@ -25,9 +26,7 @@ class GroupDetailScreen extends ConsumerWidget {
 
     ref.listen(deleteGroupProvider, (prev, next) {
       if (prev?.isLoading == true && next.hasValue && !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.groupDeleted)),
-        );
+        context.showSuccess(l10n.groupDeleted);
         context.pop();
       }
     });

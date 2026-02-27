@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notidea/core/l10n/l10n.dart';
 import 'package:notidea/core/router/route_names.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/shared/providers/locale_provider.dart';
 import 'package:notidea/shared/providers/theme_provider.dart';
 import 'package:notidea/shared/widgets/confirm_dialog.dart';
@@ -114,12 +115,7 @@ class SettingsScreen extends ConsumerWidget {
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString().replaceFirst('Exception: ', '')),
-                          backgroundColor: theme.colorScheme.error,
-                        ),
-                      );
+                      context.showError(e);
                     }
                   }
                 }

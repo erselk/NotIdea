@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/core/constants/app_constants.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
+import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/friends/presentation/providers/friends_provider.dart';
 import 'package:notidea/features/groups/domain/models/group_model.dart';
@@ -133,9 +134,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         });
         if (mounted) {
           final l10n = AppLocalizations.of(context)!;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.removeShare)),
-          );
+          context.showInfo(l10n.removeShare);
         }
         return;
       } else {
@@ -168,12 +167,8 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
 
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            existingShare == null ? l10n.noteShared : l10n.permissionUpdated,
-          ),
-        ),
+      context.showSuccess(
+        existingShare == null ? l10n.noteShared : l10n.permissionUpdated,
       );
     }
   }
@@ -197,9 +192,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         });
         if (mounted) {
           final l10n = AppLocalizations.of(context)!;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.removeShare)),
-          );
+          context.showInfo(l10n.removeShare);
         }
         return;
       }
@@ -227,9 +220,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
     await _fetchShares();
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.noteShared)),
-      );
+      context.showSuccess(l10n.noteShared);
     }
   }
 
@@ -251,9 +242,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.linkCopied)),
-        );
+        context.showSuccess(l10n.linkCopied);
       }
     } catch (_) {}
   }
