@@ -109,34 +109,6 @@ class TrashScreen extends ConsumerWidget {
 
             return Column(
               children: [
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.all(12),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: appColors.warning.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: appColors.warning.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, size: 18,
-                          color: appColors.warning),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          l10n.trashAutoDeleteInfo,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: appColors.textSecondary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: MasonryGridView.builder(
                     padding: const EdgeInsets.symmetric(

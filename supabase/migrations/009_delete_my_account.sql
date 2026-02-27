@@ -1,5 +1,5 @@
 -- Hesap silme: Giriş yapmış kullanıcı kendi auth.users kaydını silebilir.
--- İstemci önce notes ve profiles'ı sildikten sonra bu RPC'yi çağırır.
+-- auth.users CASCADE ile bağlı profiles ve notes otomatik silinir.
 -- SECURITY DEFINER ile auth schema üzerinde silme yetkisi kullanılır.
 
 CREATE OR REPLACE FUNCTION public.delete_my_account()
@@ -18,4 +18,4 @@ GRANT EXECUTE ON FUNCTION public.delete_my_account() TO authenticated;
 GRANT EXECUTE ON FUNCTION public.delete_my_account() TO service_role;
 
 COMMENT ON FUNCTION public.delete_my_account() IS
-  'Mevcut kullanıcının auth.users kaydını siler. Hesap silme akışında notes ve profiles silindikten sonra çağrılmalı.';
+  'Mevcut kullanıcının auth.users kaydını siler. CASCADE ile tüm veriler otomatik temizlenir.';
