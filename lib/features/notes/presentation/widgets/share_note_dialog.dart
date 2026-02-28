@@ -568,7 +568,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
             )
           : null,
       trailing: PopupMenuButton<String>(
-        initialValue: permission,
+        initialValue: hasAccess ? permission : null,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
@@ -596,20 +596,21 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         onSelected: (val) {
           if (val == 'remove') {
             _shareWithGroup(group.id, permission ?? 'read_only');
-          } else {
+          } else if (val != permission) {
             _shareWithGroup(group.id, val);
           }
+          // val == permission → zaten bu yetkide, işlem yapma
         },
         itemBuilder: (context) => [
-          if (!hasAccess || permission != 'read_only')
-            PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
-          if (!hasAccess || permission != 'read_write')
-            PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
-          if (hasAccess)
+          PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
+          PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
+          if (hasAccess) ...[
+            const PopupMenuDivider(),
             PopupMenuItem(
               value: 'remove',
               child: Text(l10n.removeShare, style: TextStyle(color: theme.colorScheme.error)),
             ),
+          ],
         ],
       ),
     );
@@ -651,7 +652,7 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
             ?.copyWith(color: appColors.textTertiary),
       ),
       trailing: PopupMenuButton<String>(
-        initialValue: permission,
+        initialValue: hasAccess ? permission : null,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
@@ -683,21 +684,23 @@ class _ShareNoteDialogState extends ConsumerState<ShareNoteDialog> {
         onSelected: (val) {
           if (val == 'remove') {
             _shareWithUser(profile.id, permission ?? 'read_only');
-          } else {
+          } else if (val != permission) {
+            // Yükseltme (viewer→editor) veya düşürme (editor→viewer)
             _shareWithUser(profile.id, val);
           }
+          // val == permission → zaten bu yetkide, işlem yapma
         },
         itemBuilder: (context) => [
-          if (!hasAccess || permission != 'read_only')
-            PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
-          if (!hasAccess || permission != 'read_write')
-            PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
-          if (hasAccess)
+          PopupMenuItem(value: 'read_only', child: Text(l10n.viewerRole)),
+          PopupMenuItem(value: 'read_write', child: Text(l10n.editorRole)),
+          if (hasAccess) ...[
+            const PopupMenuDivider(),
             PopupMenuItem(
               value: 'remove',
               child: Text(l10n.removeShare,
                   style: TextStyle(color: theme.colorScheme.error)),
             ),
+          ],
         ],
       ),
     );

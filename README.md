@@ -1,217 +1,196 @@
-# NotIdea
+﻿# NotIdea
 
-**Yaratıcı not tutma arkadaşın.**
+**Smart, social note-taking. Write, share, and discover.**
 
-NotIdea, markdown formatında not oluşturmanı, düzenlenmeni, paylaşmanı ve keşfetmeni sağlayan modern bir mobil uygulamadır. Arkadaşlarınla ve gruplarınla notlarını paylaşabilir, topluluktan ilham alabilirsin.
-
----
-
-## Özellikler
-
-- **Markdown Not Düzenleme** — Zengin metin desteğiyle notlarını markdown formatında yaz
-- **Gerçek Zamanlı Senkronizasyon** — Notların bulut üzerinde güvenle saklanır ve cihazlar arası senkronize edilir
-- **Çevrimdışı Destek** — İnternet olmadan da notlarına erişebilir, düzenleyebilirsin
-- **Paylaşım & İşbirliği** — Notlarını arkadaşlarınla, gruplarla veya herkesle paylaş
-- **Keşfet** — Topluluğun paylaştığı herkese açık notları keşfet
-- **Favoriler** — Beğendiğin notları favorilerine ekle
-- **Gruplar** — Grup oluştur ve grup üyeleriyle notlarını paylaş
-- **Arkadaşlık Sistemi** — Kullanıcıları arkadaş olarak ekle ve notlarını paylaş
-- **Tema Desteği** — Açık, koyu ve sistem teması seçenekleri
-- **Çoklu Dil** — Türkçe ve İngilizce dil desteği
-- **Güvenli Kimlik Doğrulama** — Supabase Auth ile güvenli giriş/kayıt
-- **Medya Desteği** — Notlarına görsel ekle, otomatik optimizasyon
-- **Çöp Kutusu** — Silinen notlar 30 gün boyunca geri yüklenebilir
+NotIdea is a modern mobile application that lets you create, edit, share, and discover markdown-formatted notes. Share notes with friends and groups, explore public notes from the community, and keep everything in sync across devices — even offline.
 
 ---
 
-## Teknoloji Altyapısı
+## Features
 
-| Kategori | Teknoloji |
+- **Rich Markdown Editing** — Write notes with full markdown support powered by Flutter Quill
+- **Real-time Sync** — Notes are securely stored and synced via Supabase
+- **Offline-first** — Read and edit notes without an internet connection (Hive local cache)
+- **Share & Collaborate** — Share notes with friends, groups, or the entire public
+- **Explore** — Discover publicly shared notes from the community
+- **Favorites** — Bookmark notes you love
+- **Groups** — Create groups and share notes with members
+- **Friends System** — Add users as friends and share notes privately
+- **Note Visibility** — Private, friends-only, or public per note
+- **Trash & Recovery** — Deleted notes are recoverable for 30 days
+- **Theming** — Light, dark, and system theme support
+- **Multilingual** — English and Turkish (auto-detected from device locale)
+- **Push Notifications** — Firebase Cloud Messaging for note activity
+- **Crash Reporting** — Sentry integration for production monitoring
+- **Secure Auth** — Supabase Auth (email/password + email verification)
+- **Media Support** — Attach images to notes with automatic compression
+
+---
+
+## Tech Stack
+
+| Category | Technology |
 |---|---|
 | Framework | Flutter (Dart) |
-| State Management | Riverpod (`@riverpod` annotation) |
+| State Management | Riverpod (`@riverpod` annotation generator) |
 | Routing | GoRouter |
 | Backend | Supabase (Frankfurt / fra1) |
-| Database | PostgreSQL (Neon) via Supabase |
-| Local DB | Isar |
-| Styling | Mix (utility-first) |
+| Database | PostgreSQL via Supabase |
+| Local Storage | Hive CE (offline-first cache) |
 | Data Models | Freezed + json_serializable |
-| Markdown | flutter_markdown |
+| Markdown | Flutter Quill + markdown_quill |
 | Auth | Supabase Auth |
 | Storage | Supabase Storage |
-| Image | cached_network_image, image_picker, image_cropper |
-| Env | envied (.env) |
+| Push Notifications | Firebase Cloud Messaging |
+| Crash Reporting | Sentry |
+| Styling | Mix (utility-first) |
+| Image Handling | image_picker, cached_network_image, flutter_image_compress |
+| Deep Links | `notidea://` custom scheme |
 
 ---
 
-## Klasör Yapısı
+## Project Structure
 
 ```
 lib/
-├── main.dart                         # Uygulama giriş noktası
-├── app.dart                          # MaterialApp.router yapılandırması
+├── main.dart                   # Entry point (Sentry + Firebase init)
+├── app.dart                    # MaterialApp.router configuration
 ├── config/
-│   ├── env.dart                      # Ortam değişkenleri (envied)
-│   └── supabase_config.dart          # Supabase istemci yapılandırması
+│   ├── env.dart                # Environment variables (flutter_dotenv)
+│   └── supabase_config.dart    # Supabase client setup
 ├── core/
-│   ├── constants/                    # Sabitler
-│   ├── l10n/                         # Lokalizasyon yardımcıları
-│   ├── router/                       # GoRouter yapılandırması ve rota sabitleri
-│   ├── theme/                        # Tema, renkler ve ThemeExtensions
-│   └── utils/                        # Yardımcı fonksiyonlar ve uzantılar
+│   ├── constants/              # App-wide constants
+│   ├── router/                 # GoRouter + SentryNavigatorObserver
+│   ├── services/               # NotificationService (FCM)
+│   ├── theme/                  # Theme, colors, ThemeExtensions
+│   └── utils/                  # Helpers and extensions
 ├── l10n/
-│   ├── app_en.arb                    # İngilizce çeviriler
-│   └── app_tr.arb                    # Türkçe çeviriler
+│   ├── app_en.arb              # English strings
+│   └── app_tr.arb              # Turkish strings
 ├── shared/
-│   ├── providers/                    # Paylaşılan provider'lar (tema, dil)
-│   └── widgets/                      # Paylaşılan widget'lar
+│   ├── providers/              # Shared providers (theme, locale)
+│   └── widgets/                # Shared widgets (AppScaffold, BrandedAppBar)
 └── features/
-    ├── auth/                         # Kimlik doğrulama
-    ├── notes/                        # Not CRUD, düzenleyici, detay
-    ├── profile/                      # Profil yönetimi
-    ├── friends/                      # Arkadaşlık sistemi
-    ├── groups/                       # Grup yönetimi
-    ├── legal/                        # Hukuki sayfalar
-    ├── settings/                     # Ayarlar ekranı
-    └── splash/                       # Açılış ekranı
+    ├── auth/                   # Authentication (login, signup, password reset)
+    ├── notes/                  # Notes CRUD, editor, public notes
+    ├── profile/                # Profile management
+    ├── friends/                # Friends system
+    ├── groups/                 # Group management
+    ├── explore/                # Public notes discovery
+    ├── favorites/              # Favorite notes
+    ├── search/                 # Note & user search
+    ├── settings/               # App settings
+    ├── shared_notes/           # Notes shared with user
+    ├── trash/                  # Deleted notes recovery
+    └── splash/                 # Splash screen
 ```
 
-Her feature modülü Clean Architecture prensibiyle yapılandırılmıştır:
+Each feature follows Clean Architecture:
 ```
 feature/
 ├── data/
-│   ├── datasources/   # Remote ve local veri kaynakları
-│   └── repositories/  # Repository implementasyonları
+│   ├── datasources/   # Remote (Supabase) and local (Hive) sources
+│   └── repositories/  # Repository implementations
 ├── domain/
-│   ├── models/        # Veri modelleri (Freezed)
-│   └── repositories/  # Repository arayüzleri
+│   ├── models/        # Freezed data models
+│   └── repositories/  # Repository interfaces
 └── presentation/
-    ├── screens/       # Ekranlar
-    ├── widgets/       # Feature-specific widget'lar
-    └── providers/     # Riverpod provider'lar
+    ├── screens/       # UI screens
+    ├── widgets/       # Feature-specific widgets
+    └── providers/     # Riverpod providers
 ```
 
 ---
 
-## Kurulum
+## Getting Started
 
-### Gereksinimler
+### Prerequisites
 
-- Flutter SDK ^3.10.7
-- Dart SDK ^3.10.7
-- Supabase hesabı
-- (İsteğe bağlı) Android Studio / VS Code
+- Flutter SDK `^3.10.7`
+- Dart SDK `^3.10.7`
+- A Supabase project (Frankfurt / fra1 region recommended)
+- A Firebase project (for push notifications)
 
-### Adımlar
+### Setup
 
-1. **Projeyi klonlayın:**
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/your-username/notidea.git
    cd notidea
    ```
 
-2. **Ortam değişkenlerini ayarlayın:**
-   ```bash
-   cp .env.example .env
-   ```
-   `.env` dosyasını açın ve Supabase bilgilerinizi girin:
-   ```
+2. **Set up environment variables:**
+   Create a `.env` file in the project root:
+   ```env
    SUPABASE_URL=https://your-project.supabase.co
    SUPABASE_ANON_KEY=your-anon-key
    ```
 
-3. **Bağımlılıkları yükleyin:**
+3. **Install dependencies:**
    ```bash
    flutter pub get
    ```
 
-4. **Kod oluşturmayı çalıştırın:**
+4. **Run code generation:**
    ```bash
    dart run build_runner build --delete-conflicting-outputs
    ```
 
-5. **Supabase migration'ları uygulayın:**
-   ```bash
-   supabase db push
-   ```
-   Veya SQL migration dosyalarını Supabase Dashboard > SQL Editor üzerinden çalıştırın.
+5. **Apply Supabase migrations:**
+   Run the SQL files in `supabase/migrations/` in order via the Supabase Dashboard SQL Editor.
 
-6. **Uygulamayı başlatın:**
+6. **Add `google-services.json`:**
+   Place your Firebase `google-services.json` in `android/app/`.
+
+7. **Run the app:**
    ```bash
    flutter run
    ```
 
 ---
 
-## Supabase Kurulumu
+## Supabase Setup
 
-1. [Supabase Dashboard](https://supabase.com/dashboard)'a gidin ve yeni bir proje oluşturun
-   - **Region:** Frankfurt (fra1 / EU Central)
-   - **Database:** Neon PostgreSQL (varsayılan)
+1. Create a new project at [supabase.com](https://supabase.com/dashboard)
+   - **Region:** Frankfurt (fra1)
 
-2. Migration SQL dosyalarını çalıştırın:
-   - `supabase/migrations/` klasöründeki `.sql` dosyalarını sırasıyla çalıştırın
-   - Bu migration'lar tabloları, RLS politikalarını ve storage bucket'ları oluşturur
+2. Run migration files from `supabase/migrations/` — they create tables, RLS policies, and storage buckets.
 
-3. **Storage Bucket'ları** (migration tarafından otomatik oluşturulur):
-   - `avatars` — Kullanıcı profil fotoğrafları
-   - `note-images` — Not görselleri
+3. **Storage buckets** (created by migrations):
+   - `avatars` — User profile photos
+   - `note-images` — Note media
 
-4. **API Anahtarlarını alın:**
-   - Dashboard > Settings > API
+4. Copy your API keys from **Dashboard → Settings → API**:
    - **Project URL** → `SUPABASE_URL`
    - **anon public key** → `SUPABASE_ANON_KEY`
 
-5. `.env` dosyanıza anahtarları girin
+5. Set **Redirect URLs** under **Authentication → URL Configuration**:
+   - Add `notidea://callback`
 
 ---
 
-## Katkıda Bulunma
+## Building
 
-1. Bu projeyi fork edin
-2. Feature branch oluşturun: `git checkout -b feature/yeni-ozellik`
-3. Değişikliklerinizi commit edin: `git commit -m 'feat: yeni özellik eklendi'`
-4. Branch'inizi push edin: `git push origin feature/yeni-ozellik`
-5. Pull Request açın
+```bash
+# Debug
+flutter run
 
-### Commit Mesajı Formatı
+# Release APK
+flutter build apk --release
 
-```
-feat: yeni özellik
-fix: hata düzeltmesi
-refactor: kod düzenlemesi
-docs: dokümantasyon güncelleme
-style: biçimlendirme değişikliği
-test: test ekleme/düzenleme
-chore: genel bakım
+# Release App Bundle (for Play Store)
+flutter build appbundle --release
 ```
 
 ---
 
-## Lisans
+## Version
 
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
+Current version: **2.0.0**
 
-```
-MIT License
+---
 
-Copyright (c) 2026 NotIdea
+## License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This project is licensed under the [MIT License](LICENSE).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```

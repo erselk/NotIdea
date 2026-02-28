@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:notidea/features/notes/presentation/providers/notes_provider.dart';
 import 'package:notidea/features/notes/presentation/widgets/note_card.dart';
+import 'package:notidea/features/notes/domain/models/note_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notidea/shared/widgets/app_scaffold.dart';
+import 'package:notidea/shared/widgets/notidea_logo_text.dart';
 import 'package:notidea/core/theme/theme_extensions.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:notidea/features/notes/presentation/widgets/share_note_dialog.dart';
 
 class NotesListScreen extends ConsumerStatefulWidget {
   const NotesListScreen({super.key});
@@ -51,7 +52,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
   }
 
 
-  void _showNoteActions(dynamic note) {
+  void _showNoteActions(NoteModel note) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -72,6 +73,23 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 onTap: () {
                   Navigator.pop(ctx);
                   context.push('/home/editor/${note.id}', extra: note);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  note.isPinned
+                      ? Icons.push_pin
+                      : Icons.push_pin_outlined,
+                ),
+                title: Text(
+                  note.isPinned ? l10n.unpinNote : l10n.pinNote,
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  ref.read(togglePinProvider.notifier).execute(
+                        note.id,
+                        !note.isPinned,
+                      );
                 },
               ),
               ListTile(
@@ -98,7 +116,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
                 title: Text(l10n.share),
                 onTap: () {
                   Navigator.pop(ctx);
-                  Share.share('${note.title}\n\n${note.content}');
+                  ShareNoteDialog.show(context, note);
                 },
               ),
               ListTile(
@@ -220,7 +238,7 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
               height: 36,
             ),
             const SizedBox(width: 10),
-            _NotIdeaLogo(height: 28),
+            const NotIdeaLogoText(height: 28),
           ],
         ),
         actions: [
@@ -387,30 +405,3 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
   }
 }
 
-/// NotIdea yazı logosu. Dark modda sadece siyah (#374241) kısım beyaz olur, yeşil (#06A74D) aynı kalır.
-class _NotIdeaLogo extends StatelessWidget {
-  const _NotIdeaLogo({required this.height});
-
-  final double height;
-
-  static const _asset = 'assets/images/notidea.svg';
-  static const _blackFill = 'fill="#374241"';
-  static const _whiteFillDark = 'fill="#E5EAE4"';
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return FutureBuilder<String>(
-      future: rootBundle.loadString(_asset),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return SizedBox(height: height, width: 116 * height / 25);
-        String svg = snapshot.data!;
-        if (isDark) svg = svg.replaceAll(_blackFill, _whiteFillDark);
-        return SvgPicture.string(
-          svg,
-          height: height,
-        );
-      },
-    );
-  }
-}

@@ -1,11 +1,11 @@
 {
-    "name": "notidea",
-    "short_name": "notidea",
+    "name": "NotIdea",
+    "short_name": "NotIdea",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#06A74D",
+    "theme_color": "#06A74D",
+    "description": "NotIdea – Smart, social note-taking app. Write, share and discover notes.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

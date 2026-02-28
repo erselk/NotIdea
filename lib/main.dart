@@ -35,10 +35,12 @@ Future<void> main() async {
   await AppDatabase.instance.init();
   await SupabaseConfig.initialize();
 
-  // Firebase + FCM
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await NotificationService.instance.init();
+  // Firebase + FCM — web'de yapılandırma olmadığından atlanır
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await NotificationService.instance.init();
+  }
 
   timeago.setLocaleMessages('tr', timeago.TrMessages());
 

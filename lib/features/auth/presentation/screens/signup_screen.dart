@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notidea/shared/widgets/notidea_logo_text.dart';
 import 'package:notidea/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -102,17 +103,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Center(
-                      child: SvgPicture.asset(
-                        'assets/images/notidea.svg',
-                        width: 150,
-                        colorFilter: theme.brightness == Brightness.dark
-                            ? ColorFilter.mode(
-                                theme.colorScheme.onSurface,
-                                BlendMode.srcIn,
-                              )
-                            : null,
-                      ),
+                    const Center(
+                      child: NotIdeaLogoText(width: 150),
                     ),
                     const SizedBox(height: 16),
 

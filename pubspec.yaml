@@ -1,7 +1,7 @@
 name: notidea
 description: "NotIdea - Your creative note-taking companion"
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.0.0+2
 
 environment:
   sdk: ^3.10.7
@@ -97,6 +97,11 @@ flutter_native_splash:
 flutter_launcher_icons:
   android: true
   ios: true
+  web:
+    generate: true
+    image_path: "assets/images/app_launcher_icon.png"
+    background_color: "#06A74D"
+    theme_color: "#06A74D"
   image_path: "assets/images/app_launcher_icon.png"
   adaptive_icon_foreground: "assets/images/adaptive_foreground_icon.png"
   adaptive_icon_background: "#06A74D"

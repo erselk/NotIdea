@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "src": "/(.*\\.wasm)",
+      "headers": { "Content-Type": "application/wasm" },
+      "continue": true
+    },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

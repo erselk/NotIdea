@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notidea/core/theme/app_colors.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
+import 'package:notidea/shared/widgets/notidea_logo_text.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -63,7 +63,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     const logoAsset = 'assets/images/logo.svg';
-    const textAsset = 'assets/images/notidea.svg';
 
     return Scaffold(
       body: Center(
@@ -80,16 +79,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   height: 120,
                 ),
                 const SizedBox(height: 24),
-                SvgPicture.asset(
-                  textAsset,
-                  width: 180,
-                  colorFilter: Theme.of(context).brightness == Brightness.dark
-                      ? const ColorFilter.mode(
-                          NoteCardColors.c1Light,
-                          BlendMode.srcIn,
-                        )
-                      : null,
-                ),
+                const NotIdeaLogoText(width: 180),
               ],
             ),
           ),
