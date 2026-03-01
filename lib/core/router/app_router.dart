@@ -97,12 +97,17 @@ GoRouter appRouter(Ref ref) {
       } else {
         final profile = await Supabase.instance.client
             .from('profiles')
-            .select('id, username')
+            .select('id, username, display_name')
             .eq('id', userId)
             .maybeSingle();
+        // Trigger otomatik 'user_xxxxxxxx' username'iyle profil oluşturur.
+        // Profil "tamamlandı" sayılması için display_name de dolu olmalı —
+        // profile setup ekranı bitince bu alan kullanıcı tarafından doldurulur.
         hasProfile = profile != null &&
             profile['username'] != null &&
-            (profile['username'] as String).isNotEmpty;
+            (profile['username'] as String).isNotEmpty &&
+            profile['display_name'] != null &&
+            (profile['display_name'] as String).isNotEmpty;
         _cachedUserId = userId;
         _cachedHasProfile = hasProfile;
       }

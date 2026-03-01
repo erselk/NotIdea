@@ -12,7 +12,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appName => 'NotIdea';
 
   @override
-  String get appTagline => 'Yaratıcı not tutma arkadaşın';
+  String get appTagline => 'Yaratıcı not alma yoldaşınız';
 
   @override
   String get ok => 'Tamam';
@@ -81,10 +81,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get refresh => 'Yenile';
 
   @override
-  String get emptyStateGeneral => 'Henüz burada hiçbir şey yok';
+  String get emptyStateGeneral => 'Henüz burada bir şey yok';
 
   @override
-  String get emptyStateDescription => 'Harika bir şeyler yaratmaya başla';
+  String get emptyStateDescription => 'Harika bir şey oluşturmaya başlayın';
 
   @override
   String get login => 'Giriş Yap';
@@ -102,10 +102,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get password => 'Şifre';
 
   @override
-  String get confirmPassword => 'Şifre Onayı';
+  String get confirmPassword => 'Şifre Tekrar';
 
   @override
-  String get forgotPassword => 'Şifreni mi unuttun?';
+  String get forgotPassword => 'Şifremi Unuttum?';
 
   @override
   String get resetPassword => 'Şifreyi Sıfırla';
@@ -114,7 +114,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sendResetLink => 'Sıfırlama Bağlantısı Gönder';
 
   @override
-  String get resetLinkSent => 'Şifre sıfırlama bağlantısı e-postana gönderildi';
+  String get resetLinkSent =>
+      'Şifre sıfırlama bağlantısı e-postanıza gönderildi';
 
   @override
   String get loginWithEmail => 'E-posta ile Giriş Yap';
@@ -123,13 +124,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signupWithEmail => 'E-posta ile Kayıt Ol';
 
   @override
-  String get alreadyHaveAccount => 'Zaten hesabın var mı?';
+  String get alreadyHaveAccount => 'Zaten hesabınız var mı?';
 
   @override
-  String get dontHaveAccount => 'Hesabın yok mu?';
+  String get dontHaveAccount => 'Hesabınız yok mu?';
 
   @override
-  String get welcomeBack => 'Tekrar Hoş Geldin';
+  String get welcomeBack => 'Tekrar Hoş Geldiniz';
 
   @override
   String get createAccount => 'Hesap Oluştur';
@@ -139,28 +140,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get agreeToTerms =>
-      'Kayıt olarak Kullanım Koşullarını ve Gizlilik Politikasını kabul ediyorsun';
+      'Kayıt olarak Hizmet Şartları ve Gizlilik Politikası\'nı kabul etmiş olursunuz';
 
   @override
-  String get emailRequired => 'E-posta adresi gereklidir';
+  String get emailRequired => 'E-posta gerekli';
 
   @override
-  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
+  String get invalidEmail => 'Geçerli bir e-posta girin';
 
   @override
-  String get passwordRequired => 'Şifre gereklidir';
+  String get passwordRequired => 'Şifre gerekli';
 
   @override
-  String get passwordTooShort => 'Şifre en az 8 karakter olmalıdır';
+  String get passwordTooShort => 'Şifre en az 8 karakter olmalı';
 
   @override
-  String get passwordNeedsUppercase => 'Şifre en az bir büyük harf içermelidir';
+  String get passwordNeedsUppercase => 'Şifre en az bir büyük harf içermeli';
 
   @override
-  String get passwordNeedsLowercase => 'Şifre en az bir küçük harf içermelidir';
+  String get passwordNeedsLowercase => 'Şifre en az bir küçük harf içermeli';
 
   @override
-  String get passwordNeedsDigit => 'Şifre en az bir rakam içermelidir';
+  String get passwordNeedsDigit => 'Şifre en az bir rakam içermeli';
 
   @override
   String get passwordsDoNotMatch => 'Şifreler eşleşmiyor';
@@ -178,13 +179,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noteTitle => 'Başlık';
 
   @override
-  String get noteContent => 'Yazmaya başla...';
+  String get noteContent => 'Yazmaya başlayın...';
 
   @override
-  String get noteTitleHint => 'Not başlığını girin';
+  String get noteTitleHint => 'Not başlığı girin';
 
   @override
-  String get noteContentHint => 'Notunuzu markdown formatında yazın...';
+  String get noteContentHint => 'Notunuzu markdown ile yazın...';
 
   @override
   String get noteDeleted => 'Not silindi';
@@ -218,10 +219,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get visibilityPublic => 'Herkese Açık';
 
   @override
-  String get visibilityPrivateDesc => 'Bu notu yalnızca siz görebilirsiniz';
+  String get visibilityPrivateDesc => 'Bu notu sadece siz görebilirsiniz';
 
   @override
-  String get visibilitySharedDesc => 'Arkadaşlarınız ve grup üyeleri görebilir';
+  String get visibilitySharedDesc => 'Arkadaşlar ve grup üyeleri görebilir';
 
   @override
   String get visibilityPublicDesc => 'Herkes görebilir';
@@ -239,28 +240,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noNotes => 'Henüz not yok';
 
   @override
-  String get noNotesDesc => 'İlk notunuzu oluşturmak için + simgesine dokunun';
+  String get noNotesDesc => 'İlk notunuzu oluşturmak için +\'a dokunun';
 
   @override
   String get sortBy => 'Sırala';
 
   @override
-  String get sortNewest => 'En yeni';
+  String get sortNewest => 'En yeniler önce';
 
   @override
-  String get sortOldest => 'En eski';
+  String get sortOldest => 'En eskiler önce';
 
   @override
   String get sortAlphabetical => 'Alfabetik';
 
   @override
-  String get sortLastEdited => 'Son düzenlenen';
+  String get sortLastEdited => 'Son düzenleme';
 
   @override
   String get pinNote => 'Notu Sabitle';
 
   @override
-  String get unpinNote => 'Sabitlemeyi Kaldır';
+  String get unpinNote => 'Sabiti Kaldır';
 
   @override
   String get duplicateNote => 'Notu Çoğalt';
@@ -278,10 +279,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get username => 'Kullanıcı Adı';
 
   @override
-  String get bio => 'Hakkımda';
+  String get bio => 'Hakkında';
 
   @override
-  String get bioHint => 'Kendinizi tanıtın';
+  String get bioHint => 'Kendinizden bahsedin';
 
   @override
   String get profileUpdated => 'Profil güncellendi';
@@ -293,20 +294,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get removeAvatar => 'Fotoğrafı Kaldır';
 
   @override
-  String get usernameRequired => 'Kullanıcı adı gereklidir';
+  String get usernameRequired => 'Kullanıcı adı gerekli';
 
   @override
-  String get usernameTooShort => 'Kullanıcı adı en az 3 karakter olmalıdır';
+  String get usernameTooShort => 'Kullanıcı adı en az 3 karakter olmalı';
 
   @override
-  String get usernameTooLong => 'Kullanıcı adı en fazla 20 karakter olabilir';
+  String get usernameTooLong => 'Kullanıcı adı en fazla 20 karakter olmalı';
 
   @override
   String get usernameInvalid =>
-      'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir';
+      'Kullanıcı adı sadece harf, rakam ve alt çizgi içerebilir';
 
   @override
-  String get displayNameRequired => 'Görünen ad gereklidir';
+  String get displayNameRequired => 'Görünen ad gerekli';
 
   @override
   String get friends => 'Arkadaşlar';
@@ -315,7 +316,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get addFriend => 'Arkadaş Ekle';
 
   @override
-  String get removeFriend => 'Arkadaşı Kaldır';
+  String get removeFriend => 'Arkadaşlıktan Çıkar';
 
   @override
   String get friendRequests => 'Arkadaşlık İstekleri';
@@ -351,16 +352,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noFriends => 'Henüz arkadaş yok';
 
   @override
-  String get noFriendsDesc => 'Kişileri arayın ve arkadaş olarak ekleyin';
+  String get noFriendsDesc => 'İnsanları arayın ve arkadaş olarak ekleyin';
 
   @override
   String get noFriendRequests => 'Arkadaşlık isteği yok';
 
   @override
-  String get searchFriends => 'Arkadaş ara...';
+  String get searchFriends => 'Arkadaşlarda ara...';
 
   @override
-  String get searchUsers => 'Kullanıcı ara...';
+  String get searchUsers => 'Kullanıcılarda ara...';
 
   @override
   String get groups => 'Gruplar';
@@ -381,7 +382,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get addMembers => 'Üye Ekle';
 
   @override
-  String get removeMember => 'Üyeyi Kaldır';
+  String get removeMember => 'Üyeyi Çıkar';
 
   @override
   String get leaveGroup => 'Gruptan Ayrıl';
@@ -403,7 +404,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noGroupsDesc =>
-      'Başkalarıyla not paylaşmak için bir grup oluşturun';
+      'Notlarınızı başkalarıyla paylaşmak için bir grup oluşturun';
 
   @override
   String memberCount(int count) {
@@ -417,16 +418,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exploreDesc => 'Topluluktan herkese açık notları keşfedin';
 
   @override
-  String get trending => 'Popüler';
+  String get trending => 'Trend';
 
   @override
-  String get recent => 'Son Eklenen';
+  String get recent => 'Son';
 
   @override
   String get noExploreResults => 'Henüz herkese açık not yok';
 
   @override
-  String get noExploreResultsDesc => 'Toplulukla ilk notu paylaşan siz olun';
+  String get noExploreResultsDesc =>
+      'Toplulukla paylaşacak ilk notu siz oluşturun';
 
   @override
   String get favorites => 'Favoriler';
@@ -435,20 +437,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get addToFavorites => 'Favorilere Ekle';
 
   @override
-  String get removeFromFavorites => 'Favorilerden Kaldır';
+  String get removeFromFavorites => 'Favorilerden Çıkar';
 
   @override
   String get addedToFavorites => 'Favorilere eklendi';
 
   @override
-  String get removedFromFavorites => 'Favorilerden kaldırıldı';
+  String get removedFromFavorites => 'Favorilerden çıkarıldı';
 
   @override
   String get noFavorites => 'Henüz favori yok';
 
   @override
   String get noFavoritesDesc =>
-      'Bir notu favorilere eklemek için kalp simgesine dokunun';
+      'Buraya eklemek için bir nottaki kalp simgesine dokunun';
 
   @override
   String get trash => 'Çöp Kutusu';
@@ -474,16 +476,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get trashAutoDeleteInfo =>
-      'Çöp kutusundaki notlar 30 gün sonra kalıcı olarak silinir';
+      'Çöp kutusundaki notlar 30 gün sonra kalıcı olarak silinecektir';
 
   @override
   String get sharedNotes => 'Paylaşılan Notlar';
 
   @override
-  String get sharedWithMe => 'Benimle Paylaşılan';
+  String get sharedWithMe => 'Benimle Paylaşılanlar';
 
   @override
-  String get sharedByMe => 'Paylaştıklarım';
+  String get sharedByMe => 'Benim Paylaştıklarım';
 
   @override
   String get noSharedNotes => 'Paylaşılan not yok';
@@ -492,7 +494,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noSharedNotesDesc => 'Sizinle paylaşılan notlar burada görünecek';
 
   @override
-  String get searchHint => 'Not, kişi, grup ara...';
+  String get searchHint => 'Notlarda, kişilerde, gruplarda ara...';
 
   @override
   String get searchNotes => 'Notlarda Ara';
@@ -550,7 +552,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm =>
-      'Bu işlem hesabınızı ve tüm verilerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.';
+      'Hesabınız ve tüm verileriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz.';
 
   @override
   String get aboutApp => 'NotIdea Hakkında';
@@ -568,7 +570,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get privacyPolicy => 'Gizlilik Politikası';
 
   @override
-  String get termsOfService => 'Kullanım Koşulları';
+  String get termsOfService => 'Hizmet Şartları';
 
   @override
   String get openSourceLicenses => 'Açık Kaynak Lisansları';
@@ -577,7 +579,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dangerZone => 'Tehlikeli Bölge';
 
   @override
-  String get changePassword => 'Şifre Değiştir';
+  String get changePassword => 'Şifreyi Değiştir';
 
   @override
   String get logoutConfirm => 'Çıkış yapmak istediğinize emin misiniz?';
@@ -586,13 +588,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noteColorDefault => 'Varsayılan';
 
   @override
-  String get enterYourEmail => 'E-posta adresinizi girin';
+  String get enterYourEmail => 'E-postanızı girin';
 
   @override
   String get enterYourPassword => 'Şifrenizi girin';
 
   @override
-  String get emailInvalid => 'Lütfen geçerli bir e-posta adresi girin';
+  String get emailInvalid => 'Geçerli bir e-posta adresi girin';
 
   @override
   String get loginSubtitle =>
@@ -629,7 +631,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pleaseAcceptTerms => 'Lütfen şartları ve koşulları kabul edin';
 
   @override
-  String get iAgreeToThe => 'Kabul ediyorum:';
+  String get iAgreeToThe => 'Şunları kabul ediyorum:';
 
   @override
   String get resetPasswordEmailSent => 'Şifre sıfırlama e-postası gönderildi';
@@ -671,7 +673,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get preview => 'Önizleme';
 
   @override
-  String get startWriting => 'Yazmaya başla...';
+  String get startWriting => 'Yazmaya başlayın...';
 
   @override
   String get untitled => 'Başlıksız';
@@ -696,7 +698,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kaydedilmemiş değişiklikleriniz var. İptal edilsin mi?';
 
   @override
-  String get discard => 'İptal Et';
+  String get discard => 'Vazgeç';
 
   @override
   String get errorLoadingNote => 'Not yüklenemedi';
@@ -708,10 +710,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onlyYouCanSee => 'Bunu sadece siz görebilirsiniz';
 
   @override
-  String get friendsCanSee => 'Arkadaşlarınız bunu görebilir';
+  String get friendsCanSee => 'Bunu arkadaşlarınız görebilir';
 
   @override
-  String get everyoneCanSee => 'Herkes bunu görebilir';
+  String get everyoneCanSee => 'Bunu herkes görebilir';
 
   @override
   String get profileNotFound => 'Profil bulunamadı';
@@ -721,7 +723,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get deleteAccountConfirmation =>
-      'Emin misiniz? Bu işlem hesabınızı kalıcı olarak silecektir.';
+      'Emin misiniz? Hesabınız kalıcı olarak silinecektir.';
 
   @override
   String get camera => 'Kamera';
@@ -733,11 +735,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get avatarUpdated => 'Profil fotoğrafı güncellendi';
 
   @override
-  String get errorGeneral => 'Bir şeyler ters gitti. Lütfen tekrar deneyin.';
+  String get errorGeneral => 'Bir şeyler yanlış gitti. Lütfen tekrar deneyin.';
 
   @override
-  String get errorNetwork =>
-      'İnternet bağlantısı yok. Lütfen ağınızı kontrol edin.';
+  String get errorNetwork => 'İnternet bağlantısı yok. Ağınızı kontrol edin.';
 
   @override
   String get errorTimeout =>
@@ -754,15 +755,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get errorServer => 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
 
   @override
-  String get errorImageTooLarge =>
-      'Görsel çok büyük. Maksimum boyut 5 MB\'dir.';
+  String get errorImageTooLarge => 'Görsel çok büyük. Maksimum boyut 5 MB.';
 
   @override
-  String get errorUnsupportedFormat => 'Desteklenmeyen dosya formatı.';
+  String get errorUnsupportedFormat => 'Desteklenmeyen dosya biçimi.';
 
   @override
-  String get errorUploadFailed =>
-      'Yükleme başarısız oldu. Lütfen tekrar deneyin.';
+  String get errorUploadFailed => 'Yükleme başarısız. Lütfen tekrar deneyin.';
 
   @override
   String get successGeneral => 'İşlem başarıyla tamamlandı';
@@ -858,7 +857,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get shareWithGroups => 'Gruplarla Paylaş';
 
   @override
-  String get viewerRole => 'İzleyici';
+  String get viewerRole => 'Görüntüleyen';
 
   @override
   String get editorRole => 'Düzenleyici';
@@ -867,7 +866,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get add => 'Ekle';
 
   @override
-  String get permissionUpdated => 'Erişim güncellendi';
+  String get permissionUpdated => 'İzin güncellendi';
 
   @override
   String get editGroup => 'Grubu Düzenle';
@@ -885,7 +884,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get selectMembers => 'Üye Seç';
 
   @override
-  String get groupNameRequired => 'Grup adı gereklidir';
+  String get groupNameRequired => 'Grup adı gerekli';
 
   @override
   String get noMembersYet => 'Henüz üye yok';
@@ -906,13 +905,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get alreadyFriends => 'Zaten arkadaşsınız';
 
   @override
-  String get requestPending => 'İstek beklemede';
+  String get requestPending => 'İstek bekliyor';
 
   @override
   String get statusFriend => 'Arkadaş';
 
   @override
-  String get statusPending => 'Bekliyor';
+  String get statusPending => 'Beklemede';
 
   @override
   String get visibilityFriends => 'Sadece Arkadaşlar';
@@ -940,8 +939,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noNotesYet => 'Henüz not yok';
 
   @override
-  String get createFirstNote =>
-      'İlk notunuzu oluşturmak için + simgesine dokunun';
+  String get createFirstNote => 'İlk notunuzu oluşturmak için +\'a dokunun';
 
   @override
   String get errorLoadingNotes => 'Notlar yüklenemedi';
@@ -954,10 +952,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get filterBy => 'Filtrele';
 
   @override
-  String get dateModified => 'Düzenleme Tarihi';
+  String get dateModified => 'Değiştirilme Tarihi';
 
   @override
-  String get dateCreated => 'Oluşturma Tarihi';
+  String get dateCreated => 'Oluşturulma Tarihi';
 
   @override
   String get titleLabel => 'Başlık';
@@ -975,19 +973,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get clearFilters => 'Filtreleri Temizle';
 
   @override
-  String get groupSharedNotes => 'Grup Paylaşılan Notlar';
+  String get groupSharedNotes => 'Grup Paylaşımlı Notlar';
 
   @override
-  String get completeYourProfile => 'Profilini Tamamla';
+  String get completeYourProfile => 'Profilinizi Tamamlayın';
 
   @override
-  String get profileSetupSubtitle => 'Başlamak için bilgilerini ekle';
+  String get profileSetupSubtitle => 'Başlamak için bilgilerinizi ekleyin';
 
   @override
-  String get tapToAddPhoto => 'Profil fotoğrafı eklemek için dokun';
+  String get tapToAddPhoto => 'Profil fotoğrafı eklemek için dokunun';
 
   @override
-  String get getStarted => 'Başla';
+  String get getStarted => 'Başlayın';
 
   @override
   String get checkEmailToConfirm =>
@@ -997,26 +995,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String get usernameTaken => 'Bu kullanıcı adı zaten alınmış';
 
   @override
-  String get checkingUsername => 'Uygunluk kontrol ediliyor...';
+  String get checkingUsername => 'Kullanılabilirlik kontrol ediliyor...';
 
   @override
   String get resetChanges => 'Değişiklikleri Sıfırla';
 
   @override
-  String get resetConfirmTitle => 'Değişiklikleri Sıfırla?';
+  String get resetConfirmTitle => 'Değişiklikler Sıfırlansın mı?';
 
   @override
   String get resetConfirmMessage =>
       'Kaydedilmemiş tüm değişiklikler kaybolacak. Emin misiniz?';
 
   @override
-  String get readOnlyPermission => 'Salt Okunur';
+  String get readOnlyPermission => 'Sadece Oku';
 
   @override
-  String get readWritePermission => 'Okuma ve Yazma';
+  String get readWritePermission => 'Oku ve Yaz';
 
   @override
-  String get selectPermission => 'İzin Seçin';
+  String get selectPermission => 'İzin Seç';
 
   @override
   String get shareViaSocial => 'Sosyal Medyada Paylaş';
@@ -1025,7 +1023,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notePinned => 'Not sabitlendi';
 
   @override
-  String get noteUnpinned => 'Sabitleme kaldırıldı';
+  String get noteUnpinned => 'Sabit kaldırıldı';
 
   @override
   String get notePermanentlyDeleted => 'Not kalıcı olarak silindi';
@@ -1042,7 +1040,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get fontFamilyTitle => 'Yazı Tipi';
+  String get fontFamilyTitle => 'Yazı Stili';
 
   @override
   String get fontDefault => 'Varsayılan (Sistem)';
@@ -1051,7 +1049,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get fontSerif => 'Serif';
 
   @override
-  String get fontMonospace => 'Tekdüze';
+  String get fontMonospace => 'Monospace';
 
   @override
   String get fontCursive => 'El Yazısı';
@@ -1063,13 +1061,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get required => 'Zorunlu';
 
   @override
-  String get passwordUppercase => 'Şifre en az bir büyük harf içermelidir';
+  String get passwordUppercase => 'Şifre en az bir büyük harf içermeli';
 
   @override
-  String get passwordLowercase => 'Şifre en az bir küçük harf içermelidir';
+  String get passwordLowercase => 'Şifre en az bir küçük harf içermeli';
 
   @override
-  String get passwordDigit => 'Şifre en az bir rakam içermelidir';
+  String get passwordDigit => 'Şifre en az bir rakam içermeli';
 
   @override
   String get imageLabel => 'Görsel';
