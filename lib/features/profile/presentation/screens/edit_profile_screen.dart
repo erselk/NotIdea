@@ -61,7 +61,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Future<void> _pickAvatar() async {
     final l10n = AppLocalizations.of(context)!;
 
-    final source = await showModalBottomSheet<ImageSource>(
+    final choice = await showModalBottomSheet<String>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -74,20 +74,48 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ListTile(
               leading: const Icon(Icons.camera_alt_outlined),
               title: Text(l10n.camera),
-              onTap: () => Navigator.pop(ctx, ImageSource.camera),
+              onTap: () => Navigator.pop(ctx, 'camera'),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
               title: Text(l10n.gallery),
-              onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
             ),
+            if (_currentAvatarUrl != null)
+              ListTile(
+                leading: Icon(Icons.delete_outline, color: Theme.of(ctx).colorScheme.error),
+                title: Text(l10n.removeAvatar, style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
+                onTap: () => Navigator.pop(ctx, 'remove'),
+              ),
             const SizedBox(height: 12),
           ],
         ),
       ),
     );
 
-    if (source == null) return;
+    if (choice == null) return;
+    if (choice == 'remove') {
+      final profile = ref.read(currentProfileProvider).value;
+      if (profile == null) return;
+      setState(() => _isUploadingAvatar = true);
+      try {
+        await ref.read(updateProfileProvider.notifier).execute(profile.copyWith(avatarUrl: null));
+        if (mounted) {
+          setState(() {
+            _currentAvatarUrl = null;
+            _isUploadingAvatar = false;
+          });
+          context.showSuccess(l10n.avatarUpdated);
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() => _isUploadingAvatar = false);
+          context.showError(e);
+        }
+      }
+      return;
+    }
+    final source = choice == 'camera' ? ImageSource.camera : ImageSource.gallery;
 
     final picker = ImagePicker();
     final file = await picker.pickImage(

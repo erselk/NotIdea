@@ -215,9 +215,10 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
               : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         ),
         leadingWidth: 72,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 14),
-          child: Center(
+        leading: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 14),
             child: Material(
               color: Colors.transparent,
               shape: const CircleBorder(),
@@ -241,15 +242,29 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
             const NotIdeaLogoText(height: 28),
           ],
         ),
+        actionsIconTheme: IconThemeData(size: 28),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search, size: 30,
-              color: _isSearching ? theme.colorScheme.primary : null,
+          SizedBox(
+            width: 72,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 14),
+                child: Material(
+                  color: Colors.transparent,
+                  shape: const CircleBorder(),
+                  clipBehavior: Clip.antiAlias,
+                  child: IconButton(
+                    icon: Icon(Icons.search, size: 28,
+                      color: _isSearching ? theme.colorScheme.primary : null,
+                    ),
+                    tooltip: 'Search notes',
+                    onPressed: _toggleSearch,
+                  ),
+                ),
+              ),
             ),
-            tooltip: 'Search notes',
-            onPressed: _toggleSearch,
           ),
-          const SizedBox(width: 20),
         ],
       ),
       body: Column(

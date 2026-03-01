@@ -34,22 +34,25 @@ import 'package:notidea/shared/widgets/app_scaffold.dart';
 part 'app_router.g.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+/// Profil oluşturulduktan sonra redirect cache'ini temizler (loop önlenir).
+void invalidateProfileCache() {
+  _profileCacheUserId = null;
+  _profileCacheHasProfile = null;
+}
+
+String? _profileCacheUserId;
+bool? _profileCacheHasProfile;
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
 GoRouter appRouter(Ref ref) {
   final authListenable = ValueNotifier<bool>(true);
 
-  // Profile check cache: keyed by userId, avoids Supabase query on every navigation.
-  String? _cachedUserId;
-  bool? _cachedHasProfile;
-
   final sub = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
     if (data.event == AuthChangeEvent.signedIn ||
         data.event == AuthChangeEvent.signedOut) {
-      // Invalidate profile cache on auth change.
-      _cachedUserId = null;
-      _cachedHasProfile = null;
+      invalidateProfileCache();
       authListenable.value = !authListenable.value;
     }
   });
@@ -92,8 +95,8 @@ GoRouter appRouter(Ref ref) {
       // Use cached result when available to prevent per-navigation DB queries.
       final userId = session.user.id;
       bool hasProfile;
-      if (_cachedUserId == userId && _cachedHasProfile != null) {
-        hasProfile = _cachedHasProfile!;
+      if (_profileCacheUserId == userId && _profileCacheHasProfile != null) {
+        hasProfile = _profileCacheHasProfile!;
       } else {
         final profile = await Supabase.instance.client
             .from('profiles')
@@ -108,8 +111,8 @@ GoRouter appRouter(Ref ref) {
             (profile['username'] as String).isNotEmpty &&
             profile['display_name'] != null &&
             (profile['display_name'] as String).isNotEmpty;
-        _cachedUserId = userId;
-        _cachedHasProfile = hasProfile;
+        _profileCacheUserId = userId;
+        _profileCacheHasProfile = hasProfile;
       }
 
       if (!hasProfile && !isProfileSetup) {

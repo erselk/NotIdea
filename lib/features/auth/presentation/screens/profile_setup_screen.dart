@@ -9,6 +9,7 @@ import 'package:notidea/core/utils/extensions.dart';
 import 'package:notidea/features/auth/presentation/providers/auth_provider.dart';
 import 'package:notidea/features/profile/presentation/providers/profile_provider.dart';
 import 'package:notidea/features/profile/domain/models/profile_model.dart';
+import 'package:notidea/core/router/app_router.dart';
 
 class ProfileSetupScreen extends ConsumerStatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -64,8 +65,11 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       return;
     }
 
-    setState(() => _isCheckingUsername = true);
-    _usernameDebounce = Timer(const Duration(milliseconds: 500), () async {
+    setState(() {
+      _isCheckingUsername = true;
+      _usernameTaken = false;
+    });
+    _usernameDebounce = Timer(const Duration(milliseconds: 800), () async {
       try {
         final repo = ref.read(profileRepositoryProvider);
         final taken = await repo.isUsernameTaken(trimmed);
@@ -83,7 +87,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
 
   Future<void> _pickAvatar() async {
     final l10n = AppLocalizations.of(context)!;
-    final source = await showModalBottomSheet<ImageSource>(
+    final choice = await showModalBottomSheet<String>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -96,20 +100,31 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
             ListTile(
               leading: const Icon(Icons.camera_alt_outlined),
               title: Text(l10n.camera),
-              onTap: () => Navigator.pop(ctx, ImageSource.camera),
+              onTap: () => Navigator.pop(ctx, 'camera'),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
               title: Text(l10n.gallery),
-              onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
             ),
+            if (_avatarUrl != null)
+              ListTile(
+                leading: Icon(Icons.delete_outline, color: Theme.of(ctx).colorScheme.error),
+                title: Text(l10n.removeAvatar, style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
+                onTap: () => Navigator.pop(ctx, 'remove'),
+              ),
             const SizedBox(height: 12),
           ],
         ),
       ),
     );
 
-    if (source == null) return;
+    if (choice == null) return;
+    if (choice == 'remove') {
+      setState(() => _avatarUrl = null);
+      return;
+    }
+    final source = choice == 'camera' ? ImageSource.camera : ImageSource.gallery;
 
     final picker = ImagePicker();
     final file = await picker.pickImage(
@@ -174,6 +189,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       await ref.read(createProfileProvider.notifier).execute(profile);
 
       if (mounted) {
+        invalidateProfileCache();
         context.go('/home');
       }
     } catch (e) {
