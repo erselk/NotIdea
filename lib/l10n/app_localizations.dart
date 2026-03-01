@@ -1335,6 +1335,54 @@ abstract class AppLocalizations {
   /// **'Build'**
   String get buildNumber;
 
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of NotIdea is available.'**
+  String get updateAvailableMessage;
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You must update to continue using NotIdea.'**
+  String get updateRequiredMessage;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNow;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get updateLater;
+
+  /// No description provided for @updateChangelog.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get updateChangelog;
+
+  /// No description provided for @openDownloadPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Open download page'**
+  String get openDownloadPage;
+
   /// No description provided for @legal.
   ///
   /// In en, this message translates to:

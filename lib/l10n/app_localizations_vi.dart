@@ -566,6 +566,31 @@ class AppLocalizationsVi extends AppLocalizations {
   String get buildNumber => 'Xây dựng';
 
   @override
+  String get updateAvailableTitle => 'Cập nhật có sẵn';
+
+  @override
+  String get updateAvailableMessage => 'Đã có phiên bản mới của NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Yêu cầu cập nhật';
+
+  @override
+  String get updateRequiredMessage =>
+      'Bạn phải cập nhật để tiếp tục sử dụng NotIdea.';
+
+  @override
+  String get updateNow => 'Cập nhật ngay';
+
+  @override
+  String get updateLater => 'Sau đó';
+
+  @override
+  String get updateChangelog => 'Có gì mới';
+
+  @override
+  String get openDownloadPage => 'Mở trang tải xuống';
+
+  @override
   String get legal => 'Hợp pháp';
 
   @override

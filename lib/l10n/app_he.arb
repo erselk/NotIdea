@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "עדכון זמין",
+  "updateAvailableMessage": "גרסה חדשה של NotIdea זמינה.",
+  "updateRequiredTitle": "נדרש עדכון",
+  "updateRequiredMessage": "עליך לעדכן כדי להמשיך להשתמש ב-NotIdea.",
+  "updateNow": "עדכן עכשיו",
+  "updateLater": "מאוחר יותר",
+  "updateChangelog": "מה חדש",
+  "openDownloadPage": "פתח דף הורדה"
 }

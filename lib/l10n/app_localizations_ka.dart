@@ -573,6 +573,31 @@ class AppLocalizationsKa extends AppLocalizations {
   String get buildNumber => 'აშენება';
 
   @override
+  String get updateAvailableTitle => 'განახლება ხელმისაწვდომია';
+
+  @override
+  String get updateAvailableMessage => 'ხელმისაწვდომია NotIdea-ს ახალი ვერსია.';
+
+  @override
+  String get updateRequiredTitle => 'საჭიროა განახლება';
+
+  @override
+  String get updateRequiredMessage =>
+      'თქვენ უნდა განაახლოთ NotIdea-ის გამოყენების გასაგრძელებლად.';
+
+  @override
+  String get updateNow => 'განაახლეთ ახლა';
+
+  @override
+  String get updateLater => 'მოგვიანებით';
+
+  @override
+  String get updateChangelog => 'რა არის ახალი';
+
+  @override
+  String get openDownloadPage => 'გახსენით ჩამოტვირთვის გვერდი';
+
+  @override
   String get legal => 'იურიდიული';
 
   @override

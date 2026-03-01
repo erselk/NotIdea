@@ -567,6 +567,31 @@ class AppLocalizationsPs extends AppLocalizations {
   String get buildNumber => 'جوړول';
 
   @override
+  String get updateAvailableTitle => 'تازه معلومات شتون لري';
+
+  @override
+  String get updateAvailableMessage => 'د NotIdea نوې نسخه شتون لري.';
+
+  @override
+  String get updateRequiredTitle => 'تازه کول اړین دي';
+
+  @override
+  String get updateRequiredMessage =>
+      'تاسو باید د NotIdea کارولو ته دوام ورکولو لپاره تازه کړئ.';
+
+  @override
+  String get updateNow => 'اوس تازه کړئ';
+
+  @override
+  String get updateLater => 'وروسته';
+
+  @override
+  String get updateChangelog => 'څه نوي دي';
+
+  @override
+  String get openDownloadPage => 'د ډاونلوډ پاڼه پرانیزئ';
+
+  @override
   String get legal => 'قانوني';
 
   @override

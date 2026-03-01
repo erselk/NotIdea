@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Posodobitev na voljo",
+  "updateAvailableMessage": "Na voljo je nova različica NotIdea.",
+  "updateRequiredTitle": "Potrebna posodobitev",
+  "updateRequiredMessage": "Če želite še naprej uporabljati NotIdea, morate posodobiti.",
+  "updateNow": "Posodobi zdaj",
+  "updateLater": "Kasneje",
+  "updateChangelog": "kaj je novega",
+  "openDownloadPage": "Odpri stran za prenos"
 }

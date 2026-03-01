@@ -203,6 +203,15 @@
   "version": "Version",
   "buildNumber": "Build",
 
+  "updateAvailableTitle": "Update Available",
+  "updateAvailableMessage": "A new version of NotIdea is available.",
+  "updateRequiredTitle": "Update Required",
+  "updateRequiredMessage": "You must update to continue using NotIdea.",
+  "updateNow": "Update Now",
+  "updateLater": "Later",
+  "updateChangelog": "What's new",
+  "openDownloadPage": "Open download page",
+
   "legal": "Legal",
   "privacyPolicy": "Privacy Policy",
   "termsOfService": "Terms of Service",

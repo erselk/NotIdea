@@ -571,6 +571,31 @@ class AppLocalizationsCy extends AppLocalizations {
   String get buildNumber => 'Adeiladu';
 
   @override
+  String get updateAvailableTitle => 'Diweddariad ar Gael';
+
+  @override
+  String get updateAvailableMessage => 'Mae fersiwn newydd o NotIdea ar gael.';
+
+  @override
+  String get updateRequiredTitle => 'Diweddariad Angenrheidiol';
+
+  @override
+  String get updateRequiredMessage =>
+      'Rhaid i chi ddiweddaru i barhau i ddefnyddio NotIdea.';
+
+  @override
+  String get updateNow => 'Diweddaru Nawr';
+
+  @override
+  String get updateLater => 'Yn ddiweddarach';
+
+  @override
+  String get updateChangelog => 'Beth sy\'n newydd';
+
+  @override
+  String get openDownloadPage => 'Agor tudalen lawrlwytho';
+
+  @override
   String get legal => 'Cyfreithiol';
 
   @override

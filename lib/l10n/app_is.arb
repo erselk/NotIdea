@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Uppfærsla í boði",
+  "updateAvailableMessage": "Ný útgáfa af NotIdea er fáanleg.",
+  "updateRequiredTitle": "Uppfærslu krafist",
+  "updateRequiredMessage": "Þú verður að uppfæra til að halda áfram að nota NotIdea.",
+  "updateNow": "Uppfærðu núna",
+  "updateLater": "Seinna",
+  "updateChangelog": "Hvað er nýtt",
+  "openDownloadPage": "Opna niðurhalssíðu"
 }

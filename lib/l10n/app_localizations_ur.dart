@@ -568,6 +568,31 @@ class AppLocalizationsUr extends AppLocalizations {
   String get buildNumber => 'تعمیر کریں۔';
 
   @override
+  String get updateAvailableTitle => 'اپ ڈیٹ دستیاب ہے۔';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea کا ایک نیا ورژن دستیاب ہے۔';
+
+  @override
+  String get updateRequiredTitle => 'اپ ڈیٹ درکار ہے۔';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea کا استعمال جاری رکھنے کے لیے آپ کو اپ ڈیٹ کرنا ضروری ہے۔';
+
+  @override
+  String get updateNow => 'ابھی اپ ڈیٹ کریں۔';
+
+  @override
+  String get updateLater => 'بعد میں';
+
+  @override
+  String get updateChangelog => 'نیا کیا ہے';
+
+  @override
+  String get openDownloadPage => 'ڈاؤن لوڈ صفحہ کھولیں۔';
+
+  @override
   String get legal => 'قانونی';
 
   @override

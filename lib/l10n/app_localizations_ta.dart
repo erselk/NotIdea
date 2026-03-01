@@ -575,6 +575,31 @@ class AppLocalizationsTa extends AppLocalizations {
   String get buildNumber => 'கட்டுங்கள்';
 
   @override
+  String get updateAvailableTitle => 'புதுப்பிப்பு கிடைக்கிறது';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea இன் புதிய பதிப்பு கிடைக்கிறது.';
+
+  @override
+  String get updateRequiredTitle => 'புதுப்பித்தல் தேவை';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ஐத் தொடர்ந்து பயன்படுத்த நீங்கள் புதுப்பிக்க வேண்டும்.';
+
+  @override
+  String get updateNow => 'இப்போது புதுப்பிக்கவும்';
+
+  @override
+  String get updateLater => 'பின்னர்';
+
+  @override
+  String get updateChangelog => 'என்ன புதுசு';
+
+  @override
+  String get openDownloadPage => 'பதிவிறக்கப் பக்கத்தைத் திறக்கவும்';
+
+  @override
   String get legal => 'சட்டபூர்வமானது';
 
   @override

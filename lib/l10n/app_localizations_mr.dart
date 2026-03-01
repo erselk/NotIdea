@@ -565,6 +565,31 @@ class AppLocalizationsMr extends AppLocalizations {
   String get buildNumber => 'बांधा';
 
   @override
+  String get updateAvailableTitle => 'अपडेट उपलब्ध';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea ची नवीन आवृत्ती उपलब्ध आहे.';
+
+  @override
+  String get updateRequiredTitle => 'अपडेट आवश्यक आहे';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea वापरणे सुरू ठेवण्यासाठी तुम्ही अपडेट करणे आवश्यक आहे.';
+
+  @override
+  String get updateNow => 'आता अपडेट करा';
+
+  @override
+  String get updateLater => 'नंतर';
+
+  @override
+  String get updateChangelog => 'नवीन काय आहे';
+
+  @override
+  String get openDownloadPage => 'डाउनलोड पृष्ठ उघडा';
+
+  @override
   String get legal => 'कायदेशीर';
 
   @override

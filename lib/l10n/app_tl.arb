@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Magagamit ang Update",
+  "updateAvailableMessage": "Available ang bagong bersyon ng NotIdea.",
+  "updateRequiredTitle": "Kinakailangan ang Update",
+  "updateRequiredMessage": "Dapat kang mag-update upang magpatuloy sa paggamit ng NotIdea.",
+  "updateNow": "Update Ngayon",
+  "updateLater": "Mamaya",
+  "updateChangelog": "Ano ang bago",
+  "openDownloadPage": "Buksan ang pahina ng pag-download"
 }

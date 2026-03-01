@@ -568,6 +568,31 @@ class AppLocalizationsSr extends AppLocalizations {
   String get buildNumber => 'Буилд';
 
   @override
+  String get updateAvailableTitle => 'Ажурирање је доступно';
+
+  @override
+  String get updateAvailableMessage => 'Доступна је нова верзија НотИдеа.';
+
+  @override
+  String get updateRequiredTitle => 'Потребно је ажурирање';
+
+  @override
+  String get updateRequiredMessage =>
+      'Морате да ажурирате да бисте наставили да користите НотИдеа.';
+
+  @override
+  String get updateNow => 'Ажурирајте одмах';
+
+  @override
+  String get updateLater => 'касније';
+
+  @override
+  String get updateChangelog => 'Шта има ново';
+
+  @override
+  String get openDownloadPage => 'Отворите страницу за преузимање';
+
+  @override
   String get legal => 'Правна';
 
   @override

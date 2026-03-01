@@ -569,6 +569,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String get buildNumber => 'Строить';
 
   @override
+  String get updateAvailableTitle => 'Доступно обновление';
+
+  @override
+  String get updateAvailableMessage => 'Доступна новая версия NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Требуется обновление';
+
+  @override
+  String get updateRequiredMessage =>
+      'Вам необходимо обновиться, чтобы продолжить использование NotIdea.';
+
+  @override
+  String get updateNow => 'Обновить сейчас';
+
+  @override
+  String get updateLater => 'Позже';
+
+  @override
+  String get updateChangelog => 'Что нового';
+
+  @override
+  String get openDownloadPage => 'Открыть страницу загрузки';
+
+  @override
   String get legal => 'Юридический';
 
   @override

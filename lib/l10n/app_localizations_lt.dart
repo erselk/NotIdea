@@ -570,6 +570,31 @@ class AppLocalizationsLt extends AppLocalizations {
   String get buildNumber => 'Sukurti';
 
   @override
+  String get updateAvailableTitle => 'Galimas atnaujinimas';
+
+  @override
+  String get updateAvailableMessage => 'Yra nauja NotIdea versija.';
+
+  @override
+  String get updateRequiredTitle => 'Būtinas atnaujinimas';
+
+  @override
+  String get updateRequiredMessage =>
+      'Jei norite toliau naudoti „NotIdea“, turite atnaujinti.';
+
+  @override
+  String get updateNow => 'Atnaujinkite dabar';
+
+  @override
+  String get updateLater => 'Vėliau';
+
+  @override
+  String get updateChangelog => 'Kas naujo';
+
+  @override
+  String get openDownloadPage => 'Atidaryti atsisiuntimo puslapį';
+
+  @override
   String get legal => 'Teisinė';
 
   @override

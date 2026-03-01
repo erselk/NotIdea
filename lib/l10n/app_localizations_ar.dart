@@ -565,6 +565,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get buildNumber => 'يبني';
 
   @override
+  String get updateAvailableTitle => 'التحديث متاح';
+
+  @override
+  String get updateAvailableMessage => 'يتوفر إصدار جديد من NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'التحديث مطلوب';
+
+  @override
+  String get updateRequiredMessage =>
+      'يجب عليك التحديث لمواصلة استخدام NotIdea.';
+
+  @override
+  String get updateNow => 'التحديث الآن';
+
+  @override
+  String get updateLater => 'لاحقاً';
+
+  @override
+  String get updateChangelog => 'ما هو الجديد';
+
+  @override
+  String get openDownloadPage => 'افتح صفحة التنزيل';
+
+  @override
   String get legal => 'قانوني';
 
   @override

@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Päivitys saatavilla",
+  "updateAvailableMessage": "NotIdeasta on saatavilla uusi versio.",
+  "updateRequiredTitle": "Päivitys vaaditaan",
+  "updateRequiredMessage": "Sinun on päivitettävä jatkaaksesi NotIdean käyttöä.",
+  "updateNow": "Päivitä nyt",
+  "updateLater": "Myöhemmin",
+  "updateChangelog": "Mitä uutta",
+  "openDownloadPage": "Avaa lataussivu"
 }

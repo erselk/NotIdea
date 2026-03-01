@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Sasisho Linapatikana",
+  "updateAvailableMessage": "Toleo jipya la NotIdea linapatikana.",
+  "updateRequiredTitle": "Usasishaji Unahitajika",
+  "updateRequiredMessage": "Lazima usasishe ili kuendelea kutumia NotIdea.",
+  "updateNow": "Sasisha Sasa",
+  "updateLater": "Baadaye",
+  "updateChangelog": "Nini kipya",
+  "openDownloadPage": "Fungua ukurasa wa kupakua"
 }

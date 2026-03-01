@@ -568,6 +568,31 @@ class AppLocalizationsAz extends AppLocalizations {
   String get buildNumber => 'qurmaq';
 
   @override
+  String get updateAvailableTitle => 'Yeniləmə Mövcuddur';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea-nın yeni versiyası mövcuddur.';
+
+  @override
+  String get updateRequiredTitle => 'Yeniləmə Tələb olunur';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea-dan istifadə etməyə davam etmək üçün yeniləməlisiniz.';
+
+  @override
+  String get updateNow => 'İndi Yeniləyin';
+
+  @override
+  String get updateLater => 'Daha sonra';
+
+  @override
+  String get updateChangelog => 'Nə yenilik var';
+
+  @override
+  String get openDownloadPage => 'Yükləmə səhifəsini açın';
+
+  @override
   String get legal => 'Hüquqi';
 
   @override

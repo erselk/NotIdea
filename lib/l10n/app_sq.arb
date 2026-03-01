@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Përditësimi i disponueshëm",
+  "updateAvailableMessage": "Një version i ri i NotIdea është i disponueshëm.",
+  "updateRequiredTitle": "Kërkohet përditësim",
+  "updateRequiredMessage": "Duhet të përditësosh për të vazhduar përdorimin e NotIdea.",
+  "updateNow": "Përditëso Tani",
+  "updateLater": "Më vonë",
+  "updateChangelog": "Çfarë ka të re",
+  "openDownloadPage": "Hapni faqen e shkarkimit"
 }

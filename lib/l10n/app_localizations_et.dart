@@ -568,6 +568,31 @@ class AppLocalizationsEt extends AppLocalizations {
   String get buildNumber => 'Ehitada';
 
   @override
+  String get updateAvailableTitle => 'Värskendus on saadaval';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea uus versioon on saadaval.';
+
+  @override
+  String get updateRequiredTitle => 'Vajalik värskendus';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea kasutamise jätkamiseks peate värskendama.';
+
+  @override
+  String get updateNow => 'Värskenda kohe';
+
+  @override
+  String get updateLater => 'Hiljem';
+
+  @override
+  String get updateChangelog => 'Mida uut';
+
+  @override
+  String get openDownloadPage => 'Ava allalaadimisleht';
+
+  @override
   String get legal => 'Juriidiline';
 
   @override

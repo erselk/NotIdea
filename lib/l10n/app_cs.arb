@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Aktualizace k dispozici",
+  "updateAvailableMessage": "K dispozici je nová verze NotIdea.",
+  "updateRequiredTitle": "Je vyžadována aktualizace",
+  "updateRequiredMessage": "Chcete-li nadále používat NotIdea, musíte provést aktualizaci.",
+  "updateNow": "Aktualizovat nyní",
+  "updateLater": "Později",
+  "updateChangelog": "Co je nového",
+  "openDownloadPage": "Otevřete stránku stahování"
 }

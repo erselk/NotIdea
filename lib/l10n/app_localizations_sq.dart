@@ -572,6 +572,32 @@ class AppLocalizationsSq extends AppLocalizations {
   String get buildNumber => 'Ndërtoni';
 
   @override
+  String get updateAvailableTitle => 'Përditësimi i disponueshëm';
+
+  @override
+  String get updateAvailableMessage =>
+      'Një version i ri i NotIdea është i disponueshëm.';
+
+  @override
+  String get updateRequiredTitle => 'Kërkohet përditësim';
+
+  @override
+  String get updateRequiredMessage =>
+      'Duhet të përditësosh për të vazhduar përdorimin e NotIdea.';
+
+  @override
+  String get updateNow => 'Përditëso Tani';
+
+  @override
+  String get updateLater => 'Më vonë';
+
+  @override
+  String get updateChangelog => 'Çfarë ka të re';
+
+  @override
+  String get openDownloadPage => 'Hapni faqen e shkarkimit';
+
+  @override
   String get legal => 'Ligjore';
 
   @override

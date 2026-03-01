@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Frissítés elérhető",
+  "updateAvailableMessage": "Megjelent a NotIdea új verziója.",
+  "updateRequiredTitle": "Frissítés szükséges",
+  "updateRequiredMessage": "A NotIdea használatának folytatásához frissítenie kell.",
+  "updateNow": "Frissítés most",
+  "updateLater": "Később",
+  "updateChangelog": "Újdonságok",
+  "openDownloadPage": "Nyissa meg a letöltési oldalt"
 }

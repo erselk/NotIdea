@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Diweddariad ar Gael",
+  "updateAvailableMessage": "Mae fersiwn newydd o NotIdea ar gael.",
+  "updateRequiredTitle": "Diweddariad Angenrheidiol",
+  "updateRequiredMessage": "Rhaid i chi ddiweddaru i barhau i ddefnyddio NotIdea.",
+  "updateNow": "Diweddaru Nawr",
+  "updateLater": "Yn ddiweddarach",
+  "updateChangelog": "Beth sy'n newydd",
+  "openDownloadPage": "Agor tudalen lawrlwytho"
 }

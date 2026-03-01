@@ -571,6 +571,31 @@ class AppLocalizationsFi extends AppLocalizations {
   String get buildNumber => 'Rakentaa';
 
   @override
+  String get updateAvailableTitle => 'Päivitys saatavilla';
+
+  @override
+  String get updateAvailableMessage => 'NotIdeasta on saatavilla uusi versio.';
+
+  @override
+  String get updateRequiredTitle => 'Päivitys vaaditaan';
+
+  @override
+  String get updateRequiredMessage =>
+      'Sinun on päivitettävä jatkaaksesi NotIdean käyttöä.';
+
+  @override
+  String get updateNow => 'Päivitä nyt';
+
+  @override
+  String get updateLater => 'Myöhemmin';
+
+  @override
+  String get updateChangelog => 'Mitä uutta';
+
+  @override
+  String get openDownloadPage => 'Avaa lataussivu';
+
+  @override
   String get legal => 'Laillinen';
 
   @override

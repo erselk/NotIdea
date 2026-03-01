@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Värskendus on saadaval",
+  "updateAvailableMessage": "NotIdea uus versioon on saadaval.",
+  "updateRequiredTitle": "Vajalik värskendus",
+  "updateRequiredMessage": "NotIdea kasutamise jätkamiseks peate värskendama.",
+  "updateNow": "Värskenda kohe",
+  "updateLater": "Hiljem",
+  "updateChangelog": "Mida uut",
+  "openDownloadPage": "Ava allalaadimisleht"
 }

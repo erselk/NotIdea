@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Eguneratzea eskuragarri",
+  "updateAvailableMessage": "NotIdea-ren bertsio berri bat dago eskuragarri.",
+  "updateRequiredTitle": "Eguneratu behar da",
+  "updateRequiredMessage": "Eguneratu behar duzu NotIdea erabiltzen jarraitzeko.",
+  "updateNow": "Eguneratu orain",
+  "updateLater": "Geroago",
+  "updateChangelog": "Zer berri",
+  "openDownloadPage": "Ireki deskarga orria"
 }

@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Шинэчлэх боломжтой",
+  "updateAvailableMessage": "NotIdea-ийн шинэ хувилбар гарсан байна.",
+  "updateRequiredTitle": "Шинэчлэлт шаардлагатай",
+  "updateRequiredMessage": "NotIdea-г үргэлжлүүлэн ашиглахын тулд та шинэчлэх ёстой.",
+  "updateNow": "Одоо шинэчил",
+  "updateLater": "Дараа нь",
+  "updateChangelog": "Шинэ юу байна",
+  "openDownloadPage": "Татаж авах хуудсыг нээх"
 }

@@ -573,6 +573,31 @@ class AppLocalizationsMk extends AppLocalizations {
   String get buildNumber => 'Изградба';
 
   @override
+  String get updateAvailableTitle => 'Достапно ажурирање';
+
+  @override
+  String get updateAvailableMessage => 'Достапна е нова верзија на NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Потребно е ажурирање';
+
+  @override
+  String get updateRequiredMessage =>
+      'Мора да ажурирате за да продолжите да го користите NotIdea.';
+
+  @override
+  String get updateNow => 'Ажурирајте сега';
+
+  @override
+  String get updateLater => 'Подоцна';
+
+  @override
+  String get updateChangelog => 'Што има ново';
+
+  @override
+  String get openDownloadPage => 'Отворете ја страницата за преземање';
+
+  @override
   String get legal => 'Правни';
 
   @override

@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Pembaruan Tersedia",
+  "updateAvailableMessage": "Versi baru NotIdea telah tersedia.",
+  "updateRequiredTitle": "Pembaruan Diperlukan",
+  "updateRequiredMessage": "Anda harus memperbarui untuk terus menggunakan NotIdea.",
+  "updateNow": "Perbarui Sekarang",
+  "updateLater": "Nanti",
+  "updateChangelog": "Apa yang baru",
+  "openDownloadPage": "Buka halaman unduhan"
 }

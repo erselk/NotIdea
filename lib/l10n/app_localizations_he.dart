@@ -558,6 +558,30 @@ class AppLocalizationsHe extends AppLocalizations {
   String get buildNumber => 'לִבנוֹת';
 
   @override
+  String get updateAvailableTitle => 'עדכון זמין';
+
+  @override
+  String get updateAvailableMessage => 'גרסה חדשה של NotIdea זמינה.';
+
+  @override
+  String get updateRequiredTitle => 'נדרש עדכון';
+
+  @override
+  String get updateRequiredMessage => 'עליך לעדכן כדי להמשיך להשתמש ב-NotIdea.';
+
+  @override
+  String get updateNow => 'עדכן עכשיו';
+
+  @override
+  String get updateLater => 'מאוחר יותר';
+
+  @override
+  String get updateChangelog => 'מה חדש';
+
+  @override
+  String get openDownloadPage => 'פתח דף הורדה';
+
+  @override
   String get legal => 'מִשׁפָּטִי';
 
   @override

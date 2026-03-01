@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Հասանելի է թարմացում",
+  "updateAvailableMessage": "NotIdea-ի նոր տարբերակը հասանելի է:",
+  "updateRequiredTitle": "Պահանջվում է թարմացում",
+  "updateRequiredMessage": "NotIdea-ն օգտագործելու համար դուք պետք է թարմացնեք:",
+  "updateNow": "Թարմացրեք հիմա",
+  "updateLater": "Ավելի ուշ",
+  "updateChangelog": "Ինչ նորություն կա",
+  "openDownloadPage": "Բացեք ներբեռնման էջը"
 }

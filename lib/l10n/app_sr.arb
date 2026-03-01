@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Ажурирање је доступно",
+  "updateAvailableMessage": "Доступна је нова верзија НотИдеа.",
+  "updateRequiredTitle": "Потребно је ажурирање",
+  "updateRequiredMessage": "Морате да ажурирате да бисте наставили да користите НотИдеа.",
+  "updateNow": "Ажурирајте одмах",
+  "updateLater": "касније",
+  "updateChangelog": "Шта има ново",
+  "openDownloadPage": "Отворите страницу за преузимање"
 }

@@ -575,6 +575,31 @@ class AppLocalizationsOr extends AppLocalizations {
   String get buildNumber => 'ନିର୍ମାଣ କରନ୍ତୁ |';
 
   @override
+  String get updateAvailableTitle => 'ଅଦ୍ୟତନ ଉପଲବ୍ଧ |';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea ର ଏକ ନୂତନ ସଂସ୍କରଣ ଉପଲବ୍ଧ |';
+
+  @override
+  String get updateRequiredTitle => 'ଅଦ୍ୟତନ ଆବଶ୍ୟକ |';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ବ୍ୟବହାର ଜାରି ରଖିବାକୁ ଆପଣ ନିଶ୍ଚିତ ଭାବରେ ଅଦ୍ୟତନ କରିବେ |';
+
+  @override
+  String get updateNow => 'ବର୍ତ୍ତମାନ ଅଦ୍ୟତନ କରନ୍ତୁ |';
+
+  @override
+  String get updateLater => 'ପରେ';
+
+  @override
+  String get updateChangelog => 'କଣ ନୂଆ |';
+
+  @override
+  String get openDownloadPage => 'ଡାଉନଲୋଡ୍ ପୃଷ୍ଠା ଖୋଲନ୍ତୁ |';
+
+  @override
   String get legal => 'ଆଇନଗତ |';
 
   @override

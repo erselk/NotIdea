@@ -566,6 +566,31 @@ class AppLocalizationsAf extends AppLocalizations {
   String get buildNumber => 'Bou';
 
   @override
+  String get updateAvailableTitle => 'Opdatering beskikbaar';
+
+  @override
+  String get updateAvailableMessage =>
+      '\'n Nuwe weergawe van NotIdea is beskikbaar.';
+
+  @override
+  String get updateRequiredTitle => 'Opdatering vereis';
+
+  @override
+  String get updateRequiredMessage => 'Jy moet opdateer om NotIdea te gebruik.';
+
+  @override
+  String get updateNow => 'Dateer nou op';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get updateChangelog => 'Wat is nuut';
+
+  @override
+  String get openDownloadPage => 'Maak die aflaaibladsy oop';
+
+  @override
   String get legal => 'Wettig';
 
   @override

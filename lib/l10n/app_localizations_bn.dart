@@ -567,6 +567,31 @@ class AppLocalizationsBn extends AppLocalizations {
   String get buildNumber => 'নির্মাণ করুন';
 
   @override
+  String get updateAvailableTitle => 'আপডেট উপলব্ধ';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea এর একটি নতুন সংস্করণ উপলব্ধ।';
+
+  @override
+  String get updateRequiredTitle => 'আপডেট প্রয়োজন';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ব্যবহার চালিয়ে যেতে আপনাকে অবশ্যই আপডেট করতে হবে।';
+
+  @override
+  String get updateNow => 'এখনই আপডেট করুন';
+
+  @override
+  String get updateLater => 'পরে';
+
+  @override
+  String get updateChangelog => 'নতুন কি';
+
+  @override
+  String get openDownloadPage => 'ডাউনলোড পৃষ্ঠা খুলুন';
+
+  @override
   String get legal => 'আইনি';
 
   @override

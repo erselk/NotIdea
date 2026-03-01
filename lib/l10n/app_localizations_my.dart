@@ -575,6 +575,31 @@ class AppLocalizationsMy extends AppLocalizations {
   String get buildNumber => 'ဆောက်';
 
   @override
+  String get updateAvailableTitle => 'အပ်ဒိတ် ရနိုင်သည်။';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea ဗားရှင်းအသစ်ကို ရနိုင်ပါပြီ။';
+
+  @override
+  String get updateRequiredTitle => 'အပ်ဒိတ်လုပ်ရန် လိုအပ်သည်။';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ကိုဆက်လက်အသုံးပြုရန် သင်သည် အပ်ဒိတ်လုပ်ရပါမည်။';
+
+  @override
+  String get updateNow => 'ယခု အပ်ဒိတ်လုပ်ပါ။';
+
+  @override
+  String get updateLater => 'နောက်တော့';
+
+  @override
+  String get updateChangelog => 'ဘာထူးသလဲ';
+
+  @override
+  String get openDownloadPage => 'ဒေါင်းလုဒ်စာမျက်နှာကိုဖွင့်ပါ။';
+
+  @override
   String get legal => 'ဥပဒေရေးရာ';
 
   @override

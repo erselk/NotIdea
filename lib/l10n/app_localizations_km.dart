@@ -567,6 +567,31 @@ class AppLocalizationsKm extends AppLocalizations {
   String get buildNumber => 'សាងសង់';
 
   @override
+  String get updateAvailableTitle => 'ការអាប់ដេតមាន';
+
+  @override
+  String get updateAvailableMessage => 'កំណែថ្មីរបស់ NotIdea មានហើយ។';
+
+  @override
+  String get updateRequiredTitle => 'តម្រូវឱ្យធ្វើបច្ចុប្បន្នភាព';
+
+  @override
+  String get updateRequiredMessage =>
+      'អ្នកត្រូវតែអាប់ដេត ដើម្បីបន្តប្រើប្រាស់ NotIdea។';
+
+  @override
+  String get updateNow => 'ធ្វើបច្ចុប្បន្នភាពឥឡូវនេះ';
+
+  @override
+  String get updateLater => 'ពេលក្រោយ';
+
+  @override
+  String get updateChangelog => 'តើមានអ្វីថ្មី។';
+
+  @override
+  String get openDownloadPage => 'បើកទំព័រទាញយក';
+
+  @override
   String get legal => 'ផ្លូវច្បាប់';
 
   @override

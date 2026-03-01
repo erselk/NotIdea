@@ -562,6 +562,30 @@ class AppLocalizationsLo extends AppLocalizations {
   String get buildNumber => 'ກໍ່ສ້າງ';
 
   @override
+  String get updateAvailableTitle => 'ອັບເດດມີໃຫ້';
+
+  @override
+  String get updateAvailableMessage => 'ເວີຊັນໃໝ່ຂອງ NotIdea ມີໃຫ້.';
+
+  @override
+  String get updateRequiredTitle => 'ຕ້ອງການອັບເດດ';
+
+  @override
+  String get updateRequiredMessage => 'ທ່ານຕ້ອງອັບເດດເພື່ອສືບຕໍ່ນຳໃຊ້ NotIdea.';
+
+  @override
+  String get updateNow => 'ອັບເດດດຽວນີ້';
+
+  @override
+  String get updateLater => 'ຕໍ່ມາ';
+
+  @override
+  String get updateChangelog => 'ມີຫຍັງໃໝ່';
+
+  @override
+  String get openDownloadPage => 'ເປີດໜ້າດາວໂຫຼດ';
+
+  @override
   String get legal => 'ທາງດ້ານກົດໝາຍ';
 
   @override

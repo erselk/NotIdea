@@ -568,6 +568,31 @@ class AppLocalizationsFa extends AppLocalizations {
   String get buildNumber => 'ساخت';
 
   @override
+  String get updateAvailableTitle => 'به روز رسانی موجود است';
+
+  @override
+  String get updateAvailableMessage => 'نسخه جدید NotIdea در دسترس است.';
+
+  @override
+  String get updateRequiredTitle => 'به روز رسانی مورد نیاز است';
+
+  @override
+  String get updateRequiredMessage =>
+      'برای ادامه استفاده از NotIdea باید به‌روزرسانی کنید.';
+
+  @override
+  String get updateNow => 'اکنون به روز رسانی کنید';
+
+  @override
+  String get updateLater => 'بعدا';
+
+  @override
+  String get updateChangelog => 'چه خبر است';
+
+  @override
+  String get openDownloadPage => 'صفحه دانلود را باز کنید';
+
+  @override
   String get legal => 'قانونی';
 
   @override

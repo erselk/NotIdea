@@ -569,6 +569,31 @@ class AppLocalizationsBg extends AppLocalizations {
   String get buildNumber => 'Изграждане';
 
   @override
+  String get updateAvailableTitle => 'Налична актуализация';
+
+  @override
+  String get updateAvailableMessage => 'Налична е нова версия на NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Изисква се актуализация';
+
+  @override
+  String get updateRequiredMessage =>
+      'Трябва да актуализирате, за да продължите да използвате NotIdea.';
+
+  @override
+  String get updateNow => 'Актуализирайте сега';
+
+  @override
+  String get updateLater => 'по-късно';
+
+  @override
+  String get updateChangelog => 'Какво ново';
+
+  @override
+  String get openDownloadPage => 'Отворете страницата за изтегляне';
+
+  @override
   String get legal => 'Законни';
 
   @override

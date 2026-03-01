@@ -392,5 +392,13 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Opdatering beskikbaar",
+  "updateAvailableMessage": "'n Nuwe weergawe van NotIdea is beskikbaar.",
+  "updateRequiredTitle": "Opdatering vereis",
+  "updateRequiredMessage": "Jy moet opdateer om NotIdea te gebruik.",
+  "updateNow": "Dateer nou op",
+  "updateLater": "Later",
+  "updateChangelog": "Wat is nuut",
+  "openDownloadPage": "Maak die aflaaibladsy oop"
 }

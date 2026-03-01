@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "ອັບເດດມີໃຫ້",
+  "updateAvailableMessage": "ເວີຊັນໃໝ່ຂອງ NotIdea ມີໃຫ້.",
+  "updateRequiredTitle": "ຕ້ອງການອັບເດດ",
+  "updateRequiredMessage": "ທ່ານຕ້ອງອັບເດດເພື່ອສືບຕໍ່ນຳໃຊ້ NotIdea.",
+  "updateNow": "ອັບເດດດຽວນີ້",
+  "updateLater": "ຕໍ່ມາ",
+  "updateChangelog": "ມີຫຍັງໃໝ່",
+  "openDownloadPage": "ເປີດໜ້າດາວໂຫຼດ"
 }

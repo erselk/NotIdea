@@ -569,6 +569,31 @@ class AppLocalizationsHy extends AppLocalizations {
   String get buildNumber => 'Կառուցել';
 
   @override
+  String get updateAvailableTitle => 'Հասանելի է թարմացում';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea-ի նոր տարբերակը հասանելի է:';
+
+  @override
+  String get updateRequiredTitle => 'Պահանջվում է թարմացում';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea-ն օգտագործելու համար դուք պետք է թարմացնեք:';
+
+  @override
+  String get updateNow => 'Թարմացրեք հիմա';
+
+  @override
+  String get updateLater => 'Ավելի ուշ';
+
+  @override
+  String get updateChangelog => 'Ինչ նորություն կա';
+
+  @override
+  String get openDownloadPage => 'Բացեք ներբեռնման էջը';
+
+  @override
   String get legal => 'Իրավական';
 
   @override

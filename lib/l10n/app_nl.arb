@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Update beschikbaar",
+  "updateAvailableMessage": "Er is een nieuwe versie van NotIdea beschikbaar.",
+  "updateRequiredTitle": "Update vereist",
+  "updateRequiredMessage": "U moet updaten om NotIdea te kunnen blijven gebruiken.",
+  "updateNow": "Nu bijwerken",
+  "updateLater": "Later",
+  "updateChangelog": "Wat is er nieuw",
+  "openDownloadPage": "Downloadpagina openen"
 }

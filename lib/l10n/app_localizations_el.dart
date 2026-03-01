@@ -576,6 +576,32 @@ class AppLocalizationsEl extends AppLocalizations {
   String get buildNumber => 'Οικοδομώ';
 
   @override
+  String get updateAvailableTitle => 'Διαθέσιμη ενημέρωση';
+
+  @override
+  String get updateAvailableMessage =>
+      'Μια νέα έκδοση του NotIdea είναι διαθέσιμη.';
+
+  @override
+  String get updateRequiredTitle => 'Απαιτείται ενημέρωση';
+
+  @override
+  String get updateRequiredMessage =>
+      'Πρέπει να ενημερώσετε για να συνεχίσετε να χρησιμοποιείτε το NotIdea.';
+
+  @override
+  String get updateNow => 'Ενημέρωση τώρα';
+
+  @override
+  String get updateLater => 'Αργότερα';
+
+  @override
+  String get updateChangelog => 'Τι νέο υπάρχει';
+
+  @override
+  String get openDownloadPage => 'Ανοίξτε τη σελίδα λήψης';
+
+  @override
   String get legal => 'Νομικός';
 
   @override

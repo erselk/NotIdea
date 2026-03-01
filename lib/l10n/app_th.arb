@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "อัปเดตพร้อมใช้งาน",
+  "updateAvailableMessage": "NotIdea เวอร์ชันใหม่พร้อมใช้งานแล้ว",
+  "updateRequiredTitle": "จำเป็นต้องอัปเดต",
+  "updateRequiredMessage": "คุณต้องอัปเดตเพื่อใช้ NotIdea ต่อไป",
+  "updateNow": "อัปเดตทันที",
+  "updateLater": "ภายหลัง",
+  "updateChangelog": "มีอะไรใหม่",
+  "openDownloadPage": "เปิดหน้าดาวน์โหลด"
 }

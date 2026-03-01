@@ -568,6 +568,31 @@ class AppLocalizationsSi extends AppLocalizations {
   String get buildNumber => 'ගොඩනඟන්න';
 
   @override
+  String get updateAvailableTitle => 'යාවත්කාලීන ලබා ගත හැක';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea හි නව අනුවාදයක් තිබේ.';
+
+  @override
+  String get updateRequiredTitle => 'යාවත්කාලීන කිරීම අවශ්‍යයි';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea දිගටම භාවිතා කිරීමට ඔබ යාවත්කාලීන කළ යුතුය.';
+
+  @override
+  String get updateNow => 'දැන් යාවත්කාලීන කරන්න';
+
+  @override
+  String get updateLater => 'පසුව';
+
+  @override
+  String get updateChangelog => 'මොනවද අළුත්';
+
+  @override
+  String get openDownloadPage => 'බාගැනීම් පිටුව විවෘත කරන්න';
+
+  @override
   String get legal => 'නීතිමය';
 
   @override

@@ -570,6 +570,32 @@ class AppLocalizationsZu extends AppLocalizations {
   String get buildNumber => 'Yakha';
 
   @override
+  String get updateAvailableTitle => 'Isibuyekezo Siyatholakala';
+
+  @override
+  String get updateAvailableMessage =>
+      'Inguqulo entsha ye-NotIdea iyatholakala.';
+
+  @override
+  String get updateRequiredTitle => 'Kudingeka Ukubuyekeza';
+
+  @override
+  String get updateRequiredMessage =>
+      'Kufanele ubuyekeze ukuze uqhubeke usebenzisa i-NotIdea.';
+
+  @override
+  String get updateNow => 'Buyekeza Manje';
+
+  @override
+  String get updateLater => 'Kamuva';
+
+  @override
+  String get updateChangelog => 'Yini entsha';
+
+  @override
+  String get openDownloadPage => 'Vula ikhasi lokulanda';
+
+  @override
   String get legal => 'Okusemthethweni';
 
   @override

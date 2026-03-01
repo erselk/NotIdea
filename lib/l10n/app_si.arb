@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "යාවත්කාලීන ලබා ගත හැක",
+  "updateAvailableMessage": "NotIdea හි නව අනුවාදයක් තිබේ.",
+  "updateRequiredTitle": "යාවත්කාලීන කිරීම අවශ්‍යයි",
+  "updateRequiredMessage": "NotIdea දිගටම භාවිතා කිරීමට ඔබ යාවත්කාලීන කළ යුතුය.",
+  "updateNow": "දැන් යාවත්කාලීන කරන්න",
+  "updateLater": "පසුව",
+  "updateChangelog": "මොනවද අළුත්",
+  "openDownloadPage": "බාගැනීම් පිටුව විවෘත කරන්න"
 }

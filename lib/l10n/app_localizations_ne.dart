@@ -567,6 +567,31 @@ class AppLocalizationsNe extends AppLocalizations {
   String get buildNumber => 'निर्माण गर्नुहोस्';
 
   @override
+  String get updateAvailableTitle => 'अपडेट उपलब्ध छ';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea को नयाँ संस्करण उपलब्ध छ।';
+
+  @override
+  String get updateRequiredTitle => 'अद्यावधिक आवश्यक छ';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea प्रयोग जारी राख्न तपाईंले अद्यावधिक गर्नुपर्छ।';
+
+  @override
+  String get updateNow => 'अहिले अपडेट गर्नुहोस्';
+
+  @override
+  String get updateLater => 'पछि';
+
+  @override
+  String get updateChangelog => 'नयाँ के छ';
+
+  @override
+  String get openDownloadPage => 'डाउनलोड पृष्ठ खोल्नुहोस्';
+
+  @override
   String get legal => 'कानूनी';
 
   @override

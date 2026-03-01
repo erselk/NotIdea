@@ -555,6 +555,30 @@ class AppLocalizationsKo extends AppLocalizations {
   String get buildNumber => '짓다';
 
   @override
+  String get updateAvailableTitle => '업데이트 가능';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea의 새 버전을 사용할 수 있습니다.';
+
+  @override
+  String get updateRequiredTitle => '업데이트 필요';
+
+  @override
+  String get updateRequiredMessage => 'NotIdea를 계속 사용하려면 업데이트해야 합니다.';
+
+  @override
+  String get updateNow => '지금 업데이트';
+
+  @override
+  String get updateLater => '나중에';
+
+  @override
+  String get updateChangelog => '새로운 소식';
+
+  @override
+  String get openDownloadPage => '다운로드 페이지 열기';
+
+  @override
   String get legal => '합법적인';
 
   @override

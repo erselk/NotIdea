@@ -567,6 +567,31 @@ class AppLocalizationsSk extends AppLocalizations {
   String get buildNumber => 'Stavať';
 
   @override
+  String get updateAvailableTitle => 'Aktualizácia k dispozícii';
+
+  @override
+  String get updateAvailableMessage => 'K dispozícii je nová verzia NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Vyžaduje sa aktualizácia';
+
+  @override
+  String get updateRequiredMessage =>
+      'Ak chcete naďalej používať NotIdea, musíte vykonať aktualizáciu.';
+
+  @override
+  String get updateNow => 'Aktualizovať teraz';
+
+  @override
+  String get updateLater => 'Neskôr';
+
+  @override
+  String get updateChangelog => 'Čo je nové';
+
+  @override
+  String get openDownloadPage => 'Otvorte stránku sťahovania';
+
+  @override
   String get legal => 'Právne';
 
   @override

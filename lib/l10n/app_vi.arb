@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Cập nhật có sẵn",
+  "updateAvailableMessage": "Đã có phiên bản mới của NotIdea.",
+  "updateRequiredTitle": "Yêu cầu cập nhật",
+  "updateRequiredMessage": "Bạn phải cập nhật để tiếp tục sử dụng NotIdea.",
+  "updateNow": "Cập nhật ngay",
+  "updateLater": "Sau đó",
+  "updateChangelog": "Có gì mới",
+  "openDownloadPage": "Mở trang tải xuống"
 }

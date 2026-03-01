@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Жаңыртуу жеткиликтүү",
+  "updateAvailableMessage": "NotIdea жаңы версиясы жеткиликтүү.",
+  "updateRequiredTitle": "Жаңыртуу керек",
+  "updateRequiredMessage": "NotIdea колдонууну улантуу үчүн жаңыртышыңыз керек.",
+  "updateNow": "Азыр жаңыртуу",
+  "updateLater": "Кийинчерээк",
+  "updateChangelog": "Эмне жаңылык",
+  "openDownloadPage": "Жүктөп алуу барагын ачыңыз"
 }

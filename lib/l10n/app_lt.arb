@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Galimas atnaujinimas",
+  "updateAvailableMessage": "Yra nauja NotIdea versija.",
+  "updateRequiredTitle": "Būtinas atnaujinimas",
+  "updateRequiredMessage": "Jei norite toliau naudoti „NotIdea“, turite atnaujinti.",
+  "updateNow": "Atnaujinkite dabar",
+  "updateLater": "Vėliau",
+  "updateChangelog": "Kas naujo",
+  "openDownloadPage": "Atidaryti atsisiuntimo puslapį"
 }

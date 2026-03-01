@@ -577,6 +577,32 @@ class AppLocalizationsGsw extends AppLocalizations {
   String get buildNumber => 'Bauen';
 
   @override
+  String get updateAvailableTitle => 'Update verfügbar';
+
+  @override
+  String get updateAvailableMessage =>
+      'Eine neue Version von NotIdea ist verfügbar.';
+
+  @override
+  String get updateRequiredTitle => 'Aktualisierung erforderlich';
+
+  @override
+  String get updateRequiredMessage =>
+      'Sie müssen ein Update durchführen, um NotIdea weiterhin verwenden zu können.';
+
+  @override
+  String get updateNow => 'Jetzt aktualisieren';
+
+  @override
+  String get updateLater => 'Später';
+
+  @override
+  String get updateChangelog => 'Was ist neu';
+
+  @override
+  String get openDownloadPage => 'Download-Seite öffnen';
+
+  @override
   String get legal => 'Legal';
 
   @override

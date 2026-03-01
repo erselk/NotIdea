@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Atualização disponível",
+  "updateAvailableMessage": "Uma nova versão do NotIdea está disponível.",
+  "updateRequiredTitle": "Atualização necessária",
+  "updateRequiredMessage": "Você deve atualizar para continuar usando o NotIdea.",
+  "updateNow": "Atualizar agora",
+  "updateLater": "Mais tarde",
+  "updateChangelog": "O que há de novo",
+  "openDownloadPage": "Abrir página de download"
 }

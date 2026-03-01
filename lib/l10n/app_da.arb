@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Opdatering tilgængelig",
+  "updateAvailableMessage": "En ny version af NotIdea er tilgængelig.",
+  "updateRequiredTitle": "Opdatering påkrævet",
+  "updateRequiredMessage": "Du skal opdatere for at fortsætte med at bruge NotIdea.",
+  "updateNow": "Opdater nu",
+  "updateLater": "Senere",
+  "updateChangelog": "Hvad er nyt",
+  "openDownloadPage": "Åbn downloadsiden"
 }

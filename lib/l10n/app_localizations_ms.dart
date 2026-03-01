@@ -571,6 +571,31 @@ class AppLocalizationsMs extends AppLocalizations {
   String get buildNumber => 'bina';
 
   @override
+  String get updateAvailableTitle => 'Kemas Kini Tersedia';
+
+  @override
+  String get updateAvailableMessage => 'Versi baharu NotIdea tersedia.';
+
+  @override
+  String get updateRequiredTitle => 'Kemas Kini Diperlukan';
+
+  @override
+  String get updateRequiredMessage =>
+      'Anda mesti mengemas kini untuk terus menggunakan NotIdea.';
+
+  @override
+  String get updateNow => 'Kemas kini Sekarang';
+
+  @override
+  String get updateLater => 'Nanti';
+
+  @override
+  String get updateChangelog => 'Apa yang baru';
+
+  @override
+  String get openDownloadPage => 'Buka halaman muat turun';
+
+  @override
   String get legal => 'sah';
 
   @override

@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "ការអាប់ដេតមាន",
+  "updateAvailableMessage": "កំណែថ្មីរបស់ NotIdea មានហើយ។",
+  "updateRequiredTitle": "តម្រូវឱ្យធ្វើបច្ចុប្បន្នភាព",
+  "updateRequiredMessage": "អ្នកត្រូវតែអាប់ដេត ដើម្បីបន្តប្រើប្រាស់ NotIdea។",
+  "updateNow": "ធ្វើបច្ចុប្បន្នភាពឥឡូវនេះ",
+  "updateLater": "ពេលក្រោយ",
+  "updateChangelog": "តើមានអ្វីថ្មី។",
+  "openDownloadPage": "បើកទំព័រទាញយក"
 }

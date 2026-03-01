@@ -554,6 +554,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get buildNumber => '建造';
 
   @override
+  String get updateAvailableTitle => '有可用更新';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea 的新版本已可用。';
+
+  @override
+  String get updateRequiredTitle => '需要更新';
+
+  @override
+  String get updateRequiredMessage => '您必须更新才能继续使用 NotIdea。';
+
+  @override
+  String get updateNow => '立即更新';
+
+  @override
+  String get updateLater => '稍后再说';
+
+  @override
+  String get updateChangelog => '更新内容';
+
+  @override
+  String get openDownloadPage => '打开下载页面';
+
+  @override
   String get legal => '合法的';
 
   @override
@@ -1603,6 +1627,30 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get buildNumber => '建造';
+
+  @override
+  String get updateAvailableTitle => '可用更新';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea 的新版本現已推出。';
+
+  @override
+  String get updateRequiredTitle => '需要更新';
+
+  @override
+  String get updateRequiredMessage => '您必須更新才能繼續使用 NotIdea。';
+
+  @override
+  String get updateNow => '立即更新';
+
+  @override
+  String get updateLater => '之後';
+
+  @override
+  String get updateChangelog => '什麼是新的';
+
+  @override
+  String get openDownloadPage => '開啟下載頁面';
 
   @override
   String get legal => '合法的';

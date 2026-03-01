@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Yeniləmə Mövcuddur",
+  "updateAvailableMessage": "NotIdea-nın yeni versiyası mövcuddur.",
+  "updateRequiredTitle": "Yeniləmə Tələb olunur",
+  "updateRequiredMessage": "NotIdea-dan istifadə etməyə davam etmək üçün yeniləməlisiniz.",
+  "updateNow": "İndi Yeniləyin",
+  "updateLater": "Daha sonra",
+  "updateChangelog": "Nə yenilik var",
+  "openDownloadPage": "Yükləmə səhifəsini açın"
 }

@@ -568,6 +568,31 @@ class AppLocalizationsUk extends AppLocalizations {
   String get buildNumber => 'Будувати';
 
   @override
+  String get updateAvailableTitle => 'Оновлення доступне';
+
+  @override
+  String get updateAvailableMessage => 'Доступна нова версія NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Потрібне оновлення';
+
+  @override
+  String get updateRequiredMessage =>
+      'Ви повинні оновити, щоб продовжити використання NotIdea.';
+
+  @override
+  String get updateNow => 'Оновити зараз';
+
+  @override
+  String get updateLater => 'Пізніше';
+
+  @override
+  String get updateChangelog => 'Що нового';
+
+  @override
+  String get openDownloadPage => 'Відкрити сторінку завантаження';
+
+  @override
   String get legal => 'юридичний';
 
   @override

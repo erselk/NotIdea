@@ -564,6 +564,31 @@ class AppLocalizationsTr extends AppLocalizations {
   String get buildNumber => 'Derleme';
 
   @override
+  String get updateAvailableTitle => 'Güncelleme Mevcut';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea\'nın yeni bir sürümü mevcut.';
+
+  @override
+  String get updateRequiredTitle => 'Güncelleme Zorunlu';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea\'yı kullanmaya devam etmek için güncelleme yapmalısınız.';
+
+  @override
+  String get updateNow => 'Şimdi Güncelle';
+
+  @override
+  String get updateLater => 'Daha Sonra';
+
+  @override
+  String get updateChangelog => 'Yenilikler';
+
+  @override
+  String get openDownloadPage => 'İndirme sayfasını aç';
+
+  @override
   String get legal => 'Yasal';
 
   @override

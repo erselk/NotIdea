@@ -571,6 +571,32 @@ class AppLocalizationsGl extends AppLocalizations {
   String get buildNumber => 'Construír';
 
   @override
+  String get updateAvailableTitle => 'Actualización dispoñible';
+
+  @override
+  String get updateAvailableMessage =>
+      'Hai unha nova versión de NotIdea dispoñible.';
+
+  @override
+  String get updateRequiredTitle => 'Actualización necesaria';
+
+  @override
+  String get updateRequiredMessage =>
+      'Debes actualizar para seguir usando NotIdea.';
+
+  @override
+  String get updateNow => 'Actualiza agora';
+
+  @override
+  String get updateLater => 'Máis tarde';
+
+  @override
+  String get updateChangelog => 'O que hai de novo';
+
+  @override
+  String get openDownloadPage => 'Abre a páxina de descarga';
+
+  @override
   String get legal => 'Legal';
 
   @override

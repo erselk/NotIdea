@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "အပ်ဒိတ် ရနိုင်သည်။",
+  "updateAvailableMessage": "NotIdea ဗားရှင်းအသစ်ကို ရနိုင်ပါပြီ။",
+  "updateRequiredTitle": "အပ်ဒိတ်လုပ်ရန် လိုအပ်သည်။",
+  "updateRequiredMessage": "NotIdea ကိုဆက်လက်အသုံးပြုရန် သင်သည် အပ်ဒိတ်လုပ်ရပါမည်။",
+  "updateNow": "ယခု အပ်ဒိတ်လုပ်ပါ။",
+  "updateLater": "နောက်တော့",
+  "updateChangelog": "ဘာထူးသလဲ",
+  "openDownloadPage": "ဒေါင်းလုဒ်စာမျက်နှာကိုဖွင့်ပါ။"
 }

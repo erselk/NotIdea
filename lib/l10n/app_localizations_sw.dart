@@ -570,6 +570,31 @@ class AppLocalizationsSw extends AppLocalizations {
   String get buildNumber => 'Jenga';
 
   @override
+  String get updateAvailableTitle => 'Sasisho Linapatikana';
+
+  @override
+  String get updateAvailableMessage => 'Toleo jipya la NotIdea linapatikana.';
+
+  @override
+  String get updateRequiredTitle => 'Usasishaji Unahitajika';
+
+  @override
+  String get updateRequiredMessage =>
+      'Lazima usasishe ili kuendelea kutumia NotIdea.';
+
+  @override
+  String get updateNow => 'Sasisha Sasa';
+
+  @override
+  String get updateLater => 'Baadaye';
+
+  @override
+  String get updateChangelog => 'Nini kipya';
+
+  @override
+  String get openDownloadPage => 'Fungua ukurasa wa kupakua';
+
+  @override
   String get legal => 'Kisheria';
 
   @override

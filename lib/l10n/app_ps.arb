@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "تازه معلومات شتون لري",
+  "updateAvailableMessage": "د NotIdea نوې نسخه شتون لري.",
+  "updateRequiredTitle": "تازه کول اړین دي",
+  "updateRequiredMessage": "تاسو باید د NotIdea کارولو ته دوام ورکولو لپاره تازه کړئ.",
+  "updateNow": "اوس تازه کړئ",
+  "updateLater": "وروسته",
+  "updateChangelog": "څه نوي دي",
+  "openDownloadPage": "د ډاونلوډ پاڼه پرانیزئ"
 }

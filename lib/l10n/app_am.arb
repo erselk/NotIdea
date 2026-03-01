@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "ማዘመን አለ።",
+  "updateAvailableMessage": "አዲስ የNotIdea ስሪት አለ።",
+  "updateRequiredTitle": "ማዘመን ያስፈልጋል",
+  "updateRequiredMessage": "NotIdeaን መጠቀም ለመቀጠል ማዘመን አለብህ።",
+  "updateNow": "አሁን አዘምን",
+  "updateLater": "በኋላ",
+  "updateChangelog": "ምን አዲስ ነገር አለ",
+  "openDownloadPage": "የማውረድ ገጽ ክፈት"
 }

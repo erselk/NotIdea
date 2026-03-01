@@ -555,6 +555,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get buildNumber => '建てる';
 
   @override
+  String get updateAvailableTitle => '利用可能なアップデート';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea の新しいバージョンが利用可能です。';
+
+  @override
+  String get updateRequiredTitle => 'アップデートが必要です';
+
+  @override
+  String get updateRequiredMessage => 'NotIdea を引き続き使用するには、更新する必要があります。';
+
+  @override
+  String get updateNow => '今すぐアップデート';
+
+  @override
+  String get updateLater => '後で';
+
+  @override
+  String get updateChangelog => '新着情報';
+
+  @override
+  String get openDownloadPage => 'ダウンロードページを開く';
+
+  @override
   String get legal => '法律上の';
 
   @override

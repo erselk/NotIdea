@@ -565,6 +565,31 @@ class AppLocalizationsCs extends AppLocalizations {
   String get buildNumber => 'Vytvořit';
 
   @override
+  String get updateAvailableTitle => 'Aktualizace k dispozici';
+
+  @override
+  String get updateAvailableMessage => 'K dispozici je nová verze NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Je vyžadována aktualizace';
+
+  @override
+  String get updateRequiredMessage =>
+      'Chcete-li nadále používat NotIdea, musíte provést aktualizaci.';
+
+  @override
+  String get updateNow => 'Aktualizovat nyní';
+
+  @override
+  String get updateLater => 'Později';
+
+  @override
+  String get updateChangelog => 'Co je nového';
+
+  @override
+  String get openDownloadPage => 'Otevřete stránku stahování';
+
+  @override
   String get legal => 'Právní';
 
   @override

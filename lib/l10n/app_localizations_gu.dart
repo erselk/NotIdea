@@ -566,6 +566,31 @@ class AppLocalizationsGu extends AppLocalizations {
   String get buildNumber => 'બિલ્ડ';
 
   @override
+  String get updateAvailableTitle => 'અપડેટ ઉપલબ્ધ છે';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea નું નવું સંસ્કરણ ઉપલબ્ધ છે.';
+
+  @override
+  String get updateRequiredTitle => 'અપડેટ જરૂરી';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea નો ઉપયોગ ચાલુ રાખવા માટે તમારે અપડેટ કરવું આવશ્યક છે.';
+
+  @override
+  String get updateNow => 'હમણાં અપડેટ કરો';
+
+  @override
+  String get updateLater => 'બાદમાં';
+
+  @override
+  String get updateChangelog => 'નવું શું છે';
+
+  @override
+  String get openDownloadPage => 'ડાઉનલોડ પૃષ્ઠ ખોલો';
+
+  @override
   String get legal => 'કાનૂની';
 
   @override

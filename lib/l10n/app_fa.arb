@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "به روز رسانی موجود است",
+  "updateAvailableMessage": "نسخه جدید NotIdea در دسترس است.",
+  "updateRequiredTitle": "به روز رسانی مورد نیاز است",
+  "updateRequiredMessage": "برای ادامه استفاده از NotIdea باید به‌روزرسانی کنید.",
+  "updateNow": "اکنون به روز رسانی کنید",
+  "updateLater": "بعدا",
+  "updateChangelog": "چه خبر است",
+  "openDownloadPage": "صفحه دانلود را باز کنید"
 }

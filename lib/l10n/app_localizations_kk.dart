@@ -568,6 +568,31 @@ class AppLocalizationsKk extends AppLocalizations {
   String get buildNumber => 'Құру';
 
   @override
+  String get updateAvailableTitle => 'Жаңарту қолжетімді';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea жаңа нұсқасы қолжетімді.';
+
+  @override
+  String get updateRequiredTitle => 'Жаңарту қажет';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea пайдалануды жалғастыру үшін жаңарту қажет.';
+
+  @override
+  String get updateNow => 'Қазір жаңарту';
+
+  @override
+  String get updateLater => 'Кейінірек';
+
+  @override
+  String get updateChangelog => 'Не жаңалық';
+
+  @override
+  String get openDownloadPage => 'Жүктеп алу бетін ашыңыз';
+
+  @override
   String get legal => 'Заңды';
 
   @override

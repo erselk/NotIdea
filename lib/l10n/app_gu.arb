@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "અપડેટ ઉપલબ્ધ છે",
+  "updateAvailableMessage": "NotIdea નું નવું સંસ્કરણ ઉપલબ્ધ છે.",
+  "updateRequiredTitle": "અપડેટ જરૂરી",
+  "updateRequiredMessage": "NotIdea નો ઉપયોગ ચાલુ રાખવા માટે તમારે અપડેટ કરવું આવશ્યક છે.",
+  "updateNow": "હમણાં અપડેટ કરો",
+  "updateLater": "બાદમાં",
+  "updateChangelog": "નવું શું છે",
+  "openDownloadPage": "ડાઉનલોડ પૃષ્ઠ ખોલો"
 }

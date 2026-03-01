@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Абнаўленне даступна",
+  "updateAvailableMessage": "Даступная новая версія NotIdea.",
+  "updateRequiredTitle": "Патрабуецца абнаўленне",
+  "updateRequiredMessage": "Вы павінны абнавіць, каб працягваць выкарыстоўваць NotIdea.",
+  "updateNow": "Абнавіць зараз",
+  "updateLater": "Пазней",
+  "updateChangelog": "Што новага",
+  "openDownloadPage": "Адкрыць старонку загрузкі"
 }

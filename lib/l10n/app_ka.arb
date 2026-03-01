@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "განახლება ხელმისაწვდომია",
+  "updateAvailableMessage": "ხელმისაწვდომია NotIdea-ს ახალი ვერსია.",
+  "updateRequiredTitle": "საჭიროა განახლება",
+  "updateRequiredMessage": "თქვენ უნდა განაახლოთ NotIdea-ის გამოყენების გასაგრძელებლად.",
+  "updateNow": "განაახლეთ ახლა",
+  "updateLater": "მოგვიანებით",
+  "updateChangelog": "რა არის ახალი",
+  "openDownloadPage": "გახსენით ჩამოტვირთვის გვერდი"
 }

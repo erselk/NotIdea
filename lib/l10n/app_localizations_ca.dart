@@ -573,6 +573,32 @@ class AppLocalizationsCa extends AppLocalizations {
   String get buildNumber => 'Construir';
 
   @override
+  String get updateAvailableTitle => 'Actualització disponible';
+
+  @override
+  String get updateAvailableMessage =>
+      'Hi ha disponible una nova versió de NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Actualització necessària';
+
+  @override
+  String get updateRequiredMessage =>
+      'Heu d\'actualitzar per continuar utilitzant NotIdea.';
+
+  @override
+  String get updateNow => 'Actualitza ara';
+
+  @override
+  String get updateLater => 'Més tard';
+
+  @override
+  String get updateChangelog => 'Què hi ha de nou';
+
+  @override
+  String get openDownloadPage => 'Obriu la pàgina de descàrrega';
+
+  @override
   String get legal => 'Legal';
 
   @override

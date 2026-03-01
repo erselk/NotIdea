@@ -566,6 +566,32 @@ class AppLocalizationsNb extends AppLocalizations {
   String get buildNumber => 'Bygge';
 
   @override
+  String get updateAvailableTitle => 'Oppdatering tilgjengelig';
+
+  @override
+  String get updateAvailableMessage =>
+      'En ny versjon av NotIdea er tilgjengelig.';
+
+  @override
+  String get updateRequiredTitle => 'Oppdatering kreves';
+
+  @override
+  String get updateRequiredMessage =>
+      'Du må oppdatere for å fortsette å bruke NotIdea.';
+
+  @override
+  String get updateNow => 'Oppdater nå';
+
+  @override
+  String get updateLater => 'Seinere';
+
+  @override
+  String get updateChangelog => 'Hva er nytt';
+
+  @override
+  String get openDownloadPage => 'Åpne nedlastingssiden';
+
+  @override
   String get legal => 'Lovlig';
 
   @override

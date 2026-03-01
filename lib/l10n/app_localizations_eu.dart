@@ -570,6 +570,32 @@ class AppLocalizationsEu extends AppLocalizations {
   String get buildNumber => 'Eraiki';
 
   @override
+  String get updateAvailableTitle => 'Eguneratzea eskuragarri';
+
+  @override
+  String get updateAvailableMessage =>
+      'NotIdea-ren bertsio berri bat dago eskuragarri.';
+
+  @override
+  String get updateRequiredTitle => 'Eguneratu behar da';
+
+  @override
+  String get updateRequiredMessage =>
+      'Eguneratu behar duzu NotIdea erabiltzen jarraitzeko.';
+
+  @override
+  String get updateNow => 'Eguneratu orain';
+
+  @override
+  String get updateLater => 'Geroago';
+
+  @override
+  String get updateChangelog => 'Zer berri';
+
+  @override
+  String get openDownloadPage => 'Ireki deskarga orria';
+
+  @override
   String get legal => 'Legezkoa';
 
   @override

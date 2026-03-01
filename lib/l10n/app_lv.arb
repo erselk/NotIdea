@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Pieejams atjauninājums",
+  "updateAvailableMessage": "Ir pieejama jauna NotIdea versija.",
+  "updateRequiredTitle": "Nepieciešams atjauninājums",
+  "updateRequiredMessage": "Lai turpinātu lietot NotIdea, jums ir jāatjaunina.",
+  "updateNow": "Atjaunināt tūlīt",
+  "updateLater": "Vēlāk",
+  "updateChangelog": "Kas jauns",
+  "openDownloadPage": "Atveriet lejupielādes lapu"
 }

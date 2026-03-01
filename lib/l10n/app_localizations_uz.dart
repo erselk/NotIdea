@@ -573,6 +573,31 @@ class AppLocalizationsUz extends AppLocalizations {
   String get buildNumber => 'Qurilish';
 
   @override
+  String get updateAvailableTitle => 'Yangilanish mavjud';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea-ning yangi versiyasi mavjud.';
+
+  @override
+  String get updateRequiredTitle => 'Yangilash kerak';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea-dan foydalanishni davom ettirish uchun yangilashingiz kerak.';
+
+  @override
+  String get updateNow => 'Hozir yangilash';
+
+  @override
+  String get updateLater => 'Keyinchalik';
+
+  @override
+  String get updateChangelog => 'Nima yangiliklar';
+
+  @override
+  String get openDownloadPage => 'Yuklab olish sahifasini oching';
+
+  @override
   String get legal => 'Huquqiy';
 
   @override

@@ -558,6 +558,30 @@ class AppLocalizationsAm extends AppLocalizations {
   String get buildNumber => 'ይገንቡ';
 
   @override
+  String get updateAvailableTitle => 'ማዘመን አለ።';
+
+  @override
+  String get updateAvailableMessage => 'አዲስ የNotIdea ስሪት አለ።';
+
+  @override
+  String get updateRequiredTitle => 'ማዘመን ያስፈልጋል';
+
+  @override
+  String get updateRequiredMessage => 'NotIdeaን መጠቀም ለመቀጠል ማዘመን አለብህ።';
+
+  @override
+  String get updateNow => 'አሁን አዘምን';
+
+  @override
+  String get updateLater => 'በኋላ';
+
+  @override
+  String get updateChangelog => 'ምን አዲስ ነገር አለ';
+
+  @override
+  String get openDownloadPage => 'የማውረድ ገጽ ክፈት';
+
+  @override
   String get legal => 'ህጋዊ';
 
   @override

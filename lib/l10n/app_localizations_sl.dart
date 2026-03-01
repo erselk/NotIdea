@@ -568,6 +568,31 @@ class AppLocalizationsSl extends AppLocalizations {
   String get buildNumber => 'Zgradite';
 
   @override
+  String get updateAvailableTitle => 'Posodobitev na voljo';
+
+  @override
+  String get updateAvailableMessage => 'Na voljo je nova različica NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Potrebna posodobitev';
+
+  @override
+  String get updateRequiredMessage =>
+      'Če želite še naprej uporabljati NotIdea, morate posodobiti.';
+
+  @override
+  String get updateNow => 'Posodobi zdaj';
+
+  @override
+  String get updateLater => 'Kasneje';
+
+  @override
+  String get updateChangelog => 'kaj je novega';
+
+  @override
+  String get openDownloadPage => 'Odpri stran za prenos';
+
+  @override
   String get legal => 'Pravno';
 
   @override

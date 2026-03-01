@@ -561,6 +561,30 @@ class AppLocalizationsTh extends AppLocalizations {
   String get buildNumber => 'สร้าง';
 
   @override
+  String get updateAvailableTitle => 'อัปเดตพร้อมใช้งาน';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea เวอร์ชันใหม่พร้อมใช้งานแล้ว';
+
+  @override
+  String get updateRequiredTitle => 'จำเป็นต้องอัปเดต';
+
+  @override
+  String get updateRequiredMessage => 'คุณต้องอัปเดตเพื่อใช้ NotIdea ต่อไป';
+
+  @override
+  String get updateNow => 'อัปเดตทันที';
+
+  @override
+  String get updateLater => 'ภายหลัง';
+
+  @override
+  String get updateChangelog => 'มีอะไรใหม่';
+
+  @override
+  String get openDownloadPage => 'เปิดหน้าดาวน์โหลด';
+
+  @override
   String get legal => 'ถูกกฎหมาย';
 
   @override

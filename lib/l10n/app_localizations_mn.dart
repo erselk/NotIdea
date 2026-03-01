@@ -574,6 +574,32 @@ class AppLocalizationsMn extends AppLocalizations {
   String get buildNumber => 'барих';
 
   @override
+  String get updateAvailableTitle => 'Шинэчлэх боломжтой';
+
+  @override
+  String get updateAvailableMessage =>
+      'NotIdea-ийн шинэ хувилбар гарсан байна.';
+
+  @override
+  String get updateRequiredTitle => 'Шинэчлэлт шаардлагатай';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea-г үргэлжлүүлэн ашиглахын тулд та шинэчлэх ёстой.';
+
+  @override
+  String get updateNow => 'Одоо шинэчил';
+
+  @override
+  String get updateLater => 'Дараа нь';
+
+  @override
+  String get updateChangelog => 'Шинэ юу байна';
+
+  @override
+  String get openDownloadPage => 'Татаж авах хуудсыг нээх';
+
+  @override
   String get legal => 'Хууль эрх зүйн';
 
   @override

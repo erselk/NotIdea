@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "Isibuyekezo Siyatholakala",
+  "updateAvailableMessage": "Inguqulo entsha ye-NotIdea iyatholakala.",
+  "updateRequiredTitle": "Kudingeka Ukubuyekeza",
+  "updateRequiredMessage": "Kufanele ubuyekeze ukuze uqhubeke usebenzisa i-NotIdea.",
+  "updateNow": "Buyekeza Manje",
+  "updateLater": "Kamuva",
+  "updateChangelog": "Yini entsha",
+  "openDownloadPage": "Vula ikhasi lokulanda"
 }

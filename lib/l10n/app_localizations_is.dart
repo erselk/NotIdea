@@ -570,6 +570,31 @@ class AppLocalizationsIs extends AppLocalizations {
   String get buildNumber => 'Byggja';
 
   @override
+  String get updateAvailableTitle => 'Uppfærsla í boði';
+
+  @override
+  String get updateAvailableMessage => 'Ný útgáfa af NotIdea er fáanleg.';
+
+  @override
+  String get updateRequiredTitle => 'Uppfærslu krafist';
+
+  @override
+  String get updateRequiredMessage =>
+      'Þú verður að uppfæra til að halda áfram að nota NotIdea.';
+
+  @override
+  String get updateNow => 'Uppfærðu núna';
+
+  @override
+  String get updateLater => 'Seinna';
+
+  @override
+  String get updateChangelog => 'Hvað er nýtt';
+
+  @override
+  String get openDownloadPage => 'Opna niðurhalssíðu';
+
+  @override
   String get legal => 'Löglegt';
 
   @override

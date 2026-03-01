@@ -569,6 +569,31 @@ class AppLocalizationsLv extends AppLocalizations {
   String get buildNumber => 'Veidot';
 
   @override
+  String get updateAvailableTitle => 'Pieejams atjauninājums';
+
+  @override
+  String get updateAvailableMessage => 'Ir pieejama jauna NotIdea versija.';
+
+  @override
+  String get updateRequiredTitle => 'Nepieciešams atjauninājums';
+
+  @override
+  String get updateRequiredMessage =>
+      'Lai turpinātu lietot NotIdea, jums ir jāatjaunina.';
+
+  @override
+  String get updateNow => 'Atjaunināt tūlīt';
+
+  @override
+  String get updateLater => 'Vēlāk';
+
+  @override
+  String get updateChangelog => 'Kas jauns';
+
+  @override
+  String get openDownloadPage => 'Atveriet lejupielādes lapu';
+
+  @override
   String get legal => 'Juridisks';
 
   @override

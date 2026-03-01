@@ -576,6 +576,31 @@ class AppLocalizationsMl extends AppLocalizations {
   String get buildNumber => 'പണിയുക';
 
   @override
+  String get updateAvailableTitle => 'അപ്ഡേറ്റ് ലഭ്യമാണ്';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea-യുടെ പുതിയ പതിപ്പ് ലഭ്യമാണ്.';
+
+  @override
+  String get updateRequiredTitle => 'അപ്ഡേറ്റ് ആവശ്യമാണ്';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ഉപയോഗിക്കുന്നത് തുടരാൻ നിങ്ങൾ അപ്ഡേറ്റ് ചെയ്യണം.';
+
+  @override
+  String get updateNow => 'ഇപ്പോൾ അപ്ഡേറ്റ് ചെയ്യുക';
+
+  @override
+  String get updateLater => 'പിന്നീട്';
+
+  @override
+  String get updateChangelog => 'പുതിയതെന്താണ്';
+
+  @override
+  String get openDownloadPage => 'ഡൗൺലോഡ് പേജ് തുറക്കുക';
+
+  @override
   String get legal => 'നിയമപരമായ';
 
   @override

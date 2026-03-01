@@ -569,6 +569,32 @@ class AppLocalizationsRo extends AppLocalizations {
   String get buildNumber => 'Construi';
 
   @override
+  String get updateAvailableTitle => 'Actualizare disponibilă';
+
+  @override
+  String get updateAvailableMessage =>
+      'Este disponibilă o nouă versiune de NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Actualizare necesară';
+
+  @override
+  String get updateRequiredMessage =>
+      'Trebuie să actualizați pentru a continua să utilizați NotIdea.';
+
+  @override
+  String get updateNow => 'Actualizați acum';
+
+  @override
+  String get updateLater => 'Mai târziu';
+
+  @override
+  String get updateChangelog => 'Ce este nou';
+
+  @override
+  String get openDownloadPage => 'Deschide pagina de descărcare';
+
+  @override
   String get legal => 'Legal';
 
   @override

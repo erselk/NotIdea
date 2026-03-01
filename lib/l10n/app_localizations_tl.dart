@@ -576,6 +576,32 @@ class AppLocalizationsTl extends AppLocalizations {
   String get buildNumber => 'Bumuo';
 
   @override
+  String get updateAvailableTitle => 'Magagamit ang Update';
+
+  @override
+  String get updateAvailableMessage =>
+      'Available ang bagong bersyon ng NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Kinakailangan ang Update';
+
+  @override
+  String get updateRequiredMessage =>
+      'Dapat kang mag-update upang magpatuloy sa paggamit ng NotIdea.';
+
+  @override
+  String get updateNow => 'Update Ngayon';
+
+  @override
+  String get updateLater => 'Mamaya';
+
+  @override
+  String get updateChangelog => 'Ano ang bago';
+
+  @override
+  String get openDownloadPage => 'Buksan ang pahina ng pag-download';
+
+  @override
   String get legal => 'Legal';
 
   @override

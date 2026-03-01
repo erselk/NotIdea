@@ -573,6 +573,31 @@ class AppLocalizationsHu extends AppLocalizations {
   String get buildNumber => 'Épít';
 
   @override
+  String get updateAvailableTitle => 'Frissítés elérhető';
+
+  @override
+  String get updateAvailableMessage => 'Megjelent a NotIdea új verziója.';
+
+  @override
+  String get updateRequiredTitle => 'Frissítés szükséges';
+
+  @override
+  String get updateRequiredMessage =>
+      'A NotIdea használatának folytatásához frissítenie kell.';
+
+  @override
+  String get updateNow => 'Frissítés most';
+
+  @override
+  String get updateLater => 'Később';
+
+  @override
+  String get updateChangelog => 'Újdonságok';
+
+  @override
+  String get openDownloadPage => 'Nyissa meg a letöltési oldalt';
+
+  @override
   String get legal => 'Jogi';
 
   @override

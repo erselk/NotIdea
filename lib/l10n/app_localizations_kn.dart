@@ -570,6 +570,31 @@ class AppLocalizationsKn extends AppLocalizations {
   String get buildNumber => 'ನಿರ್ಮಿಸಿ';
 
   @override
+  String get updateAvailableTitle => 'ನವೀಕರಣ ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get updateAvailableMessage => 'NotIdea ನ ಹೊಸ ಆವೃತ್ತಿ ಲಭ್ಯವಿದೆ.';
+
+  @override
+  String get updateRequiredTitle => 'ನವೀಕರಣದ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get updateRequiredMessage =>
+      'NotIdea ಬಳಸುವುದನ್ನು ಮುಂದುವರಿಸಲು ನೀವು ನವೀಕರಿಸಬೇಕು.';
+
+  @override
+  String get updateNow => 'ಈಗ ನವೀಕರಿಸಿ';
+
+  @override
+  String get updateLater => 'ನಂತರ';
+
+  @override
+  String get updateChangelog => 'ಹೊಸತೇನಿದೆ';
+
+  @override
+  String get openDownloadPage => 'ಡೌನ್‌ಲೋಡ್ ಪುಟವನ್ನು ತೆರೆಯಿರಿ';
+
+  @override
   String get legal => 'ಕಾನೂನುಬದ್ಧ';
 
   @override

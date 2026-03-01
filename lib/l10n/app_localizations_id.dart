@@ -572,6 +572,31 @@ class AppLocalizationsId extends AppLocalizations {
   String get buildNumber => 'Membangun';
 
   @override
+  String get updateAvailableTitle => 'Pembaruan Tersedia';
+
+  @override
+  String get updateAvailableMessage => 'Versi baru NotIdea telah tersedia.';
+
+  @override
+  String get updateRequiredTitle => 'Pembaruan Diperlukan';
+
+  @override
+  String get updateRequiredMessage =>
+      'Anda harus memperbarui untuk terus menggunakan NotIdea.';
+
+  @override
+  String get updateNow => 'Perbarui Sekarang';
+
+  @override
+  String get updateLater => 'Nanti';
+
+  @override
+  String get updateChangelog => 'Apa yang baru';
+
+  @override
+  String get openDownloadPage => 'Buka halaman unduhan';
+
+  @override
   String get legal => 'Legal';
 
   @override

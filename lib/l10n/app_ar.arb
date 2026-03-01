@@ -392,5 +392,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "updateAvailableTitle": "التحديث متاح",
+  "updateAvailableMessage": "يتوفر إصدار جديد من NotIdea.",
+  "updateRequiredTitle": "التحديث مطلوب",
+  "updateRequiredMessage": "يجب عليك التحديث لمواصلة استخدام NotIdea.",
+  "updateNow": "التحديث الآن",
+  "updateLater": "لاحقاً",
+  "updateChangelog": "ما هو الجديد",
+  "openDownloadPage": "افتح صفحة التنزيل"
 }

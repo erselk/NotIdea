@@ -571,6 +571,32 @@ class AppLocalizationsIt extends AppLocalizations {
   String get buildNumber => 'Costruire';
 
   @override
+  String get updateAvailableTitle => 'Aggiornamento disponibile';
+
+  @override
+  String get updateAvailableMessage =>
+      'È disponibile una nuova versione di NotIdea.';
+
+  @override
+  String get updateRequiredTitle => 'Aggiornamento richiesto';
+
+  @override
+  String get updateRequiredMessage =>
+      'È necessario aggiornare per continuare a utilizzare NotIdea.';
+
+  @override
+  String get updateNow => 'Aggiorna ora';
+
+  @override
+  String get updateLater => 'Dopo';
+
+  @override
+  String get updateChangelog => 'Cosa c\'è di nuovo';
+
+  @override
+  String get openDownloadPage => 'Apri la pagina di download';
+
+  @override
   String get legal => 'Legale';
 
   @override

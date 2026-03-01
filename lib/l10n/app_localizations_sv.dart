@@ -567,6 +567,32 @@ class AppLocalizationsSv extends AppLocalizations {
   String get buildNumber => 'Bygga';
 
   @override
+  String get updateAvailableTitle => 'Uppdatering tillgänglig';
+
+  @override
+  String get updateAvailableMessage =>
+      'En ny version av NotIdea är tillgänglig.';
+
+  @override
+  String get updateRequiredTitle => 'Uppdatering krävs';
+
+  @override
+  String get updateRequiredMessage =>
+      'Du måste uppdatera för att fortsätta använda NotIdea.';
+
+  @override
+  String get updateNow => 'Uppdatera nu';
+
+  @override
+  String get updateLater => 'Senare';
+
+  @override
+  String get updateChangelog => 'Vad är nytt';
+
+  @override
+  String get openDownloadPage => 'Öppna nedladdningssidan';
+
+  @override
   String get legal => 'Rättslig';
 
   @override
