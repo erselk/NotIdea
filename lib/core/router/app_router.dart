@@ -94,6 +94,12 @@ GoRouter appRouter(Ref ref) {
 
       // Use cached result when available to prevent per-navigation DB queries.
       final userId = session.user.id;
+      final appMetadata = session.user.appMetadata ?? <String, dynamic>{};
+      final userMetadata = session.user.userMetadata ?? <String, dynamic>{};
+      final isGoogleProvider =
+          (appMetadata['provider'] as String?)?.toLowerCase() == 'google';
+      final googleFullName =
+          (userMetadata['full_name'] as String?) ?? (userMetadata['name'] as String?) ?? '';
       bool hasProfile;
       if (_profileCacheUserId == userId && _profileCacheHasProfile != null) {
         hasProfile = _profileCacheHasProfile!;
@@ -106,11 +112,21 @@ GoRouter appRouter(Ref ref) {
         // Trigger otomatik 'user_xxxxxxxx' username'iyle profil oluşturur.
         // Profil "tamamlandı" sayılması için display_name de dolu olmalı —
         // profile setup ekranı bitince bu alan kullanıcı tarafından doldurulur.
+        final username = (profile?['username'] as String?) ?? '';
+        final displayName = (profile?['display_name'] as String?) ?? '';
+
+        // Google ile girişte Supabase/trigger tarafı display_name'i
+        // otomatik olarak Google görünen adıyla doldurabiliyor. Bu durumda
+        // kullanıcıya yine de profil setup ekranını gösterip kendi ismini
+        // ve kullanıcı adını seçmesini istiyoruz. Bu yüzden, eğer provider
+        // Google ise ve display_name Google'ın full_name'iyle birebir
+        // aynıysa "profil tamamlanmış" saymıyoruz.
+        final isDisplayNameCompleted = displayName.isNotEmpty &&
+            (!isGoogleProvider || displayName != googleFullName);
+
         hasProfile = profile != null &&
-            profile['username'] != null &&
-            (profile['username'] as String).isNotEmpty &&
-            profile['display_name'] != null &&
-            (profile['display_name'] as String).isNotEmpty;
+            username.isNotEmpty &&
+            isDisplayNameCompleted;
         _profileCacheUserId = userId;
         _profileCacheHasProfile = hasProfile;
       }

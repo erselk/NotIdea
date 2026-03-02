@@ -50,6 +50,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoggingIn = true);
+    try {
+      await ref.read(loginWithGoogleProvider.notifier).execute();
+      if (mounted) {
+        context.go(RoutePaths.home);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoggingIn = false);
+        context.showError(e);
+      }
+    }
+  }
+
   void _showForgotPassword() {
     final l10n = AppLocalizations.of(context)!;
     final emailController = TextEditingController(
@@ -216,6 +231,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Google login button
+                    OutlinedButton.icon(
+                      onPressed: isLoading ? null : _handleGoogleLogin,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: const Icon(Icons.account_circle_outlined),
+                      label: Text(
+                        '${l10n.login} (Google)',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16),
 

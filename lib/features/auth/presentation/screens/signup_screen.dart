@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notidea/shared/widgets/notidea_logo_text.dart';
 import 'package:notidea/l10n/app_localizations.dart';
+import 'package:notidea/core/router/route_names.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notidea/core/utils/extensions.dart';
@@ -61,6 +62,20 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         context.showInfo(l10n.checkEmailToConfirm);
         context.go('/login');
       }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSigningUp = false);
+        context.showError(e);
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignup() async {
+    setState(() => _isSigningUp = true);
+    try {
+      await ref.read(loginWithGoogleProvider.notifier).execute();
+      if (!mounted) return;
+      context.go(RoutePaths.home);
     } catch (e) {
       if (mounted) {
         setState(() => _isSigningUp = false);
@@ -274,6 +289,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    OutlinedButton.icon(
+                      onPressed: isLoading ? null : _handleGoogleSignup,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: const Icon(Icons.account_circle_outlined),
+                      label: Text(
+                        '${l10n.signUp} (Google)',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
 

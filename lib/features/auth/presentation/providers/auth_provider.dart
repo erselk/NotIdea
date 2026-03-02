@@ -46,6 +46,18 @@ class Login extends _$Login {
 }
 
 @Riverpod(keepAlive: true)
+class LoginWithGoogle extends _$LoginWithGoogle {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> execute() async {
+    final repository = ref.read(authRepositoryProvider);
+    await repository.signInWithGoogle();
+    ref.invalidate(currentUserProvider);
+  }
+}
+
+@Riverpod(keepAlive: true)
 class Signup extends _$Signup {
   @override
   FutureOr<void> build() {}

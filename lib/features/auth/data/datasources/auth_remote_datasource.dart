@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:notidea/config/supabase_config.dart';
 import 'package:notidea/core/constants/app_constants.dart';
@@ -11,22 +12,14 @@ class AuthRemoteDatasource {
     return _auth.onAuthStateChange.map((event) {
       final user = event.session?.user;
       if (user == null) return null;
-      return UserModel(
-        id: user.id,
-        email: user.email ?? '',
-        createdAt: DateTime.tryParse(user.createdAt),
-      );
+      return _mapUserWithCachedProfile(user);
     });
   }
 
   UserModel? getCurrentUser() {
     final user = _auth.currentUser;
     if (user == null) return null;
-    return UserModel(
-      id: user.id,
-      email: user.email ?? '',
-      createdAt: DateTime.tryParse(user.createdAt),
-    );
+    return _mapUserWithCachedProfile(user);
   }
 
   Future<UserModel> signIn({
@@ -43,21 +36,7 @@ class AuthRemoteDatasource {
       throw Exception('Login failed: user not found');
     }
 
-    final profile = await _client
-        .from('profiles')
-        .select()
-        .eq('id', user.id)
-        .maybeSingle();
-
-    return UserModel(
-      id: user.id,
-      email: user.email ?? '',
-      displayName: profile?['display_name'] as String?,
-      username: profile?['username'] as String?,
-      avatarUrl: profile?['avatar_url'] as String?,
-      bio: profile?['bio'] as String?,
-      createdAt: DateTime.tryParse(user.createdAt),
-    );
+    return _mapUserWithProfile(user);
   }
 
   Future<UserModel> signUp({
@@ -76,11 +55,7 @@ class AuthRemoteDatasource {
       throw Exception('Signup failed: could not create user');
     }
 
-    return UserModel(
-      id: user.id,
-      email: user.email ?? '',
-      createdAt: DateTime.tryParse(user.createdAt),
-    );
+    return _mapUserWithCachedProfile(user);
   }
 
   Future<void> signOut() async {
@@ -91,6 +66,49 @@ class AuthRemoteDatasource {
     await _auth.resetPasswordForEmail(
       email,
       redirectTo: AppConstants.authRedirectUrl,
+    );
+  }
+
+  Future<UserModel> signInWithGoogle() async {
+    final redirectUrl =
+        kIsWeb ? Uri.base.origin : AppConstants.authRedirectUrl;
+
+    await _auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: redirectUrl,
+    );
+
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('Login with Google failed: user not found');
+    }
+
+    return _mapUserWithProfile(user);
+  }
+
+  Future<UserModel> _mapUserWithProfile(User user) async {
+    final profile = await _client
+        .from('profiles')
+        .select()
+        .eq('id', user.id)
+        .maybeSingle();
+
+    return UserModel(
+      id: user.id,
+      email: user.email ?? '',
+      displayName: profile?['display_name'] as String?,
+      username: profile?['username'] as String?,
+      avatarUrl: profile?['avatar_url'] as String?,
+      bio: profile?['bio'] as String?,
+      createdAt: DateTime.tryParse(user.createdAt),
+    );
+  }
+
+  UserModel _mapUserWithCachedProfile(User user) {
+    return UserModel(
+      id: user.id,
+      email: user.email ?? '',
+      createdAt: DateTime.tryParse(user.createdAt),
     );
   }
 }
